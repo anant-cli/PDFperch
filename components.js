@@ -186,7 +186,7 @@
      */
     function normalizeGlobalLabels() {
         const navMap = {
-            'blog/index.html': '📰 Blog',
+            'blog/blog_index.html': '📰 Blog',
             'blog/': '📰 Blog',
             'index.html': '🏠 Home',
             'all-tools.html': '🛠️ All Tools',
