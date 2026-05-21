@@ -2,7 +2,7 @@
  * ConvertPDF Service Worker v8
  * Strategy: Cache-first for static assets, network-first for HTML pages.
  */
-const CACHE_NAME = 'convertpdf-v8';
+const CACHE_NAME = 'convertpdf-v9';
 
 const STATIC_ASSETS = [
     '/',
@@ -34,6 +34,10 @@ const STATIC_ASSETS = [
     '/pages/txt2docx.html',
     '/pages/watermarkpdf.html',
     '/pages/web2pdf.html',
+    '/pages/imgcompress.html',
+    '/pages/organizepdf.html',
+    '/pages/ocrtool.html',
+    '/pages/ppt2pdf.html',
     '/tools/compresspdf.js',
     '/tools/docx2pdf.js',
     '/tools/img2pdf.js',
@@ -49,7 +53,11 @@ const STATIC_ASSETS = [
     '/tools/splitpdf.js',
     '/tools/txt2docx.js',
     '/tools/watermarkpdf.js',
-    '/tools/web2pdf.js'
+    '/tools/web2pdf.js',
+    '/tools/imgcompress.js',
+    '/tools/organizepdf.js',
+    '/tools/ocrtool.js',
+    '/tools/ppt2pdf.js'
 ];
 
 function isFontRequest(url) {

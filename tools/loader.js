@@ -29,7 +29,11 @@
             'pdfencrypt': 'renderpdfencrypt',
             'qrmaker': 'renderqrmaker',
             'txt2docx': 'rendertxt2docx',
-            'web2pdf': 'renderweb2pdf'
+            'web2pdf': 'renderweb2pdf',
+            'imgcompress': 'renderimgcompress',
+            'organizepdf': 'renderorganizepdf',
+            'ocrtool': 'renderocrtool',
+            'ppt2pdf': 'renderppt2pdf'
         };
         return toolMap[filename] || null;
     }

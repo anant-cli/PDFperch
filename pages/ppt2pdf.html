@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="preload" href="../styles.css" as="style">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="icon" href="/favicon.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="ConvertPDF">
+    <meta name="description"
+        content="Convert PowerPoint PPTX files to PDF in your browser. Basic text and image slides. 100% private, no uploads.">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <title>PPT to PDF — Convert PowerPoint Online | ConvertPDF</title>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PPT to PDF — Convert PowerPoint Online — ConvertPDF">
+    <meta property="og:description"
+        content="Convert PowerPoint PPTX files to PDF in your browser. Basic text and image slides. 100% private, no uploads.">
+    <meta property="og:url" content="https://convertpdf.pages.dev/pages/ppt2pdf.html">
+    <meta property="og:image" content="https://convertpdf.pages.dev/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="ConvertPDF">
+    <meta property="og:image:alt" content="PPT to PDF Tool — ConvertPDF">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            "name": "PPT to PDF Tool",
+            "applicationCategory": "UtilitiesApplication",
+            "operatingSystem": "Web",
+            "isAccessibleForFree": true,
+            "url": "https://convertpdf.pages.dev/pages/ppt2pdf.html",
+            "description": "Convert PowerPoint PPTX files to PDF directly in your browser. Supports basic text and image slides. 100% private — files never leave your device.",
+            "publisher": {
+                "@type": "Organization",
+                "name": "ConvertPDF",
+                "url": "https://convertpdf.pages.dev"
+            },
+            "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+            },
+            "featureList": [
+                "Convert PPTX presentations to PDF.",
+                "Extracts basic slide elements: text, images, and solid backgrounds.",
+                "All processing runs in the browser — no uploads."
+            ],
+            "screenshot": "https://convertpdf.pages.dev/og-image.png",
+            "softwareVersion": "1.0",
+            "browserRequirements": "Requires JavaScript"
+        }
+    </script>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PPT to PDF — Convert PowerPoint Online — ConvertPDF">
+    <meta name="twitter:description"
+        content="Convert PowerPoint PPTX files to PDF in your browser. Basic text and image slides. 100% private, no uploads.">
+    <meta name="twitter:image" content="https://convertpdf.pages.dev/og-image.png">
+    <!-- Canonical -->
+    <link rel="canonical" href="https://convertpdf.pages.dev/pages/ppt2pdf.html">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "@id": "https://convertpdf.pages.dev/pages/ppt2pdf.html#faq",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "Why does my slide look different in the PDF?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Full PPTX rendering requires a full Office runtime. This tool parses slide XML and reconstructs slides using HTML/CSS, so complex layouts, custom fonts, and graphical effects may differ from the original."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I convert .ppt (older format) files?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Only .pptx files are supported. .ppt is a binary format that requires a native Office library. Save your file as .pptx in PowerPoint and re-upload."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How many slides can I convert?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "There is no hard limit, but larger decks take more time. Decks with many embedded images may be slow depending on your device's memory."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://convertpdf.pages.dev/" },
+            { "@type": "ListItem", "position": 2, "name": "All Tools", "item": "https://convertpdf.pages.dev/all-tools.html" },
+            { "@type": "ListItem", "position": 3, "name": "PPT to PDF", "item": "https://convertpdf.pages.dev/pages/ppt2pdf.html" }
+        ]
+    }
+    </script>
+
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+    <noscript>
+        <div
+            style="background:#c0392b;color:#fff;text-align:center;padding:1rem;font-family:sans-serif;font-size:0.95rem;">
+            ⚠️ ConvertPDF requires JavaScript. Please enable it to use this tool.</div>
+    </noscript>
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo">
+                <a href="../index.html" title="ConvertPDF - Home">&#128196; ConvertPDF</a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="../all-tools.html" class="active">All Tools</a></li>
+                    <li><a href="../blog/blog_index.html">Blog</a></li>
+                    <li><a href="../about.html">About</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                    <li><a href="../privacy.html">Privacy &#128274;</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <nav aria-label="Breadcrumb"
+            style="font-size:0.85rem;color:var(--text-muted);padding:0.5rem 2rem 0;max-width:1380px;margin:0 auto">
+            <a href="../index.html" style="color:var(--text-secondary)">Home</a>
+            &rsaquo;
+            <a href="../all-tools.html" style="color:var(--text-secondary)">All Tools</a>
+            &rsaquo;
+            <span>PPT to PDF</span>
+        </nav>
+        <div class="app-container">
+            <div class="back-btn-wrapper">
+                <a href="../index.html" class="back-btn">&larr; Back to Home</a>
+            </div>
+
+            <div id="toolContainer" class="tool-panel"></div>
+
+            <!-- Tool guide -->
+            <div class="content-section" style="margin-top: 3rem;">
+                <div class="seo-content">
+                    <h1>PPT to PDF</h1>
+                    <p class="seo-intro">
+                        Convert PowerPoint PPTX files to PDF in your browser. This tool handles the most common slide
+                        elements like text, images, and solid backgrounds. Converts common slide elements. Complex
+                        animations
+                        and embedded charts are not supported.
+                    </p>
+
+                    <div class="warning">
+                        Converts common slide elements (text, images, solid backgrounds). Complex animations and
+                        embedded charts are not supported.
+                    </div>
+
+                    <div class="seo-meta-grid">
+                        <div class="seo-meta-card"><strong>Best for:</strong> converting simple slide decks, sharing
+                            presentations without PowerPoint.</div>
+                        <div class="seo-meta-card"><strong>Input:</strong> PPTX documents.</div>
+                        <div class="seo-meta-card"><strong>Output:</strong> PDF documents.</div>
+                    </div>
+
+                    <h2>Privacy</h2>
+                    <p>All processing is handled locally by your browser. No document data ever reaches ConvertPDF
+                        servers. Your files remain on your device.</p>
+
+                    <h2>Related tools</h2>
+                    <ul class="seo-feature-list">
+                        <li><a href="docx2pdf.html">DOCX to PDF</a></li>
+                        <li><a href="mergepdf.html">Merge PDFs</a></li>
+                        <li><a href="compresspdf.html">Compress PDF</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>&#128196; ConvertPDF</h4>
+                <p>Free, private, client-side PDF tools. No uploads, no sign-up, no limits.</p>
+                <div class="social-links">
+                    <a href="mailto:convertpdf.contact@gmail.com" title="Email">&#128231;</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4> Tools</h4>
+                <ul>
+                    <li><a href="md2pdf.html">Markdown to PDF</a></li>
+                    <li><a href="docx2pdf.html">DOCX to PDF</a></li>
+                    <li><a href="img2pdf.html">Images to PDF</a></li>
+                    <li><a href="mergepdf.html">Merge PDFs</a></li>
+                    <li><a href="pdfencrypt.html">Password Protect</a></li>
+                    <li><a href="qrmaker.html">QR Generator</a></li>
+                    <li><a href="imgcompress.html">Image Compression</a></li>
+                    <li><a href="organizepdf.html">Organize PDF</a></li>
+                    <li><a href="ocrtool.html">OCR — Image to Text</a></li>
+                    <li><a href="ppt2pdf.html">PPT to PDF</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>&#128218; Resources</h4>
+                <ul>
+                    <li><a href="../blog/extract-images-from-pdfs.html">how to extract images from PDFs</a></li>
+                    <li><a href="../blog/best-free-tools-students.html">best free PDF tools for students</a></li>
+                    <li><a href="../about.html"> About</a></li>
+                    <li><a href="../contact.html">Contact</a></li>
+                    <li><a href="../privacy.html"> Privacy</a></li>
+                    <li><a href="../terms.html">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>&#128231; Get in Touch</h4>
+                <p>Have questions or feedback! &#128231; We'd love to hear from you.</p>
+                <p><a href="mailto:convertpdf.contact@gmail.com">convertpdf.contact@gmail.com</a></p>
+                <p><a href="https://convertpdf.pages.dev">Back to Home</a></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 ConvertPDF. All rights reserved. | <a href="../privacy.html">Privacy</a> | <a
+                    href="../terms.html">Terms</a> | <a href="../sitemap.xml">Sitemap</a></p>
+        </div>
+    </footer>
+
+    <script defer src="../utils.js"></script>
+    <script defer src="../components.js"></script>
+    <script defer src="../tools/ppt2pdf.js"></script>
+    <script defer src="../tools/loader.js"></script>
+</body>
+
+</html>

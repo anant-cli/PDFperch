@@ -48,6 +48,26 @@
     <lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.92</priority></url>
   <url><loc>https://convertpdf.pages.dev/pages/signpdf.html</loc>
     <lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.88</priority></url>
+  <url>
+    <loc>https://convertpdf.pages.dev/pages/imgcompress.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/pages/organizepdf.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/pages/ocrtool.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/pages/ppt2pdf.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 
   <!-- Blog -->
   <url><loc>https://convertpdf.pages.dev/blog/blog_index.html</loc>
@@ -83,71 +103,70 @@
   <url><loc>https://convertpdf.pages.dev/author/anant.html</loc>
     <lastmod>2026-05-21</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/pdf-vs-docx-which-format.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/convertpdf-vs-ilovepdf-vs-smallpdf.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/how-to-protect-confidential-pdf.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/jpg-to-pdf-free.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/compress-pdf-free-online.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/remove-password-from-pdf.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-<url>
-  <url><loc>https://convertpdf.pages.dev/blog/pdf-to-word-converter-free.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <lastmod>2026-05-21</lastmod>
-  <changefreq>monthly</changefreq>
-  <priority>0.8</priority>
-</url>
-
   <url>
-  <url><loc>https://convertpdf.pages.dev/blog/split-pdfs-online-privacy.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <loc>https://convertpdf.pages.dev/blog/pdf-vs-docx-which-format.html</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-  <url><loc>https://convertpdf.pages.dev/blog/rotate-pdfs-online-privacy.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <loc>https://convertpdf.pages.dev/blog/convertpdf-vs-ilovepdf-vs-smallpdf.html</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-  <url><loc>https://convertpdf.pages.dev/blog/compress-pdfs-online-privacy.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <loc>https://convertpdf.pages.dev/blog/how-to-protect-confidential-pdf.html</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-  <url><loc>https://convertpdf.pages.dev/blog/sign-pdfs-online-privacy.html</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+    <loc>https://convertpdf.pages.dev/blog/jpg-to-pdf-free.html</loc>
     <lastmod>2026-05-21</lastmod>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/compress-pdf-free-online.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/remove-password-from-pdf.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/pdf-to-word-converter-free.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/split-pdfs-online-privacy.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/rotate-pdfs-online-privacy.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/compress-pdfs-online-privacy.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/blog/sign-pdfs-online-privacy.html</loc>
+    <lastmod>2026-05-21</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
