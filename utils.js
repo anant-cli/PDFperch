@@ -5,6 +5,9 @@
  * @version 2.0.0
  */
 
+// ==================== DEBUG FLAG ====================
+const DEBUG = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
 // ==================== CONSTANTS ====================
 
 const CONSTANTS = {
@@ -51,7 +54,7 @@ const CDN_INTEGRITY = {
         'sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==',
     'https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js':
         'sha384-dHP9fwqd9BAiDh9uJ0p10khgbbcFMh34bVEiCnJ1Ah/AT2T2k4t572VEo3WXzxXp',
-    'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js':
+    'https://cdn.jsdelivr.net/npm/tesseract.js@4.1.4/dist/tesseract.min.js':
         'sha384-+56qagDlzJ3YYkDcyAXRdhrP7/+ai8qJcS6HpjACl2idDoCyCqRf5VVi7E/XkGae'
 };
 
@@ -430,7 +433,7 @@ function loadScript(src, integrity, fallbackSrc) {
             const fallback = fallbackSrc || CDN_FALLBACKS[src];
             
             if (fallback && fallback !== src) {
-                console.warn(`Failed to load ${src}, trying fallback: ${fallback}`);
+                if (DEBUG) console.warn(`Failed to load ${src}, trying fallback: ${fallback}`);
                 loadScript(fallback, null, null).then(resolve).catch(reject);
             } else {
                 reject(new Error(`Failed to load script: ${src}`));
@@ -658,7 +661,7 @@ function setupDropZone(dropZoneId, fileInputId) {
     const fileInput = document.getElementById(fileInputId);
 
     if (!dropZone || !fileInput) {
-        console.warn(`setupDropZone: Missing elements (${dropZoneId}, ${fileInputId})`);
+        if (DEBUG) console.warn(`setupDropZone: Missing elements (${dropZoneId}, ${fileInputId})`);
         return;
     }
 
@@ -790,7 +793,7 @@ const MemoryManager = {
             try {
                 URL.revokeObjectURL(url);
             } catch (e) {
-                console.warn('Failed to revoke object URL:', e);
+                if (DEBUG) console.warn('Failed to revoke object URL:', e);
             }
         });
         this.objectUrls.clear();

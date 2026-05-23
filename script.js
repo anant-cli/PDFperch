@@ -21,7 +21,8 @@ const tools = [
     { id: 'imgcompress', name: '🗜️ Image Compression', desc: 'reduce image file size with quality controls', icon: '🗜️', url: 'pages/imgcompress.html' },
     { id: 'organizepdf', name: '🗂️ Organize PDF', desc: 'reorder, rotate, and delete PDF pages visually', icon: '🗂️', url: 'pages/organizepdf.html' },
     { id: 'ocrtool', name: '🔍 OCR Image to Text', desc: 'extract text from images and scanned PDFs', icon: '🔍', url: 'pages/ocrtool.html' },
-    { id: 'ppt2pdf', name: '📊 PPT → PDF', desc: 'PowerPoint presentation to PDF', icon: '📊', url: 'pages/ppt2pdf.html' }
+    { id: 'ppt2pdf', name: '📊 PPT → PDF', desc: 'PowerPoint presentation to PDF', icon: '📊', url: 'pages/ppt2pdf.html' },
+    { id: 'pdfunlock', name: '🔓 Remove PDF Password', desc: 'unlock password-protected PDFs', icon: '🔓', url: 'pages/pdfunlock.html' }
 ];
 
 // Render tool cards on index.html

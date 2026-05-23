@@ -1,0 +1,22 @@
+# Cloudflare Pages URL redirects — clean URLs
+/merge-pdf          /pages/mergepdf.html      301
+/compress-pdf       /pages/compresspdf.html   301
+/split-pdf          /pages/splitpdf.html      301
+/rotate-pdf         /pages/rotatepdf.html     301
+/pdf-to-jpg         /pages/pdf2jpg.html       301
+/jpg-to-pdf         /pages/img2pdf.html       301
+/word-to-pdf        /pages/docx2pdf.html      301
+/ppt-to-pdf         /pages/ppt2pdf.html       301
+/pdf-password       /pages/pdfencrypt.html    301
+/pdf-unlock         /pages/pdfunlock.html     301
+/sign-pdf           /pages/signpdf.html       301
+/watermark-pdf      /pages/watermarkpdf.html  301
+/ocr                /pages/ocrtool.html       301
+/markdown-to-pdf    /pages/md2pdf.html        301
+/html-to-pdf        /pages/web2pdf.html       301
+/qr-code-generator  /pages/qrmaker.html       301
+/compress-images    /pages/imgcompress.html   301
+/organize-pdf       /pages/organizepdf.html   301
+/image-converter    /pages/img2png.html       301
+/page-numbers       /pages/pagenumbers.html   301
+/txt-to-word        /pages/txt2docx.html      301

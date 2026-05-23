@@ -170,4 +170,24 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://convertpdf.pages.dev/pages/pdfunlock.html</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url><loc>https://convertpdf.pages.dev/blog/how-to-ocr-pdf-free.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
+  <url><loc>https://convertpdf.pages.dev/blog/compress-images-free-guide.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
+  <url><loc>https://convertpdf.pages.dev/blog/add-watermark-pdf-free.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
+  <url><loc>https://convertpdf.pages.dev/blog/add-page-numbers-pdf-free.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
+  <url><loc>https://convertpdf.pages.dev/blog/ppt-to-pdf-without-powerpoint.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
+  <url><loc>https://convertpdf.pages.dev/blog/rearrange-pdf-pages-online.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
+  <url><loc>https://convertpdf.pages.dev/blog/webp-vs-png-vs-jpeg-2026.html</loc>
+    <lastmod>2026-05-22</lastmod><changefreq>monthly</changefreq><priority>0.70</priority></url>
 </urlset>

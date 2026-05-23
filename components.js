@@ -521,3 +521,101 @@
         init();
     }
 })();
+
+// ── Related Tools Component ──────────────────────────────────────────────────
+const RELATED_TOOLS_MAP = {
+    'mergepdf':     ['splitpdf','organizepdf','compresspdf','signpdf'],
+    'splitpdf':     ['mergepdf','organizepdf','compresspdf','pagenumbers'],
+    'compresspdf':  ['mergepdf','pdfencrypt','watermarkpdf','pdf2jpg'],
+    'pdfencrypt':   ['pdfunlock','signpdf','compresspdf','mergepdf'],
+    'pdfunlock':    ['pdfencrypt','compresspdf','mergepdf','signpdf'],
+    'signpdf':      ['pdfencrypt','watermarkpdf','mergepdf','compresspdf'],
+    'watermarkpdf': ['signpdf','pdfencrypt','mergepdf','compresspdf'],
+    'rotatepdf':    ['organizepdf','mergepdf','splitpdf','pagenumbers'],
+    'organizepdf':  ['mergepdf','splitpdf','rotatepdf','pagenumbers'],
+    'pagenumbers':  ['organizepdf','mergepdf','watermarkpdf','compresspdf'],
+    'pdf2jpg':      ['img2pdf','compresspdf','splitpdf','ocrtool'],
+    'img2pdf':      ['pdf2jpg','mergepdf','compresspdf','docx2pdf'],
+    'docx2pdf':     ['img2pdf','mergepdf','compresspdf','signpdf'],
+    'md2pdf':       ['docx2pdf','img2pdf','pagenumbers','compresspdf'],
+    'ppt2pdf':      ['docx2pdf','mergepdf','compresspdf','signpdf'],
+    'web2pdf':      ['md2pdf','docx2pdf','compresspdf','mergepdf'],
+    'txt2docx':     ['docx2pdf','md2pdf','mergepdf','compresspdf'],
+    'ocrtool':      ['pdf2jpg','img2pdf','compresspdf','splitpdf'],
+    'img2png':      ['imgcompress','img2pdf','pdf2jpg','compresspdf'],
+    'imgcompress':  ['img2png','img2pdf','compresspdf','pdf2jpg'],
+    'qrmaker':      ['img2pdf','pdfencrypt','watermarkpdf','signpdf'],
+};
+
+const TOOL_META = {
+    'mergepdf':     { name:'Merge PDF',          icon:'🧩', url:'mergepdf.html' },
+    'splitpdf':     { name:'Split PDF',          icon:'✂️',  url:'splitpdf.html' },
+    'compresspdf':  { name:'Compress PDF',       icon:'🗜️', url:'compresspdf.html' },
+    'pdfencrypt':   { name:'Password Protect',   icon:'🔐', url:'pdfencrypt.html' },
+    'pdfunlock':    { name:'Remove Password',    icon:'🔓', url:'pdfunlock.html' },
+    'signpdf':      { name:'Sign PDF',           icon:'✍️',  url:'signpdf.html' },
+    'watermarkpdf': { name:'Watermark PDF',      icon:'💧', url:'watermarkpdf.html' },
+    'rotatepdf':    { name:'Rotate PDF',         icon:'🔄', url:'rotatepdf.html' },
+    'organizepdf':  { name:'Organize PDF',       icon:'🗂️', url:'organizepdf.html' },
+    'pagenumbers':  { name:'Page Numbers',       icon:'📄', url:'pagenumbers.html' },
+    'pdf2jpg':      { name:'PDF to JPG',         icon:'📸', url:'pdf2jpg.html' },
+    'img2pdf':      { name:'Images to PDF',      icon:'🖼️', url:'img2pdf.html' },
+    'docx2pdf':     { name:'Word to PDF',        icon:'📃', url:'docx2pdf.html' },
+    'md2pdf':       { name:'Markdown to PDF',    icon:'📝', url:'md2pdf.html' },
+    'ppt2pdf':      { name:'PPT to PDF',         icon:'📊', url:'ppt2pdf.html' },
+    'web2pdf':      { name:'HTML to PDF',        icon:'🌐', url:'web2pdf.html' },
+    'txt2docx':     { name:'TXT to Word',        icon:'📄', url:'txt2docx.html' },
+    'ocrtool':      { name:'OCR Text Extract',   icon:'🔍', url:'ocrtool.html' },
+    'img2png':      { name:'Image Converter',    icon:'🎨', url:'img2png.html' },
+    'imgcompress':  { name:'Compress Images',    icon:'🗜️', url:'imgcompress.html' },
+    'qrmaker':      { name:'QR Code Generator', icon:'📱', url:'qrmaker.html' },
+};
+
+function renderRelatedTools() {
+    const path = window.location.pathname;
+    const toolId = path.split('/').pop().replace('.html','');
+    const related = RELATED_TOOLS_MAP[toolId];
+    if (!related) return;
+
+    const existing = document.getElementById('relatedToolsSection');
+    if (existing) return;
+
+    const section = document.createElement('div');
+    section.id = 'relatedToolsSection';
+    section.style.cssText = 'margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border-subtle,rgba(255,255,255,0.08));';
+
+    const heading = document.createElement('h3');
+    heading.textContent = 'You might also need';
+    heading.style.cssText = 'font-size:1rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.9rem;';
+    section.appendChild(heading);
+
+    const grid = document.createElement('div');
+    grid.style.cssText = 'display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.7rem;';
+
+    related.forEach(id => {
+        const meta = TOOL_META[id];
+        if (!meta) return;
+        const a = document.createElement('a');
+        a.href = meta.url;
+        a.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:0.35rem; padding:0.8rem 0.5rem; background:var(--bg-input,rgba(255,255,255,0.04)); border:1px solid var(--border-subtle,rgba(255,255,255,0.08)); border-radius:8px; text-decoration:none; color:var(--text-primary); font-size:0.82rem; font-weight:500; transition:background 0.15s, border-color 0.15s; text-align:center;';
+        a.onmouseenter = () => { a.style.background='var(--bg-card-hover,rgba(255,255,255,0.08))'; a.style.borderColor='var(--border,rgba(255,255,255,0.18))'; };
+        a.onmouseleave = () => { a.style.background='var(--bg-input,rgba(255,255,255,0.04))'; a.style.borderColor='var(--border-subtle,rgba(255,255,255,0.08))'; };
+        a.innerHTML = `<span style="font-size:1.4rem;">${meta.icon}</span><span>${meta.name}</span>`;
+        grid.appendChild(a);
+    });
+
+    section.appendChild(grid);
+
+    // Inject after toolContainer
+    const container = document.getElementById('toolContainer');
+    if (container && container.parentNode) {
+        container.parentNode.insertBefore(section, container.nextSibling);
+    }
+}
+
+// Auto-run when DOM is ready and again after tool renders
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => setTimeout(renderRelatedTools, 800));
+} else {
+    setTimeout(renderRelatedTools, 800);
+}

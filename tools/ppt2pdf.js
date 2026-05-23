@@ -42,6 +42,13 @@ async function renderppt2pdf(container) {
             Always review the output before sharing.
         </div>
 
+        <div id="pptDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📊➡️📄</div>
+            <p>Drag and drop a .pptx file here</p>
+            <p class="note">or click to browse files — PPTX only</p>
+            <input type="file" id="pptInput" accept=".pptx" style="display: none;">
+        </div>
+
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>
             <details>
@@ -56,13 +63,6 @@ async function renderppt2pdf(container) {
                 <summary>How many slides can I convert?</summary>
                 <p>There is no hard limit, but larger decks take more time. Decks with many embedded images may be slow depending on your device's memory.</p>
             </details>
-        </div>
-
-        <div id="pptDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">📊➡️📄</div>
-            <p>Drag and drop a .pptx file here</p>
-            <p class="note">or click to browse files — PPTX only</p>
-            <input type="file" id="pptInput" accept=".pptx" style="display: none;">
         </div>
 
         <div id="pptFileInfo" style="display:none; background:var(--bg-input); padding:1rem; border-radius:var(--r-md); margin-bottom:1rem; font-size:0.9rem; color:var(--text-muted);">

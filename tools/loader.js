@@ -33,7 +33,8 @@
             'imgcompress': 'renderimgcompress',
             'organizepdf': 'renderorganizepdf',
             'ocrtool': 'renderocrtool',
-            'ppt2pdf': 'renderppt2pdf'
+            'ppt2pdf': 'renderppt2pdf',
+            'pdfunlock': 'renderpdfunlock'
         };
         return toolMap[filename] || null;
     }

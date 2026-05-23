@@ -4,7 +4,7 @@
 async function renderocrtool(container) {
     try {
         // Load Tesseract.js — actual worker/WASM downloads happen lazily on first recognition
-        await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js');
+        await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@4.1.4/dist/tesseract.min.js');
         if (typeof Tesseract === 'undefined') {
             throw new Error('OCR engine failed to load. Check your internet connection and try again.');
         }

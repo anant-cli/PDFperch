@@ -47,6 +47,7 @@ async function rendersignpdf(container) {
                     <select id="signatureType">
                         <option value="text">Type Name</option>
                         <option value="draw">Draw Signature</option>
+                        <option value="image">Upload Image</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -87,6 +88,13 @@ async function rendersignpdf(container) {
                     <button id="undoSignature" class="secondary" type="button">↶ Undo</button>
                     <button id="redoSignature" class="secondary" type="button">↷ Redo</button>
                 </div>
+            </div>
+
+            <div id="imageSignatureGroup" class="input-group" style="display:none;">
+                <label>Upload Signature Image (PNG/JPG with transparent or white background)</label>
+                <input type="file" id="sigImgInput" accept="image/png,image/jpeg,image/gif,image/webp" style="margin-top:0.5rem;">
+                <canvas id="sigImgPreview" width="500" height="150"
+                    style="display:none; border: 2px solid var(--accent); border-radius: 4px; max-width: 100%; margin-top:0.5rem; background: var(--surface-strong);"></canvas>
             </div>
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
@@ -147,6 +155,10 @@ async function rendersignpdf(container) {
         const sigFontSel = document.getElementById('signatureFont');
         const textSigGroup = document.getElementById('textSignatureGroup');
         const drawSigGroup = document.getElementById('drawSignatureGroup');
+        const imgSigGroup = document.getElementById('imageSignatureGroup');
+        const sigImgInput = document.getElementById('sigImgInput');
+        const sigImgPreview = document.getElementById('sigImgPreview');
+        let uploadedSigImage = null; // stores HTMLImageElement for the uploaded signature
         const textInput = document.getElementById('signatureText');
         const canvas = document.getElementById('signatureCanvas');
         const clearBtn = document.getElementById('clearSignature');
@@ -340,9 +352,34 @@ async function rendersignpdf(container) {
 
         // Signature type toggle
         sigTypeSel.addEventListener('change', () => {
-            const isText = sigTypeSel.value === 'text';
-            textSigGroup.style.display = isText ? 'block' : 'none';
-            drawSigGroup.style.display = isText ? 'none' : 'block';
+            const val = sigTypeSel.value;
+            textSigGroup.style.display = val === 'text' ? 'block' : 'none';
+            drawSigGroup.style.display = val === 'draw' ? 'block' : 'none';
+            imgSigGroup.style.display  = val === 'image' ? 'block' : 'none';
+        });
+
+        // Image signature upload preview
+        sigImgInput.addEventListener('change', () => {
+            const file = sigImgInput.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    uploadedSigImage = img;
+                    // Draw preview on canvas
+                    const maxW = 500, maxH = 150;
+                    const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
+                    sigImgPreview.width = Math.round(img.width * ratio);
+                    sigImgPreview.height = Math.round(img.height * ratio);
+                    sigImgPreview.style.display = 'block';
+                    const ctx = sigImgPreview.getContext('2d');
+                    ctx.clearRect(0, 0, sigImgPreview.width, sigImgPreview.height);
+                    ctx.drawImage(img, 0, 0, sigImgPreview.width, sigImgPreview.height);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         });
 
         // File loaded
@@ -383,6 +420,10 @@ async function rendersignpdf(container) {
                     if (window.showToast) showToast('✏️ Please draw a signature first', 'error');
                     return;
                 }
+            }
+            if (sigTypeSel.value === 'image' && !uploadedSigImage) {
+                if (window.showToast) showToast('Please upload a signature image first', 'error');
+                return;
             }
             
             if (sigTypeSel.value === 'text' && sigColorSel.value === 'red') {
@@ -446,8 +487,32 @@ async function rendersignpdf(container) {
                         }
                         page.drawText(text, { x, y, size: fontSize, font, color: sigColor });
 
+                    } else if (sigTypeSel.value === 'image') {
+                        // Uploaded image signature
+                        const imgCanvas = document.createElement('canvas');
+                        imgCanvas.width = uploadedSigImage.width;
+                        imgCanvas.height = uploadedSigImage.height;
+                        const imgCtx = imgCanvas.getContext('2d');
+                        imgCtx.drawImage(uploadedSigImage, 0, 0);
+                        const dataUrl = imgCanvas.toDataURL('image/png');
+                        const sigBytes = await fetch(dataUrl).then(r => r.arrayBuffer());
+                        const sigEmbed = await pdfDoc.embedPng(sigBytes);
+
+                        let sigW = Math.min(200, width / 3);
+                        sigW = sigW * parseFloat(scaleSel.value);
+                        const sigH = (sigEmbed.height / sigEmbed.width) * sigW;
+
+                        let x, y;
+                        switch (positionSel.value) {
+                            case 'bottom-right': x = width - sigW - margin;  y = margin; break;
+                            case 'bottom-left':  x = margin;                  y = margin; break;
+                            case 'top-right':    x = width - sigW - margin;  y = height - sigH - margin; break;
+                            case 'top-left':     x = margin;                  y = height - sigH - margin; break;
+                            default:             x = margin;                  y = margin;
+                        }
+                        page.drawImage(sigEmbed, { x, y, width: sigW, height: sigH });
+
                     } else {
-                        // Drawn signature — transparent PNG (no white fill)
                         const dataUrl = canvas.toDataURL('image/png');
                         const sigBytes = await fetch(dataUrl).then(r => r.arrayBuffer());
                         const sigEmbed = await pdfDoc.embedPng(sigBytes);

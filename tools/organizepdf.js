@@ -55,6 +55,7 @@ async function renderorganizepdf(container) {
 
         <div style="display:flex; gap:1rem; flex-wrap:wrap;">
             <button id="orgSaveBtn" class="primary" disabled>💾 Save Organised PDF</button>
+            <button id="orgResetBtn" class="secondary" disabled>↺ Reset to Original Order</button>
             <button id="orgReloadBtn" class="download-btn" style="display:none;">↺ Load New File</button>
         </div>
         `;
@@ -67,6 +68,7 @@ async function renderorganizepdf(container) {
         const progBar    = document.getElementById('orgProgressBar');
         const thumbGrid  = document.getElementById('orgThumbGrid');
         const saveBtn    = document.getElementById('orgSaveBtn');
+        const resetBtn   = document.getElementById('orgResetBtn');
         const reloadBtn  = document.getElementById('orgReloadBtn');
 
         // State
@@ -124,10 +126,19 @@ async function renderorganizepdf(container) {
                 }
 
                 pages = Array.from({ length: total }, (_, i) => ({ pageIndex: i, rotation: 0 }));
+                const originalPages = pages.map(p => ({ ...p })); // snapshot for reset
 
                 statusDiv.textContent = `Loaded: ${file.name} — ${total} pages`;
                 statusDiv.style.display = 'block';
                 reloadBtn.style.display = 'inline-block';
+                saveBtn.disabled = false;
+                resetBtn.disabled = false;
+
+                resetBtn.onclick = async () => {
+                    pages = originalPages.map(p => ({ ...p }));
+                    await renderAllThumbnails();
+                    if (window.showToast) showToast('Page order reset to original.');
+                };
 
                 if (window.hideSpinner) hideSpinner();
                 await renderAllThumbnails();

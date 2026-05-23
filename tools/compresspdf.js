@@ -69,7 +69,18 @@ async function rendercompresspdf(container) {
         </div>
 
         <div class="input-group">
-            <label for="compressionLevel">Compression Mode</label>
+            <label for="compressionMode">Compression Strategy</label>
+            <select id="compressionMode">
+                <option value="image">Image Mode — re-renders pages as images (best size reduction)</option>
+                <option value="safe">Safe Mode — removes unused objects, preserves text layer</option>
+            </select>
+            <div id="imageModeWarning" style="margin-top:0.5rem; padding:0.6rem 0.8rem; border-radius:4px; background:rgba(255,165,0,0.12); border:1px solid rgba(255,165,0,0.4); font-size:0.85rem; color:var(--text-muted);">
+                ⚠️ <strong>Image mode</strong> removes text selectability and search. Best for photos and scanned PDFs. Use <strong>Safe mode</strong> for documents with selectable text.
+            </div>
+        </div>
+
+        <div class="input-group" id="dpiGroup">
+            <label for="compressionLevel">Quality Level</label>
             <select id="compressionLevel">
                 <option value="screen">Screen (72 DPI, JPEG 60%) — smallest file, email/web sharing</option>
                 <option value="web" selected>Web (96 DPI, JPEG 75%) — balanced size and quality</option>
@@ -105,6 +116,16 @@ async function rendercompresspdf(container) {
         const progressBar = document.getElementById('compressProgressBar');
         const downloadBtn = document.getElementById('downloadCompressBtn');
         const qualitySel = document.getElementById('compressionLevel');
+        const compressionModeSel = document.getElementById('compressionMode');
+        const imageModeWarning = document.getElementById('imageModeWarning');
+        const dpiGroup = document.getElementById('dpiGroup');
+
+        // Toggle warning and DPI options based on strategy
+        compressionModeSel.addEventListener('change', () => {
+            const isSafe = compressionModeSel.value === 'safe';
+            imageModeWarning.style.display = isSafe ? 'none' : 'block';
+            dpiGroup.style.display = isSafe ? 'none' : 'block';
+        });
 
         let currentFile = null;
         let originalSize = 0;
@@ -153,6 +174,45 @@ async function rendercompresspdf(container) {
             downloadBtn.disabled = true;
 
             try {
+                const strategy = compressionModeSel.value;
+
+                // ── Safe mode: remove unused objects, preserve text layer ────
+                if (strategy === 'safe') {
+                    progressDiv.innerHTML = 'Loading PDF...';
+                    const arrayBuf = await currentFile.arrayBuffer();
+                    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuf, { ignoreEncryption: false });
+                    progressBar.style.width = '60%';
+                    progressDiv.innerHTML = 'Optimising PDF structure...';
+                    // Save with pdf-lib's built-in compression flags
+                    const compressedBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
+                    progressBar.style.width = '100%';
+                    progressDiv.innerHTML = 'Compression complete!';
+
+                    const compressedSize = compressedBytes.length;
+                    const savedBytes = originalSize - compressedSize;
+                    const reduction = ((savedBytes / originalSize) * 100).toFixed(1);
+
+                    compressedStats.style.display = 'block';
+                    compressedSizeSpan.textContent = formatFileSize(compressedSize);
+
+                    if (savedBytes > 0) {
+                        sizeReductionSpan.textContent = `${reduction}% smaller (${formatFileSize(savedBytes)} saved)`;
+                    } else {
+                        sizeReductionSpan.textContent = 'Already optimised — no further reduction possible in Safe mode.';
+                    }
+
+                    const blob = new Blob([compressedBytes], { type: 'application/pdf' });
+                    downloadBtn.disabled = false;
+                    downloadBtn.onclick = () => {
+                        const baseName = currentFile.name.replace(/\.pdf$/i, '');
+                        downloadBlob(blob, `${baseName}_safe.pdf`);
+                    };
+                    if (window.showToast) showToast('Safe compression complete!');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Compress PDF';
+                    return;
+                }
+
                 const mode = qualitySel.value;
                 const modeConfig = {
                     screen: { dpi: 72,  quality: 0.60 },
