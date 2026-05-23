@@ -66,6 +66,10 @@ function isFontRequest(url) {
     return url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com');
 }
 
+function isExternalAnalyticsRequest(url) {
+    return url.includes('cloudflareinsights.com') || url.includes('analytics') || url.includes('beacon');
+}
+
 function isNavigationRequest(req) {
     return req.mode === 'navigate';
 }
@@ -102,6 +106,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
     if (isFontRequest(event.request.url)) return;
+    if (isExternalAnalyticsRequest(event.request.url)) return;
 
     // Navigation: try network first, fall back to cached index
     if (isNavigationRequest(event.request)) {
