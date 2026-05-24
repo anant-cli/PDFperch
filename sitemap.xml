@@ -51,6 +51,12 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://convertpdf.pages.dev/pages/pdf2word.html</loc>
+    <lastmod>2026-05-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://convertpdf.pages.dev/pages/img2pdf.html</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
@@ -148,12 +154,6 @@
   </url>
   <url>
     <loc>https://convertpdf.pages.dev/pages/ocrtool.html</loc>
-    <lastmod>2026-05-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://convertpdf.pages.dev/pages/ppt2pdf.html</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
@@ -322,12 +322,6 @@
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/pdfunlock.html</loc>
-    <lastmod>2026-05-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
     <loc>https://convertpdf.pages.dev/blog/how-to-ocr-pdf-free.html</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
@@ -347,12 +341,6 @@
   </url>
   <url>
     <loc>https://convertpdf.pages.dev/blog/add-page-numbers-pdf-free.html</loc>
-    <lastmod>2026-05-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.70</priority>
-  </url>
-  <url>
-    <loc>https://convertpdf.pages.dev/blog/ppt-to-pdf-without-powerpoint.html</loc>
     <lastmod>2026-05-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.70</priority>

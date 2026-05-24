@@ -1,10 +1,3 @@
-/**
- * utils.js – Shared helper functions for ConvertPDF
- * Production-ready version with enhanced error handling, performance optimizations,
- * and proper memory management.
- * @version 2.0.0
- */
-
 // ==================== DEBUG FLAG ====================
 const DEBUG = ['localhost', '127.0.0.1'].includes(window.location.hostname);
 

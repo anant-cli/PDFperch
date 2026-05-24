@@ -1,4 +1,3 @@
-// tools/loader.js – Automatically renders the correct tool
 (function() {
     'use strict';
 
@@ -16,6 +15,7 @@
         const toolMap = {
             'md2pdf': 'rendermd2pdf',
             'docx2pdf': 'renderdocx2pdf',
+            'pdf2word': 'renderpdf2word',
             'img2pdf': 'renderimg2pdf',
             'img2png': 'renderimg2png',
             'mergepdf': 'rendermergepdf',
@@ -32,9 +32,7 @@
             'web2pdf': 'renderweb2pdf',
             'imgcompress': 'renderimgcompress',
             'organizepdf': 'renderorganizepdf',
-            'ocrtool': 'renderocrtool',
-            'ppt2pdf': 'renderppt2pdf',
-            'pdfunlock': 'renderpdfunlock'
+            'ocrtool': 'renderocrtool'
         };
         return toolMap[filename] || null;
     }

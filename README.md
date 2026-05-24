@@ -1,6 +1,6 @@
 # ConvertPDF
 
-ConvertPDF is a free, privacy-first collection of browser-based document tools. All conversions occur in your browser, with no document uploads, no user accounts, and no behavioural analytics.
+ConvertPDF is a free, privacy-first collection of browser-based document tools. All conversions occur in your browser, with no document uploads, no user accounts, and Cloudflare Analytics used only for aggregate traffic counts.
 
 Live site: [https://convertpdf.pages.dev](https://convertpdf.pages.dev)
 
@@ -14,6 +14,7 @@ ConvertPDF includes a range of tools for everyday document workflows:
 |------|-------------|
 | **Markdown to PDF** | Convert Markdown into formatted PDF with math support and syntax highlighting. |
 | **DOCX to PDF** | Convert Microsoft Word documents to PDF in the browser. |
+| **PDF to Word** | Extract selectable PDF text into an editable DOCX file. |
 | **Images to PDF** | Combine JPG or PNG images into a single PDF file. |
 | **PDF Password Protect** | Add password protection and permission restrictions to PDFs. |
 | **Merge PDFs** | Combine multiple PDF files into one document. |
@@ -34,7 +35,7 @@ ConvertPDF includes a range of tools for everyday document workflows:
 
 - **Privacy-first:** Document processing happens locally in the browser. Files are not uploaded for conversion.
 - **No account needed:** Use the tools without registration or subscription.
-- **Minimal data collection:** We do not use Google Analytics or behavioural tracking.
+- **Traffic analytics only:** Cloudflare Analytics is used for aggregate site traffic measurement.
 - **Search monitoring only:** Google Search Console is used solely to monitor search traffic and indexing performance.
 - **Static architecture:** The site is delivered as static HTML, CSS, and JavaScript for speed and reliability.
 
@@ -60,15 +61,8 @@ This project is a static website. You can open it directly or serve it locally f
 - A modern web browser such as Chrome, Firefox, Edge, or Safari.
 
 ### Setup Instructions
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/anant-cli/ConvertPDF.git
-   ```
-2. Open the project folder:
-   ```bash
-   cd ConvertPDF
-   ```
-3. Open `index.html` in your browser, or run a local web server such as VS Code Live Server.
+1. Open the project folder.
+2. Open `index.html` in your browser, or run a local web server such as VS Code Live Server.
 
 ---
 
@@ -76,7 +70,7 @@ This project is a static website. You can open it directly or serve it locally f
 
 This repository includes professional content and legal pages that support privacy, trust, and discoverability:
 
-- `privacy.html` explains our commitment to no file uploads, no analytics, and limited third-party services.
+- `privacy.html` explains our commitment to no file uploads, traffic-only analytics, and limited third-party services.
 - `terms.html` describes permitted use, liability limitations, and user responsibilities.
 - `about.html` explains the service, technology, and privacy-first approach.
 - `contact.html` provides a clear channel for support and security disclosures.
