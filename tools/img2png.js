@@ -334,4 +334,3 @@ function renderimg2png(container) {
         dZip.disabled = false;
         dZip.innerHTML = '📦 Download All as ZIP';
     });
-}
