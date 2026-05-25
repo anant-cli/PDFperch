@@ -104,7 +104,7 @@ async function rendermergepdf(container) {
             fileMeta.set(file, meta);
             try {
                 const buf = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: buf.slice(0), disableWorker: true }).promise;
+                const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
                 meta.pages = pdf.numPages;
                 const page = await pdf.getPage(1);
                 const viewport = page.getViewport({ scale: 0.18 });
@@ -113,6 +113,7 @@ async function rendermergepdf(container) {
                 canvas.height = viewport.height;
                 await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
                 meta.thumbUrl = canvas.toDataURL('image/png');
+                releaseCanvas(canvas);
             } catch (err) {
                 console.warn('Unable to render merge thumbnail:', err);
             }

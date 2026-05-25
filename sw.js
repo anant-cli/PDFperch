@@ -1,7 +1,7 @@
 /**
  * ConvertPDF Service Worker
  */
-const CACHE_NAME = 'convertpdf-v11';
+const CACHE_NAME = 'convertpdf-v12';
 
 const STATIC_ASSETS = [
     '/',
@@ -96,6 +96,10 @@ self.addEventListener('activate', event => {
 });
 
 // Fetch: stale-while-revalidate for assets, network-first for navigation.
+function isCDNRequest(url) {
+    return url.includes('cdn.jsdelivr.net') || url.includes('cdnjs.cloudflare.com') || url.includes('unpkg.com');
+}
+
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
     if (isFontRequest(event.request.url)) return;
@@ -120,7 +124,30 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Assets: stale-while-revalidate
+    // CDN assets: use explicit CORS mode so the response is not opaque and can be cached.
+    // Strategy: cache-first (libs are versioned/immutable), fall back to network.
+    if (isCDNRequest(event.request.url)) {
+        event.respondWith(
+            caches.open(CACHE_NAME).then(cache =>
+                cache.match(event.request).then(cached => {
+                    if (cached) return cached;
+                    const corsRequest = new Request(event.request.url, {
+                        mode: 'cors',
+                        credentials: 'omit',
+                    });
+                    return fetch(corsRequest).then(res => {
+                        if (res && res.status === 200 && res.type === 'cors') {
+                            cache.put(event.request, res.clone());
+                        }
+                        return res;
+                    });
+                })
+            )
+        );
+        return;
+    }
+
+    // Same-origin assets: stale-while-revalidate
     event.respondWith(
         caches.open(CACHE_NAME).then(cache => {
             return cache.match(event.request).then(cachedResponse => {

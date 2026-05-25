@@ -394,39 +394,56 @@ function loadImage(file) {
 
 // ==================== DYNAMIC RESOURCE LOADING ====================
 
+// In-flight load promises — prevents race conditions when the same URL is
+// requested concurrently before its <script> tag fires onload.
+const _loadingScripts = new Map();
+const _loadingStyles  = new Map();
+
 /**
- * Loads external script with fallback support
+ * Loads external script with fallback support.
+ * Deduplicates concurrent calls for the same URL so the script is only
+ * injected once even when multiple tools request it simultaneously.
  * @param {string} src - Script URL
- * @param {string} integrity - SRI integrity hash
- * @param {string} fallbackSrc - Fallback URL
+ * @param {string|null} integrity - SRI integrity hash (overrides CDN_INTEGRITY lookup)
+ * @param {string|null} fallbackSrc - Fallback URL if primary fails
  * @returns {Promise<void>}
  */
 function loadScript(src, integrity, fallbackSrc) {
-    return new Promise((resolve, reject) => {
-        // Check if already loaded
-        const existing = document.querySelector(`script[src="${src}"]`);
-        if (existing) {
-            resolve();
-            return;
-        }
+    // Already finished loading — script tag is present and onload has fired.
+    // We track this via a data attribute so we don't resolve prematurely on a
+    // still-loading tag (the old bug: existing script found → resolve() called
+    // before the global the caller needs is actually defined).
+    const existing = document.querySelector(`script[src="${src}"][data-loaded="1"]`);
+    if (existing) return Promise.resolve();
+
+    // In-flight: reuse the same promise so we don't inject a duplicate tag.
+    if (_loadingScripts.has(src)) return _loadingScripts.get(src);
+
+    const promise = new Promise((resolve, reject) => {
+        // Another tab / earlier page load may have added a tag that never
+        // finished (e.g. network error). Remove it so we start fresh.
+        const stale = document.querySelector(`script[src="${src}"]:not([data-loaded])`);
+        if (stale) stale.remove();
 
         const script = document.createElement('script');
         script.src = src;
-        
-        const sri = integrity || CDN_INTEGRITY[src];
-        if (sri) {
-            script.integrity = sri;
-            script.crossOrigin = 'anonymous';
-        }
+        script.crossOrigin = 'anonymous'; // always set; needed for SRI and CORS caching
 
-        script.onload = () => resolve();
-        
+        const sri = integrity || CDN_INTEGRITY[src];
+        if (sri) script.integrity = sri;
+
+        script.onload = () => {
+            script.setAttribute('data-loaded', '1');
+            _loadingScripts.delete(src);
+            resolve();
+        };
+
         script.onerror = () => {
             script.remove();
+            _loadingScripts.delete(src);
             const fallback = fallbackSrc || CDN_FALLBACKS[src];
-            
             if (fallback && fallback !== src) {
-                if (DEBUG) console.warn(`Failed to load ${src}, trying fallback: ${fallback}`);
+                if (DEBUG) console.warn(`[loadScript] ${src} failed, trying fallback: ${fallback}`);
                 loadScript(fallback, null, null).then(resolve).catch(reject);
             } else {
                 reject(new Error(`Failed to load script: ${src}`));
@@ -435,38 +452,64 @@ function loadScript(src, integrity, fallbackSrc) {
 
         document.head.appendChild(script);
     });
+
+    _loadingScripts.set(src, promise);
+    return promise;
 }
 
 /**
- * Loads external stylesheet with SRI support
+ * Loads external stylesheet with SRI support.
+ * Deduplicates concurrent calls the same way as loadScript.
  * @param {string} href - Stylesheet URL
- * @param {string} integrity - SRI integrity hash
+ * @param {string|null} integrity - SRI integrity hash
  * @returns {Promise<void>}
  */
 function loadStylesheet(href, integrity) {
-    return new Promise((resolve, reject) => {
-        // Check if already loaded
-        const existing = document.querySelector(`link[href="${href}"]`);
-        if (existing) {
-            resolve();
-            return;
-        }
+    const existing = document.querySelector(`link[rel="stylesheet"][href="${href}"][data-loaded="1"]`);
+    if (existing) return Promise.resolve();
+
+    if (_loadingStyles.has(href)) return _loadingStyles.get(href);
+
+    const promise = new Promise((resolve, reject) => {
+        const stale = document.querySelector(`link[rel="stylesheet"][href="${href}"]:not([data-loaded])`);
+        if (stale) stale.remove();
 
         const link = document.createElement('link');
-        link.rel = 'stylesheet';
+        link.rel  = 'stylesheet';
         link.href = href;
-        
-        const sri = integrity || CDN_INTEGRITY[href];
-        if (sri) {
-            link.integrity = sri;
-            link.crossOrigin = 'anonymous';
-        }
+        link.crossOrigin = 'anonymous';
 
-        link.onload = () => resolve();
-        link.onerror = () => reject(new Error(`Failed to load stylesheet: ${href}`));
-        
+        const sri = integrity || CDN_INTEGRITY[href];
+        if (sri) link.integrity = sri;
+
+        link.onload = () => {
+            link.setAttribute('data-loaded', '1');
+            _loadingStyles.delete(href);
+            resolve();
+        };
+        link.onerror = () => {
+            link.remove();
+            _loadingStyles.delete(href);
+            reject(new Error(`Failed to load stylesheet: ${href}`));
+        };
+
         document.head.appendChild(link);
     });
+
+    _loadingStyles.set(href, promise);
+    return promise;
+}
+
+/**
+ * Frees a canvas element's GPU/memory backing immediately.
+ * Call this after toDataURL() / toBlob() once you no longer need the canvas.
+ * @param {HTMLCanvasElement} canvas
+ */
+function releaseCanvas(canvas) {
+    if (!canvas) return;
+    canvas.width  = 0;
+    canvas.height = 0;
+    canvas.remove();
 }
 
 // ==================== UI COMPONENTS ====================

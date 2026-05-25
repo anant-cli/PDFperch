@@ -152,7 +152,7 @@ async function renderpdf2jpg(container) {
 
             try {
                 const arrayBuf = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument({ data: arrayBuf, disableWorker: true }).promise;
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuf }).promise;
                 const totalPages = pdf.numPages;
                 let pagesToExtract = [];
 
@@ -195,6 +195,7 @@ async function renderpdf2jpg(container) {
                     const mimeType = fmt === 'png' ? 'image/png' : 'image/jpeg';
                     const blob = await new Promise(r => canvas.toBlob(r, mimeType, fmt === 'jpeg' ? jpegQuality : undefined));
                     const pixelDims = `${canvas.width}×${canvas.height}px`;
+                    releaseCanvas(canvas);
                     generatedBlobs.push({ blob, pageNum, pixelDims, fmt });
 
                     // Add to preview area

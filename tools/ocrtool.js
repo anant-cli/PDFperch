@@ -214,6 +214,7 @@ async function renderocrtool(container) {
                         await pdfPage.render({ canvasContext: ctx, viewport }).promise;
 
                         const { data: { text } } = await worker.recognize(canvas);
+                        releaseCanvas(canvas);
                         if (pageNum > 1) fullText += `\n\n--- Page ${pageNum} ---\n\n`;
                         fullText += text;
                     }

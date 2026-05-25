@@ -250,6 +250,7 @@ async function rendercompresspdf(container) {
                     const jpegBlob = await new Promise(resolve =>
                         canvas.toBlob(resolve, 'image/jpeg', quality)
                     );
+                    releaseCanvas(canvas);
                     const jpegBytes = await jpegBlob.arrayBuffer();
                     const jpegImage = await newDoc.embedJpg(jpegBytes);
 
