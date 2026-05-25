@@ -111,8 +111,8 @@ async function renderdocx2pdf(container) {
         const docxPrintStyles = `
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Calibri','Segoe UI',Roboto,sans-serif; line-height: 1.6; color: #2c3e50; background: white; padding: 2.54cm; -webkit-print-color-adjust: exact; }
-            .docx-body { max-width: 100%; margin: 0 auto; }
+            body { font-family: 'Calibri','Segoe UI',Roboto,sans-serif; line-height: 1.6; color: #2c3e50; background: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .docx-body { width: 100%; max-width: 100%; }
             .docx-body h1 { font-size: 28px; color: #1e2b4f; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; page-break-after: avoid; }
             .docx-body h2 { font-size: 24px; color: #2c3e50; border-bottom: 1px solid #bdc3c7; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; page-break-after: avoid; }
             .docx-body h3 { font-size: 20px; color: #34495e; margin-top: 20px; margin-bottom: 10px; page-break-after: avoid; }
@@ -124,7 +124,7 @@ async function renderdocx2pdf(container) {
             .docx-body td { padding: 10px 12px; border: 1px solid #ddd; }
             .docx-body tr:nth-child(even) { background: #f8f9fa; }
             .docx-body img { max-width: 100%; height: auto; page-break-inside: avoid; display:block; margin:0 auto; }
-            @media print { body { margin: 2.54cm; } .page-break { page-break-before: always; } }
+            @media print { .page-break { page-break-before: always; } }
         </style>`;
 
         // Create a scoped preview stylesheet to avoid leaking global rules into the host page
@@ -250,7 +250,7 @@ async function renderdocx2pdf(container) {
     <meta charset="UTF-8">
     <title>${docTitle} \u2013 ConvertPDF</title>
     ${docxPrintStyles}
-    <style>@page { size: ${pageSize} ${orientation}; margin: 2.54cm; }</style>
+    <style>@page { size: ${pageSize} ${orientation}; margin: 2cm 2.5cm; }</style>
 </head>
 <body>
     <div class="docx-body">${window.currentDocxHtml}</div>

@@ -112,10 +112,12 @@ async function rendermd2pdf(container) {
                     line-height: 1.6;
                     color: ${theme === 'dark' ? '#c9d1d9' : '#24292e'};
                     background: ${theme === 'dark' ? '#0d1117' : 'white'};
-                    padding: 2.54cm;
+                    padding: 0;
+                    margin: 0;
                     -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
                 }
-                .markdown-body { max-width: 800px; margin: 0 auto; }
+                .markdown-body { width: 100%; max-width: 100%; }
                 h1, h2, h3, h4, h5, h6 {
                     margin-top: 1.5rem;
                     margin-bottom: 1rem;
@@ -137,8 +139,7 @@ async function rendermd2pdf(container) {
                 .page-break { page-break-before: always; height: 0; }
                 hr { border: none; border-top: 1px solid ${theme === 'dark' ? '#21262d' : '#e1e4e8'}; margin: 1.25rem 0; }
                 @media print {
-                    body { margin: 2.54cm; }
-                    code, pre { -webkit-print-color-adjust: exact; }
+                    code, pre { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
                 }
             </style>
             <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
@@ -251,7 +252,7 @@ async function rendermd2pdf(container) {
                     <style>
                         @page {
                             size: ${pageSize} ${orientation};
-                            margin: 2.54cm;
+                            margin: 2cm 2.5cm;
                         }
                     </style>
                     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"><\/script>

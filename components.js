@@ -32,24 +32,47 @@
 
         headerContainer.insertBefore(toggle, nav);
 
+        // Create backdrop overlay
+        const backdrop = document.createElement('div');
+        backdrop.className = 'nav-backdrop';
+        backdrop.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(backdrop);
+
         // Set ID for aria-controls
         const ul = nav.querySelector('ul');
         if (ul) {
             ul.id = 'main-nav-list';
         }
 
+        function openMenu() {
+            nav.classList.add('open');
+            toggle.classList.add('active');
+            toggle.setAttribute('aria-expanded', 'true');
+            backdrop.classList.add('visible');
+            document.body.style.overflow = '';
+            trapFocus(nav);
+        }
+
+        function closeMenu() {
+            nav.classList.remove('open');
+            toggle.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+            backdrop.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+
         // Toggle handler
         toggle.addEventListener('click', function (e) {
             e.stopPropagation();
-            const isOpen = nav.classList.toggle('open');
-            toggle.classList.toggle('active', isOpen);
-            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            
-            // Trap focus in menu when open
-            if (isOpen) {
-                trapFocus(nav);
+            if (nav.classList.contains('open')) {
+                closeMenu();
+            } else {
+                openMenu();
             }
         });
+
+        // Close on backdrop click
+        backdrop.addEventListener('click', closeMenu);
 
         // Close on outside click
         document.addEventListener('click', function (e) {
@@ -66,12 +89,19 @@
             }
         });
 
-        // Close menu helper
-        function closeMenu() {
-            nav.classList.remove('open');
-            toggle.classList.remove('active');
-            toggle.setAttribute('aria-expanded', 'false');
-        }
+        // Close nav when a link is clicked (SPA-style navigation)
+        nav.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                closeMenu();
+            });
+        });
+
+        // Close nav on resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 800 && nav.classList.contains('open')) {
+                closeMenu();
+            }
+        });
 
         // Focus trap for accessibility
         function trapFocus(element) {
@@ -101,6 +131,8 @@
             });
         }
     }
+
+
 
     // ==================== NAVIGATION HELPERS ====================
 
