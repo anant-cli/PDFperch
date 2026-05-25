@@ -843,3 +843,18 @@ window.addEventListener('beforeunload', () => {
 
 // Export for global use
 window.MemoryManager = MemoryManager;
+
+/**
+ * Yields execution to the browser main thread to prevent blocking and allow garbage collection
+ * @returns {Promise<void>}
+ */
+function yieldToMainThread() {
+    return new Promise(resolve => {
+        if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(() => setTimeout(resolve, 0));
+        } else {
+            setTimeout(resolve, 0);
+        }
+    });
+}
+window.yieldToMainThread = yieldToMainThread;

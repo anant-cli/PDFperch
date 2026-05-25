@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
     'use strict';
 
     // ==================== CONSTANTS ====================
@@ -512,6 +512,57 @@
     /**
      * Clear stale consent/analytics data left from previous site version
      */
+    /**
+     * Set up premium theme toggle (Dark / Light mode)
+     */
+    function setupThemeToggle() {
+        const headerContainer = document.querySelector('.header-container');
+        if (!headerContainer) return;
+
+        if (document.querySelector('.theme-toggle-btn')) return;
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'theme-toggle-btn';
+        toggleBtn.setAttribute('aria-label', 'Toggle light/dark theme');
+        toggleBtn.setAttribute('title', 'Toggle Light/Dark Theme');
+        
+        const storedTheme = localStorage.getItem('cpdf_theme');
+        let currentTheme = 'dark'; 
+        if (storedTheme) {
+            currentTheme = storedTheme;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            currentTheme = 'light';
+        }
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateToggleIcon(toggleBtn, currentTheme);
+
+        toggleBtn.addEventListener('click', function () {
+            const nextTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('cpdf_theme', nextTheme);
+            updateToggleIcon(toggleBtn, nextTheme);
+            if (window.showToast) {
+                showToast(`Switched to ${nextTheme} mode!`, 'info');
+            }
+        });
+
+        const nav = headerContainer.querySelector('.main-nav');
+        if (nav) {
+            headerContainer.insertBefore(toggleBtn, nav);
+        } else {
+            headerContainer.appendChild(toggleBtn);
+        }
+    }
+
+    function updateToggleIcon(btn, theme) {
+        if (theme === 'light') {
+            btn.innerHTML = '🌙'; 
+        } else {
+            btn.innerHTML = '☀️'; 
+        }
+    }
+
     function clearLegacyStorage() {
         try {
             localStorage.removeItem('convertpdf_consent_v1');
