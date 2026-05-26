@@ -769,8 +769,7 @@ function showFileOnDropZone(dropZoneId, file) {
         p.appendChild(span);
     }
 
-    dropZone.style.borderColor = 'var(--accent)';
-    dropZone.style.background = 'rgba(99,102,241,0.07)';
+    dropZone.classList.add('drop-zone--selected');
 }
 
 /**
@@ -787,8 +786,7 @@ function resetDropZone(dropZoneId, defaultText = 'Drag and drop a file here') {
         p.textContent = defaultText;
     }
 
-    dropZone.style.borderColor = '';
-    dropZone.style.background = '';
+    dropZone.classList.remove('drop-zone--selected');
     dropZone.classList.remove('dragover');
 }
 
@@ -942,3 +940,30 @@ function yieldToMainThread() {
     });
 }
 window.yieldToMainThread = yieldToMainThread;
+
+/**
+ * Shows a prominent, persistent warning toast when a popup is blocked.
+ * Call this after window.open() returns null.
+ */
+function showPopupBlockedWarning(toolName) {
+    const container = document.getElementById('toast-container')
+        || document.querySelector('.toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'toast warning popup-blocked-toast';
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `
+        <span class="toast-icon">🚫</span>
+        <span>
+            <strong>Pop-up blocked!</strong> Your browser blocked the ${toolName} window.
+            Please allow pop-ups for this site in your browser's address bar, then click again.
+        </span>
+        <button class="toast-close" aria-label="Dismiss">✕</button>
+    `;
+    toast.querySelector('.toast-close').onclick = () => toast.remove();
+    container.appendChild(toast);
+    // Do NOT auto-remove — user must read and act
+}
+window.showPopupBlockedWarning = showPopupBlockedWarning;
+

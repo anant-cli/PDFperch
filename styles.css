@@ -102,15 +102,18 @@
     min-width: unset;
     box-shadow: none;
 }
+
 .theme-toggle-btn:hover {
     background: rgba(79, 158, 255, 0.12);
     color: var(--accent);
     transform: scale(1.05);
 }
+
 :root[data-theme="light"] .theme-toggle-btn {
     background: rgba(15, 23, 42, 0.04);
     color: var(--text-secondary);
 }
+
 :root[data-theme="light"] .theme-toggle-btn:hover {
     background: rgba(37, 99, 235, 0.08);
     color: var(--accent-vivid);
@@ -178,7 +181,36 @@ body {
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Smooth global transitions for theme toggles */
+body,
+header,
+footer,
+.tool-card,
+.tool-panel,
+.area,
+input,
+select,
+textarea,
+.back-btn,
+.button.secondary,
+h1,
+h2,
+h3,
+h4,
+p,
+.usage-counter,
+canvas,
+.drop-zone,
+.sig-canvas {
+    transition: background-color var(--theme-transition, 0s) cubic-bezier(0.4, 0, 0.2, 1),
+        color var(--theme-transition, 0s) cubic-bezier(0.4, 0, 0.2, 1),
+        border-color var(--theme-transition, 0s) cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow var(--theme-transition, 0s) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 
 img,
 iframe,
@@ -555,8 +587,19 @@ code {
 }
 
 @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(29,158,117,0.4); }
-    50% { opacity: 0.9; transform: scale(1.1); box-shadow: 0 0 0 4px rgba(29,158,117,0); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(29, 158, 117, 0.4);
+    }
+
+    50% {
+        opacity: 0.9;
+        transform: scale(1.1);
+        box-shadow: 0 0 0 4px rgba(29, 158, 117, 0);
+    }
 }
 
 /* ===========================================
@@ -1670,8 +1713,8 @@ input[type="color"] {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                    padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                    box-shadow 0.35s ease;
+            padding 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.35s ease;
         z-index: 999;
         box-shadow: none;
     }
@@ -1848,11 +1891,35 @@ input[type="color"] {
     margin-top: 0.3rem;
 }
 
-.drop-zone:hover,
+@keyframes border-pulse {
+    0% {
+        border-color: rgba(79, 158, 255, 0.35);
+        box-shadow: 0 0 0 0 rgba(79, 158, 255, 0.15);
+    }
+
+    50% {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 10px rgba(79, 158, 255, 0.06);
+    }
+
+    100% {
+        border-color: rgba(79, 158, 255, 0.35);
+        box-shadow: 0 0 0 0 rgba(79, 158, 255, 0.15);
+    }
+}
+
+.drop-zone:hover {
+    border-color: var(--accent);
+    background: rgba(79, 158, 255, 0.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
 .drop-zone.dragover {
     border-color: var(--accent);
-    background: rgba(79, 158, 255, 0.06);
+    background: rgba(79, 158, 255, 0.08);
+    animation: border-pulse 1.8s infinite ease-in-out;
 }
+
 
 /* ===========================================
    PROGRESS BAR (legacy compat)
@@ -2018,15 +2085,19 @@ input[type="color"] {
     margin-top: -10px;
     pointer-events: none;
     z-index: 9999;
-    transition: width 0.2s, height 0.2s, background-color 0.2s;
-    mix-blend-mode: screen;
+    transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .custom-cursor.hover {
-    width: 40px;
-    height: 40px;
-    background-color: rgba(79, 158, 255, 0.2);
-    border-color: transparent;
+    width: 44px;
+    height: 44px;
+    background-color: var(--accent-glow);
+    border-color: var(--accent);
+    box-shadow: 0 0 16px var(--accent-glow);
 }
 
 @media (pointer: coarse) {
@@ -2189,21 +2260,21 @@ input[type="color"] {
    ============================================== */
 @media (prefers-color-scheme: light) {
     :root {
-        --bg-root:         #f4f7ff;
-        --bg-surface:      #ffffff;
-        --bg-card:         #ffffff;
-        --bg-card-hover:   #eef3ff;
-        --bg-input:        #f0f4ff;
-        --bg-overlay:      rgba(255, 255, 255, 0.9);
-        --text-primary:    #0d1733;
-        --text-secondary:  #374469;
-        --text-muted:      #6b7da3;
-        --border-subtle:   rgba(0, 0, 0, 0.08);
-        --border-card:     rgba(79, 158, 255, 0.2);
-        --shadow-sm:       0 1px 3px rgba(0, 0, 0, 0.1);
-        --shadow-md:       0 4px 16px rgba(0, 0, 0, 0.1);
-        --shadow-lg:       0 12px 40px rgba(0, 0, 0, 0.12);
-        --shadow-glow:     0 0 24px rgba(79, 158, 255, 0.12);
+        --bg-root: #f4f7ff;
+        --bg-surface: #ffffff;
+        --bg-card: #ffffff;
+        --bg-card-hover: #eef3ff;
+        --bg-input: #f0f4ff;
+        --bg-overlay: rgba(255, 255, 255, 0.9);
+        --text-primary: #0d1733;
+        --text-secondary: #374469;
+        --text-muted: #6b7da3;
+        --border-subtle: rgba(0, 0, 0, 0.08);
+        --border-card: rgba(79, 158, 255, 0.2);
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+        --shadow-glow: 0 0 24px rgba(79, 158, 255, 0.12);
     }
 
     /* Invert aurora so it's subtle on light background */
@@ -2231,6 +2302,7 @@ input[type="color"] {
    Windows High Contrast Mode support
    ============================================== */
 @media (forced-colors: active) {
+
     .button,
     .download-btn {
         border: 2px solid ButtonText;
@@ -2532,6 +2604,7 @@ canvas[aria-label] {
 }
 
 @media (max-width: 600px) {
+
     .tool-panel,
     .content-section,
     .premium-card {
@@ -2544,9 +2617,9 @@ canvas[aria-label] {
         align-items: stretch;
     }
 
-    .tool-reset-row > *,
-    .tool-action-row > *,
-    .organize-actions > * {
+    .tool-reset-row>*,
+    .tool-action-row>*,
+    .organize-actions>* {
         flex: 1 1 100%;
         justify-content: center;
     }
@@ -2564,3 +2637,477 @@ canvas[aria-label] {
         width: 100%;
     }
 }
+
+/* ============================================================
+   TOOL COMPONENT CLASSES
+   Replaces all inline style="" attributes in tool JS files.
+   Theme-safe: all colours use CSS variables.
+   ============================================================ */
+
+/* -- Shared helpers -- */
+.drop-zone-icon {
+    font-size: 2.2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1;
+    display: block;
+}
+
+/* Hidden file inputs (replaced display:none inline) */
+.sr-only-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+/* Screen reader only utility class */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Normalise input-group spacing */
+.input-group {
+    margin-bottom: 1rem;
+}
+
+/* Generic button row used across tools */
+.tool-btn-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    align-items: center;
+}
+
+/* Drop zone — file selected state */
+.drop-zone--selected {
+    border-color: var(--accent);
+    background: rgba(79, 158, 255, 0.07);
+}
+
+/* Status message (replaces pptxStatus inline style) */
+.status-msg {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    min-height: 1.2em;
+}
+
+/* -- OCR Tool -- */
+.ocr-progress-wrap {
+    margin-top: 1rem;
+}
+
+.ocr-progress-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.ocr-progress-track {
+    width: 100%;
+    background: var(--bg-input);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+}
+
+.ocr-progress-fill {
+    width: 0%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--accent-vivid), var(--accent-light));
+    border-radius: var(--r-sm);
+    transition: width 0.2s ease;
+    box-shadow: 0 0 8px rgba(79, 158, 255, 0.4);
+}
+
+.ocr-output-section {
+    margin-top: 1.5rem;
+}
+
+.ocr-output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.ocr-output-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.ocr-textarea {
+    width: 100%;
+    min-height: 220px;
+    background: var(--bg-input);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    padding: 0.75rem;
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9rem;
+    resize: vertical;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    line-height: 1.6;
+}
+
+.ocr-textarea:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px rgba(79, 158, 255, 0.12);
+}
+
+/* -- Sign PDF Tool -- */
+.sign-options {
+    margin-bottom: 1rem;
+}
+
+.sign-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.sign-font-row {
+    margin-top: 0.5rem;
+}
+
+.pen-size-row {
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.pen-size-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
+/* Signature drawing canvas */
+.sig-canvas {
+    border: 2px solid var(--accent);
+    border-radius: var(--r-sm);
+    cursor: crosshair;
+    max-width: 100%;
+    display: block;
+    touch-action: none;
+    background: var(--bg-input);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.sig-canvas:hover {
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Upload preview canvas — hidden until image loaded */
+.sig-canvas-preview {
+    border: 2px solid var(--accent);
+    border-radius: var(--r-sm);
+    max-width: 100%;
+    margin-top: 0.5rem;
+    background: var(--bg-input);
+}
+
+/* Small compact action buttons (Clear / Undo / Redo) */
+.sig-action-btn {
+    min-width: unset !important;
+    padding: 0.5rem 1rem !important;
+    height: auto !important;
+}
+
+.sign-page-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Placement viewer (wraps preview-box) */
+.placement-viewer {
+    padding: 1.25rem;
+    margin-top: 1.5rem;
+}
+
+.placement-header {
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.placement-page-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.visual-placement-wrap {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.visual-placement-wrap:not(.hidden) {
+    display: flex;
+}
+
+.pdf-placement-viewer {
+    position: relative;
+    max-width: 100%;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    background: var(--bg-input);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+    max-height: 480px;
+    width: 100%;
+}
+
+.page-preview-container {
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    border-radius: 4px;
+    display: inline-block;
+    user-select: none;
+}
+
+.pdf-page-canvas {
+    display: block;
+    max-width: 100%;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+/* Draggable floating signature overlay */
+.floating-sig {
+    position: absolute;
+    left: 40px;
+    top: 40px;
+    width: 150px;
+    height: 60px;
+    border: 2px dashed var(--accent);
+    background: rgba(79, 158, 255, 0.15);
+    cursor: move;
+    user-select: none;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    transform-origin: top left;
+    border-radius: 3px;
+    backdrop-filter: blur(2px);
+}
+
+.floating-sig-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    pointer-events: none;
+    padding: 4px;
+    box-sizing: border-box;
+}
+
+.floating-sig-text {
+    color: var(--accent);
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Resize handle corner dot */
+.sig-resize-handle {
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: se-resize;
+    touch-action: none;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
+}
+
+.placement-placeholder {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.sign-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.sign-btn {
+    flex: 1;
+}
+
+.sign-progress {
+    margin-top: 1rem;
+}
+
+.sign-progress-text {
+    margin-bottom: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+/* -- Related Tools Section (replaces ALL inline styles in components.js) -- */
+.related-tools-section {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.related-tools-heading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.9rem;
+}
+
+.related-tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.7rem;
+}
+
+.related-tool-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.8rem 0.5rem;
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: background 0.15s, border-color 0.15s, transform 0.15s;
+    text-align: center;
+}
+
+.related-tool-link:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-card);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+    text-decoration: none;
+}
+
+.related-tool-icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+/* -- Toast: Warning variant (popup blocked) -- */
+.toast.warning {
+    border-left: 3px solid #f59e0b;
+}
+
+.popup-blocked-toast {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.popup-blocked-toast .toast-icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0;
+    min-width: unset !important;
+    width: auto !important;
+    box-shadow: none !important;
+    height: auto !important;
+    font-size: 1rem;
+    margin-left: auto;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.toast-close:hover {
+    color: var(--text-primary);
+    transform: none !important;
+    background: none;
+}
+
+/* -- Light theme overrides for new classes -- */
+:root[data-theme="light"] .sig-canvas,
+:root[data-theme="light"] .sig-canvas-preview {
+    background: #f8fafc;
+}
+
+:root[data-theme="light"] .pdf-placement-viewer {
+    background: #f1f5f9;
+}
+
+:root[data-theme="light"] .related-tool-link {
+    background: #f8fafc;
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] .related-tool-link:hover {
+    background: #eef3ff;
+    border-color: rgba(37, 99, 235, 0.2);
+}
+
+/* -- Responsive overrides for new classes -- */
+@media (max-width: 600px) {
+    .sign-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .related-tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .sign-button-row > .sign-btn {
+        flex: 1 1 100%;
+    }
+}

@@ -1,4 +1,3 @@
-# Cloudflare Pages URL redirects
 /merge-pdf          /pages/mergepdf.html      301
 /compress-pdf       /pages/compresspdf.html   301
 /split-pdf          /pages/splitpdf.html      301

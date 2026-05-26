@@ -37,12 +37,13 @@ async function rendercompresspdf(container) {
                 <p>Yes. Pages are re-rendered at the chosen DPI so text and images remain clear for the intended use.</p>
             </details>
         </div>
-        <div id="compressPdfDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">📄➕⬇️</div>
+        <div id="compressPdfDropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload PDF file to compress">
+            <div aria-hidden="true" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📄➕⬇️</div>
             <p>Drag and drop a .pdf file here</p>
             <p class="note">or click to browse files</p>
             <input type="file" id="compressPdfInput" accept=".pdf" style="display: none;">
         </div>
+
 
         <div id="compressStats" style="display:none; text-align:left; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem; background: var(--bg-input); padding: 1rem; border-radius: 4px;">
             <div><strong>Original file:</strong> <span id="originalSize">-</span></div>
@@ -215,9 +216,9 @@ async function rendercompresspdf(container) {
 
                 const mode = qualitySel.value;
                 const modeConfig = {
-                    screen: { dpi: 72,  quality: 0.60 },
-                    web:    { dpi: 96,  quality: 0.75 },
-                    print:  { dpi: 150, quality: 0.85 }
+                    screen: { dpi: 72, quality: 0.60 },
+                    web: { dpi: 96, quality: 0.75 },
+                    print: { dpi: 150, quality: 0.85 }
                 };
                 const { dpi, quality } = modeConfig[mode] || modeConfig.web;
                 // pdf.js renders at 96 CSS dpi when scale=1, so scale = targetDpi/96
@@ -255,7 +256,7 @@ async function rendercompresspdf(container) {
                     const jpegImage = await newDoc.embedJpg(jpegBytes);
 
                     // Page dimensions in PDF points: canvas pixels * (72 / dpi)
-                    const ptWidth  = canvas.width  * 72 / dpi;
+                    const ptWidth = canvas.width * 72 / dpi;
                     const ptHeight = canvas.height * 72 / dpi;
 
                     const newPage = newDoc.addPage([ptWidth, ptHeight]);

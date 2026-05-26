@@ -1,4 +1,4 @@
-﻿// web2pdf.js
+// web2pdf.js
 async function renderweb2pdf(container) {
     container.innerHTML = '';
     const area = document.createElement('div');
@@ -192,7 +192,10 @@ ${css}
 <script>setTimeout(()=>window.print(),500);<\/script></body></html>`;
 
         const win = window.open('', '_blank');
-        if (!win) {
+        if (!win || win.closed || typeof win.closed === 'undefined') {
+            if (window.showPopupBlockedWarning) {
+                showPopupBlockedWarning('HTML to PDF');
+            }
             if (window.showToast) showToast('Pop‑up blocked by browser.', 'error');
             else alert('Pop‑up blocked');
             printBtn.disabled = false; printBtn.innerHTML = '🖨️ Generate PDF';

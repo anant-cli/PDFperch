@@ -40,14 +40,14 @@ async function renderocrtool(container) {
             </details>
         </div>
 
-        <div id="ocrDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
-            <div style="font-size: 2rem; margin-bottom: 1rem;">🖼️🔤</div>
+        <div id="ocrDropZone" class="drop-zone">
+            <div class="drop-zone-icon">🖼️🔤</div>
             <p>Drag and drop an image or PDF here</p>
             <p class="note">or click to browse — JPG, PNG, WebP, BMP, TIFF, PDF</p>
-            <input type="file" id="ocrInput" accept="image/*,.pdf" style="display: none;">
+            <input type="file" id="ocrInput" accept="image/*,.pdf" class="sr-only-input">
         </div>
 
-        <div class="input-group" style="margin-bottom: 1rem;">
+        <div class="input-group">
             <label for="ocrLang">Recognition language</label>
             <select id="ocrLang">
                 <option value="eng" selected>English</option>
@@ -67,24 +67,21 @@ async function renderocrtool(container) {
 
         <button id="ocrRunBtn" class="primary" disabled>Extract Text</button>
 
-        <div id="ocrProgressWrapper" style="display:none; margin-top:1rem;">
-            <div id="ocrProgressLabel" style="font-size:0.85rem; color: var(--text-muted); margin-bottom:4px;">Loading OCR engine…</div>
-            <div style="width:100%; background: var(--bg-input); border-radius:4px;">
-                <div id="ocrProgressBar" style="width:0%; height:6px; background: var(--accent); border-radius:4px; transition: width 0.2s;"></div>
+        <div id="ocrProgressWrapper" class="ocr-progress-wrap hidden">
+            <div id="ocrProgressLabel" class="ocr-progress-label">Loading OCR engine…</div>
+            <div class="ocr-progress-track">
+                <div id="ocrProgressBar" class="ocr-progress-fill"></div>
             </div>
         </div>
 
-        <div id="ocrOutputSection" style="display:none; margin-top:1.5rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; flex-wrap:wrap; gap:0.5rem;">
-                <span style="font-size:0.85rem; color:var(--text-muted);" id="ocrWordCount"></span>
-                <span style="font-size:0.8rem; color:var(--text-muted);" id="ocrTimeLabel"></span>
+        <div id="ocrOutputSection" class="ocr-output-section hidden">
+            <div class="ocr-output-header">
+                <span class="ocr-output-meta" id="ocrWordCount"></span>
+                <span class="ocr-output-meta" id="ocrTimeLabel"></span>
             </div>
-            <textarea id="ocrOutput" readonly
-                style="width:100%; min-height:220px; background:var(--bg-input); color:var(--text-primary);
-                       border:1px solid var(--border); border-radius:var(--r-md); padding:0.75rem;
-                       font-family: monospace; font-size:0.9rem; resize:vertical; box-sizing:border-box;"
+            <textarea id="ocrOutput" class="ocr-textarea" readonly
                 placeholder="Extracted text will appear here…"></textarea>
-            <div style="display:flex; gap:0.75rem; margin-top:0.75rem; flex-wrap:wrap;">
+            <div class="tool-btn-row">
                 <button id="ocrCopyBtn" class="primary">📋 Copy Text</button>
                 <button id="ocrDownloadBtn" class="download-btn">⬇ Download .txt</button>
             </div>
@@ -143,7 +140,7 @@ async function renderocrtool(container) {
             baseName = file.name.replace(/\.[^.]+$/, '') || 'ocr-output';
             if (window.showFileOnDropZone) showFileOnDropZone('ocrDropZone', file);
             runBtn.disabled = false;
-            outputSection.style.display = 'none';
+            outputSection.classList.add('hidden');
             lastText = '';
         }
 
@@ -153,10 +150,10 @@ async function renderocrtool(container) {
 
             runBtn.disabled = true;
             runBtn.textContent = '⏳ Recognising…';
-            progressWrap.style.display = 'block';
+            progressWrap.classList.remove('hidden');
             progressBar.style.width = '0%';
             progressLabel.textContent = 'Loading OCR engine (first use may take ~10 s)…';
-            outputSection.style.display = 'none';
+            outputSection.classList.add('hidden');
             lastText = '';
 
             const langCode    = langSel.value;
@@ -250,7 +247,7 @@ async function renderocrtool(container) {
                         : `OCR complete in ${elapsed} s`;
                 }
 
-                outputSection.style.display = 'block';
+                outputSection.classList.remove('hidden');
 
             } catch (e) {
                 const msg = e.message || String(e);
@@ -263,7 +260,7 @@ async function renderocrtool(container) {
             } finally {
                 runBtn.disabled = false;
                 runBtn.textContent = 'Extract Text';
-                progressWrap.style.display = 'none';
+                progressWrap.classList.add('hidden');
                 progressBar.style.width = '0%';
             }
         });

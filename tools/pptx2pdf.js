@@ -39,13 +39,13 @@ async function renderpptx2pdf(container) {
         </div>
 
         <div id="pptxDropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload PPTX file">
-            <div aria-hidden="true" style="font-size: 2.5rem; margin-bottom: 0.5rem;">PPTX</div>
+            <div class="drop-zone-icon" aria-hidden="true">PPTX</div>
             <p>Drag and drop a PPTX file here</p>
             <p class="note">or click to browse files</p>
-            <input type="file" id="pptxInput" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" aria-label="PPTX file" style="display: none;">
+            <input type="file" id="pptxInput" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" aria-label="PPTX file" class="sr-only-input">
         </div>
 
-        <div class="orientation-selector" style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem;">
+        <div class="orientation-selector">
             <label>Paper
                 <select id="pptxPageSize">
                     <option value="a4" selected>A4</option>
@@ -82,12 +82,12 @@ async function renderpptx2pdf(container) {
             </label>
         </div>
 
-        <div id="pptxStatus" role="status" aria-live="polite" style="display:none; color:var(--text-muted); font-size:0.9rem; margin-bottom:0.75rem;"></div>
-        <div id="pptxProgressContainer" class="progress-bar-bg" style="display:none; margin-bottom:1rem;">
+        <div id="pptxStatus" role="status" aria-live="polite" class="status-msg hidden"></div>
+        <div id="pptxProgressContainer" class="progress-bar-bg hidden" style="margin-bottom:1rem;">
             <div id="pptxProgressBar" class="progress-bar-fill" style="width:0%;"></div>
         </div>
 
-        <div id="pptxPreviewShell" class="preview-box" style="display:none; padding:1rem; margin-bottom:1rem; overflow:auto; background:#f8fafc;">
+        <div id="pptxPreviewShell" class="preview-box hidden" style="padding:1rem; margin-bottom:1rem; overflow:auto;">
             <div id="pptxPreviewHost" style="width:960px; min-height:540px; transform-origin:top left;"></div>
         </div>
 
@@ -120,7 +120,7 @@ async function renderpptx2pdf(container) {
 
         function setStatus(message) {
             status.textContent = message;
-            status.style.display = message ? 'block' : 'none';
+            status.classList.toggle('hidden', !message);
         }
 
         function setProgress(value) {
@@ -135,14 +135,14 @@ async function renderpptx2pdf(container) {
             currentPdfUrl = null;
             input.value = '';
             previewHost.innerHTML = '';
-            previewShell.style.display = 'none';
-            progressWrap.style.display = 'none';
+            previewShell.classList.add('hidden');
+            progressWrap.classList.add('hidden');
             setProgress(0);
             setStatus('');
             convertBtn.disabled = true;
             downloadBtn.disabled = true;
             resetBtn.disabled = true;
-            dropZone.style.display = 'block';
+            dropZone.classList.remove('hidden');
             if (window.resetDropZone) resetDropZone('pptxDropZone', 'Drag and drop a PPTX file here');
         }
 
@@ -179,11 +179,11 @@ async function renderpptx2pdf(container) {
             downloadBtn.disabled = true;
             resetBtn.disabled = false;
             convertBtn.disabled = true;
-            dropZone.style.display = 'none';
-            previewShell.style.display = 'block';
+            dropZone.classList.add('hidden');
+            previewShell.classList.remove('hidden');
             previewHost.innerHTML = '';
             setStatus('Rendering slides locally...');
-            progressWrap.style.display = 'block';
+            progressWrap.classList.remove('hidden');
             setProgress(15);
 
             try {
@@ -217,7 +217,7 @@ async function renderpptx2pdf(container) {
                 convertBtn.disabled = true;
             } finally {
                 setTimeout(() => {
-                    progressWrap.style.display = 'none';
+                    progressWrap.classList.add('hidden');
                     setProgress(0);
                 }, 800);
             }
@@ -304,7 +304,7 @@ async function renderpptx2pdf(container) {
 
             convertBtn.disabled = true;
             downloadBtn.disabled = true;
-            progressWrap.style.display = 'block';
+            progressWrap.classList.remove('hidden');
             setProgress(0);
             setStatus('Capturing slides...');
             if (window.showSpinner) showSpinner('Generating PDF...');
@@ -378,7 +378,7 @@ async function renderpptx2pdf(container) {
                 convertBtn.disabled = false;
                 if (window.hideSpinner) hideSpinner();
                 setTimeout(() => {
-                    progressWrap.style.display = 'none';
+                    progressWrap.classList.add('hidden');
                     setProgress(0);
                 }, 1000);
             }

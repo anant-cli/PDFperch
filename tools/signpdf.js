@@ -35,15 +35,15 @@ async function rendersignpdf(container) {
             </details>
         </div>
 
-        <div id="signPdfDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📄✍️</div>
+        <div id="signPdfDropZone" class="drop-zone">
+            <div class="drop-zone-icon">📄✍️</div>
             <p>Drag and drop a .pdf file here</p>
             <p class="note">or click to browse files</p>
-            <input type="file" id="signPdfInput" accept=".pdf" style="display: none;">
+            <input type="file" id="signPdfInput" accept=".pdf" class="sr-only-input">
         </div>
 
-        <div id="signOptions" style="display:none; margin-bottom: 1rem;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+        <div id="signOptions" class="sign-options hidden">
+            <div class="sign-options-grid">
                 <div class="input-group">
                     <label for="signatureType">Signature Type</label>
                     <select id="signatureType">
@@ -66,9 +66,9 @@ async function rendersignpdf(container) {
             <div id="textSignatureGroup" class="input-group">
                 <label for="signatureText">Your Name</label>
                 <input type="text" id="signatureText" placeholder="Enter your full name" maxlength="60" value="John Doe">
-                <div style="margin-top: 0.5rem;">
+                <div class="sign-font-row">
                     <label for="signatureFont" style="font-size:0.85rem; color: var(--text-muted);">Font Style</label>
-                    <select id="signatureFont" style="margin-top:0.25rem;">
+                    <select id="signatureFont">
                         <option value="Helvetica">Helvetica — Clean &amp; Modern</option>
                         <option value="TimesRoman">Times Roman — Formal &amp; Traditional</option>
                         <option value="Courier">Courier — Typewriter Style</option>
@@ -77,32 +77,30 @@ async function rendersignpdf(container) {
             </div>
 
             <!-- DRAW SIGNATURE GROUP -->
-            <div id="drawSignatureGroup" class="input-group" style="display:none;">
+            <div id="drawSignatureGroup" class="input-group hidden">
                 <label>Draw your signature below</label>
-                <div style="margin-bottom: 0.5rem; display: flex; gap: 0.5rem; align-items: center;">
-                    <label style="font-size:0.85rem; color: var(--text-muted); flex: 1; display: flex; align-items: center; gap: 0.5rem;">
+                <div class="pen-size-row">
+                    <label class="pen-size-label">
                         <input type="range" id="penSize" min="1" max="8" value="2" style="flex: 1;">
                         <span>Pen: <span id="penSizeValue">2</span>px</span>
                     </label>
                 </div>
-                <canvas id="signatureCanvas" width="500" height="150"
-                    style="border: 2px solid var(--accent); border-radius: 6px; cursor: crosshair; max-width: 100%; display: block; touch-action: none; background: #0f1623;"></canvas>
-                <div style="margin-top: 0.5rem; display: flex; gap: 0.5rem;">
-                    <button id="clearSignature" class="secondary" type="button" style="min-width:unset; padding:0.5rem 1rem;">🗑️ Clear</button>
-                    <button id="undoSignature" class="secondary" type="button" style="min-width:unset; padding:0.5rem 1rem;">↶ Undo</button>
-                    <button id="redoSignature" class="secondary" type="button" style="min-width:unset; padding:0.5rem 1rem;">↷ Redo</button>
+                <canvas id="signatureCanvas" width="500" height="150" class="sig-canvas"></canvas>
+                <div class="tool-btn-row">
+                    <button id="clearSignature" class="secondary sig-action-btn" type="button">🗑️ Clear</button>
+                    <button id="undoSignature" class="secondary sig-action-btn" type="button">↶ Undo</button>
+                    <button id="redoSignature" class="secondary sig-action-btn" type="button">↷ Redo</button>
                 </div>
             </div>
 
             <!-- UPLOAD IMAGE GROUP -->
-            <div id="imageSignatureGroup" class="input-group" style="display:none;">
+            <div id="imageSignatureGroup" class="input-group hidden">
                 <label>Upload Signature Image (PNG/JPG)</label>
                 <input type="file" id="sigImgInput" accept="image/png,image/jpeg,image/webp" style="margin-top:0.5rem;">
-                <canvas id="sigImgPreview" width="500" height="150"
-                    style="display:none; border: 2px solid var(--accent); border-radius: 6px; max-width: 100%; margin-top:0.5rem; background: #0f1623;"></canvas>
+                <canvas id="sigImgPreview" width="500" height="150" class="sig-canvas sig-canvas-preview hidden"></canvas>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 1rem;">
+            <div class="sign-page-row">
                 <div class="input-group">
                     <label for="signaturePage">Apply to Page(s)</label>
                     <select id="signaturePage">
@@ -115,41 +113,41 @@ async function rendersignpdf(container) {
             </div>
 
             <!-- INTERACTIVE PLACEMENT VIEWER -->
-            <div id="placementHelper" class="preview-box" style="padding: 1.25rem; margin-top:1.5rem; background: var(--bg-card);">
-                <div style="font-weight:700; margin-bottom:0.75rem; display: flex; justify-content: space-between; align-items: center; flex-wrap:wrap; gap: 0.5rem;">
+            <div id="placementHelper" class="preview-box placement-viewer">
+                <div class="placement-header">
                     <span>📍 Signature Placement (Drag &amp; Resize)</span>
-                    <span id="placementPageLabel" style="font-size:0.8rem; color:var(--text-muted); font-weight:500;">No PDF loaded</span>
+                    <span id="placementPageLabel" class="placement-page-label">No PDF loaded</span>
                 </div>
-                
-                <div id="visualPlacementWrapper" style="display:none; flex-direction:column; align-items:center; gap:0.5rem; width:100%;">
-                    <div id="pdfPlacementViewer" style="position:relative; max-width:100%; border:1px solid var(--border-subtle); border-radius:var(--r-md); background:var(--bg-input); padding: 1.5rem; display:flex; justify-content:center; overflow:auto; max-height:480px; width:100%;">
-                        <div id="pagePreviewContainer" style="position:relative; box-shadow:var(--shadow-lg); border-radius:4px; display:inline-block; user-select:none;">
-                            <canvas id="pdfPageCanvas" style="display:block; max-width:100%; border-radius:4px; background:#ffffff;"></canvas>
-                            <div id="floatingSignature" style="position:absolute; left:40px; top:40px; width:150px; height:60px; border:2px dashed var(--accent); background:rgba(79, 158, 255, 0.15); cursor:move; user-select:none; box-sizing:border-box; display:flex; align-items:center; justify-content:center; touch-action:none; transform-origin: top left;">
-                                <div id="floatingSigContent" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; overflow:hidden; pointer-events:none; padding:4px; box-sizing:border-box;">
-                                    <span style="color:var(--accent); font-size:0.9rem; font-weight:bold;">John Doe</span>
+
+                <div id="visualPlacementWrapper" class="visual-placement-wrap hidden">
+                    <div id="pdfPlacementViewer" class="pdf-placement-viewer">
+                        <div id="pagePreviewContainer" class="page-preview-container">
+                            <canvas id="pdfPageCanvas" class="pdf-page-canvas"></canvas>
+                            <div id="floatingSignature" class="floating-sig">
+                                <div id="floatingSigContent" class="floating-sig-content">
+                                    <span class="floating-sig-text">John Doe</span>
                                 </div>
-                                <div class="sig-resize-handle" style="position:absolute; right:-5px; bottom:-5px; width:12px; height:12px; background:var(--accent); border-radius:50%; cursor:se-resize; touch-action:none; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>
+                                <div class="sig-resize-handle"></div>
                             </div>
                         </div>
                     </div>
                     <p class="note" style="text-align:center; margin-top:0.25rem;">Drag signature to move, drag bottom-right blue handle to resize.</p>
                 </div>
-                
-                <div id="placementPlaceholder" style="text-align:center; padding:3rem 1rem; color:var(--text-muted); font-size:0.9rem;">
+
+                <div id="placementPlaceholder" class="placement-placeholder">
                     📄 Drag or select a PDF above to position your signature interactively
                 </div>
             </div>
 
-            <div style="display:flex; flex-wrap:wrap; gap:1rem; align-items:center; margin-top:1.5rem;">
-                <button id="signPdfBtn" class="primary" type="button" style="flex:1;">Sign PDF</button>
-                <button id="downloadSignBtn" class="download-btn" type="button" style="flex:1;" disabled>Download Signed PDF</button>
+            <div class="sign-button-row">
+                <button id="signPdfBtn" class="primary sign-btn" type="button">Sign PDF</button>
+                <button id="downloadSignBtn" class="download-btn sign-btn" type="button" disabled>Download Signed PDF</button>
             </div>
 
-            <div id="signProgressContainer" style="display:none; margin-top:1rem;">
-                <div id="signProgressText" style="margin-bottom:0.5rem; color: var(--text-muted); font-size:0.875rem;">Signing...</div>
-                <div style="background: var(--bg-input); border-radius: 999px; overflow:hidden; height: 6px; border:1px solid var(--border-subtle);">
-                    <div id="signProgressBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.25s ease;"></div>
+            <div id="signProgressContainer" class="sign-progress hidden">
+                <div id="signProgressText" class="sign-progress-text">Signing...</div>
+                <div class="progress-bar-bg">
+                    <div id="signProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
                 </div>
             </div>
         </div>
@@ -370,9 +368,9 @@ async function rendersignpdf(container) {
                 const dataArray = new Uint8Array(originalBuffer);
                 pdfjsDoc = await pdfjsLib.getDocument({ data: dataArray }).promise;
                 
-                options.style.display = 'block';
+                options.classList.remove('hidden');
                 placementPlace.style.display = 'none';
-                placementWrap.style.display = 'flex';
+                placementWrap.classList.remove('hidden');
                 downloadBtn.disabled = true;
 
                 updatePageSelectorInfo();
@@ -570,9 +568,9 @@ async function rendersignpdf(container) {
         textInput.addEventListener('input', updateVisualSigPreview);
         sigTypeSel.addEventListener('change', () => {
             const val = sigTypeSel.value;
-            textSigGroup.style.display = val === 'text' ? 'block' : 'none';
-            drawSigGroup.style.display = val === 'draw' ? 'block' : 'none';
-            imgSigGroup.style.display  = val === 'image' ? 'block' : 'none';
+            textSigGroup.classList.toggle('hidden', val !== 'text');
+            drawSigGroup.classList.toggle('hidden', val !== 'draw');
+            imgSigGroup.classList.toggle('hidden', val !== 'image');
             updateVisualSigPreview();
         });
         sigFontSel.addEventListener('change', updateVisualSigPreview);
@@ -590,7 +588,7 @@ async function rendersignpdf(container) {
                     const ratio = Math.min(maxW / img.width, maxH / img.height, 1);
                     sigImgPreview.width = Math.round(img.width * ratio);
                     sigImgPreview.height = Math.round(img.height * ratio);
-                    sigImgPreview.style.display = 'block';
+                    sigImgPreview.classList.remove('hidden');
                     const ctx = sigImgPreview.getContext('2d');
                     ctx.clearRect(0, 0, sigImgPreview.width, sigImgPreview.height);
                     ctx.drawImage(img, 0, 0, sigImgPreview.width, sigImgPreview.height);
@@ -624,7 +622,7 @@ async function rendersignpdf(container) {
 
             signBtn.disabled = true;
             signBtn.innerHTML = '⏳ Signing…';
-            progressCon.style.display = 'block';
+            progressCon.classList.remove('hidden');
             progressBar.style.width = '0%';
             progressText.textContent = 'Reading original PDF…';
             downloadBtn.disabled = true;
@@ -742,7 +740,7 @@ async function rendersignpdf(container) {
                 if (window.showToast) showToast('✅ PDF signed successfully!', 'success');
 
                 setTimeout(() => {
-                    progressCon.style.display = 'none';
+                    progressCon.classList.add('hidden');
                     progressBar.style.width = '0%';
                 }, 3000);
 

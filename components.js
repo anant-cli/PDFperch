@@ -370,8 +370,8 @@
             const dx = mouseX - cursorX;
             const dy = mouseY - cursorY;
             
-            cursorX += dx * 0.1;
-            cursorY += dy * 0.1;
+            cursorX += dx * 0.14;
+            cursorY += dy * 0.14;
             
             cursor.style.left = cursorX + 'px';
             cursor.style.top = cursorY + 'px';
@@ -467,8 +467,7 @@
         el.id = 'aria-announcer';
         el.setAttribute('aria-live', 'assertive');
         el.setAttribute('aria-atomic', 'true');
-        el.setAttribute('role', 'alert');
-        el.style.cssText = 'position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;';
+        el.className = 'sr-only';
         document.body.appendChild(el);
 
         // Expose globally so tool scripts can announce errors
@@ -538,6 +537,7 @@
         updateToggleIcon(toggleBtn, currentTheme);
 
         toggleBtn.addEventListener('click', function () {
+            document.documentElement.style.setProperty('--theme-transition', '0.3s');
             const nextTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', nextTheme);
             localStorage.setItem('cpdf_theme', nextTheme);
@@ -658,25 +658,23 @@ function renderRelatedTools() {
 
     const section = document.createElement('div');
     section.id = 'relatedToolsSection';
-    section.style.cssText = 'margin-top:2.5rem; padding-top:1.5rem; border-top:1px solid var(--border-subtle,rgba(255,255,255,0.08));';
+    section.className = 'related-tools-section';
 
     const heading = document.createElement('h3');
     heading.textContent = 'You might also need';
-    heading.style.cssText = 'font-size:1rem; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-bottom:0.9rem;';
+    heading.className = 'related-tools-heading';
     section.appendChild(heading);
 
     const grid = document.createElement('div');
-    grid.style.cssText = 'display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:0.7rem;';
+    grid.className = 'related-tools-grid';
 
     related.forEach(id => {
         const meta = TOOL_META[id];
         if (!meta) return;
         const a = document.createElement('a');
         a.href = meta.url;
-        a.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:0.35rem; padding:0.8rem 0.5rem; background:var(--bg-input,rgba(255,255,255,0.04)); border:1px solid var(--border-subtle,rgba(255,255,255,0.08)); border-radius:8px; text-decoration:none; color:var(--text-primary); font-size:0.82rem; font-weight:500; transition:background 0.15s, border-color 0.15s; text-align:center;';
-        a.onmouseenter = () => { a.style.background='var(--bg-card-hover,rgba(255,255,255,0.08))'; a.style.borderColor='var(--border,rgba(255,255,255,0.18))'; };
-        a.onmouseleave = () => { a.style.background='var(--bg-input,rgba(255,255,255,0.04))'; a.style.borderColor='var(--border-subtle,rgba(255,255,255,0.08))'; };
-        a.innerHTML = `<span style="font-size:1.4rem;">${meta.icon}</span><span>${meta.name}</span>`;
+        a.className = 'related-tool-link';
+        a.innerHTML = `<span class="related-tool-icon">${meta.icon}</span><span>${meta.name}</span>`;
         grid.appendChild(a);
     });
 

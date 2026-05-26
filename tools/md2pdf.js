@@ -1,4 +1,4 @@
-﻿// md2pdf.js - Fixed PDF generation using Print (no blank pages, math + highlighting preserved)
+// md2pdf.js - Fixed PDF generation using Print (no blank pages, math + highlighting preserved)
 
 async function rendermd2pdf(container) {
     try {
@@ -286,7 +286,12 @@ async function rendermd2pdf(container) {
                 </html>`;
 
                 const printWindow = window.open('', '_blank');
-                if (!printWindow) throw new Error('Popup blocked. Please allow pop-ups for this site.');
+                if (!printWindow || printWindow.closed || typeof printWindow.closed === 'undefined') {
+                    if (window.showPopupBlockedWarning) {
+                        showPopupBlockedWarning('Markdown to PDF');
+                    }
+                    throw new Error('Popup blocked. Please allow pop-ups for this site.');
+                }
                 printWindow.document.write(fullHtml);
                 printWindow.document.close();
 
