@@ -123,128 +123,58 @@
             <!-- Tool guide -->
             <div class="content-section" style="margin-top: 3rem;">
                 <div class="seo-content">
-                    <h1>Compress PDF online</h1>
-                    <p class="seo-intro">Reduce PDF file size in your browser before emailing, uploading, or archiving a document. ConvertPDF keeps the file on your device and creates a smaller copy for download.</p>
+                    <h2>Compress PDF online</h2>
+                    <p class="seo-intro">ConvertPDF offers a powerful, browser-based PDF compression engine designed to shrink file sizes locally. By rendering pages intelligently within your web browser, our compression tool eliminates the need for external server processing. This protects confidential data while significantly reducing the storage footprint of image-heavy documents, presentations, and scanned archives.</p>
 
                     <div class="seo-meta-grid">
-                        <div class="seo-meta-card"><strong>Best for:</strong> large PDFs, scans, reports, forms, and documents that need to fit upload limits.</div>
-                        <div class="seo-meta-card"><strong>Input:</strong> PDF files.</div>
-                        <div class="seo-meta-card"><strong>Output:</strong> a smaller PDF copy.</div>
+                        <div class="seo-meta-card"><strong>Best for:</strong> Scanned documents, graphic-heavy portfolios, and large administrative PDFs requiring size reduction for email attachment or web upload.</div>
+                        <div class="seo-meta-card"><strong>Input:</strong> Any standard PDF file (including encrypted PDFs, if the user provides the local password).</div>
+                        <div class="seo-meta-card"><strong>Output:</strong> A highly optimized, smaller PDF file.</div>
                     </div>
 
-                    <h2>Before you download</h2>
-                    <p>Compression results depend on the PDF. Image-heavy scans usually shrink more than text-only documents. If the result is still too large, split the PDF first and compress each part.</p>
-
-                    <h2>How to compress a PDF</h2>
-                    <ol>
-                        <li>Click the drop zone or drag your PDF file into the upload area.</li>
-                        <li>The tool will automatically analyze and optimize the PDF structure.</li>
-                        <li>For image-heavy files, the reduction will be more significant.</li>
-                        <li>Click <strong>Compress &amp; Download</strong> to save your optimized PDF.</li>
-                    </ol>
-
-                    <h2>Frequently asked questions</h2>
-                    <details>
-                        <summary>How much can I reduce the PDF size?</summary>
-                        <p>This depends on the original file. PDFs created from high-resolution scans or containing many images usually see the most reduction (often 50-80%). Text-heavy PDFs that are already well-optimized may see smaller gains.</p>
-                    </details>
-                    <details>
-                        <summary>Is my PDF uploaded to a server?</summary>
-                        <p>No. All compression happens locally in your browser using JavaScript. Your file never leaves your device, making it safe for confidential documents.</p>
-                    </details>
-                    <details>
-                        <summary>Will I lose quality in my PDF?</summary>
-                        <p>Our tool uses lossless compression techniques where possible. For image-heavy PDFs, it may apply subtle downsampling to reach target sizes, but it aims to maintain professional readability.</p>
-                    </details>
-
-                    <h2>Related tools</h2>
-                    <ul class="seo-feature-list">
-                        <li><a href="splitpdf.html">Split PDF</a></li>
-                        <li><a href="mergepdf.html">Merge PDFs</a></li>
-                        <li><a href="pdfencrypt.html">Password protect PDF</a></li>
-                        <li><a href="pdf2jpg.html">PDF to JPG</a></li>
+                    <h2>How Client-Side PDF Compression Works</h2>
+                    <p>Unlike traditional online PDF compressors that mandate a server-side upload, ConvertPDF leverages WebAssembly and the native processing power of your computer. When you drag and drop a document into our compression tool, the file remains strictly on your local disk and in your browser's memory sandbox.</p>
+                    <p>The compression engine operates in two distinct modes, tailored to different document structures:</p>
+                    <ul>
+                        <li><strong>Safe Mode:</strong> This non-destructive strategy targets the internal structure of the PDF. It strips unused metadata, removes orphaned objects, and consolidates redundant font subsets. Crucially, Safe Mode preserves the exact vector paths of text and shapes. This makes it ideal for text-heavy contracts and invoices where visual fidelity and searchability cannot be compromised. The size reduction here is highly dependent on how bloated the original generator made the file, but it guarantees zero loss in text clarity.</li>
+                        <li><strong>Image Mode (Aggressive Compression):</strong> Designed for scanned documents and image-heavy presentations, this mode executes a complete re-rendering of the PDF. The engine rasterizes each page into an optimized JPEG image using an HTML5 Canvas context. By adjusting the DPI (Dots Per Inch) and JPEG quality ratio, the tool achieves drastic file size reductions. A 50MB architectural scan can often be reduced to under 5MB. Because this process flattens the file, the resulting document will no longer contain selectable text unless you run it through a subsequent OCR process.</li>
                     </ul>
-                    <h3>Comprehensive Guide to Compress PDF</h3>
-                    <p>
-                        In today's fast-paced digital environment, managing documents efficiently is crucial. Compressing PDF Files is one of the most common tasks for professionals, students, and everyday users alike. Whether you are handling a massive workflow or just a single important file, having a reliable tool for compressing pdf files is essential. Our tool is designed to provide a seamless, secure, and fast experience right from your web browser, eliminating the need for cumbersome software installations or risky file uploads.
-                    </p>
 
-                    <h3>High-Value Use Cases</h3>
-                    <p>
-                        Understanding when and why to use a Compress PDF tool can help streamline your digital workflow. Here are some of the most frequent and high-value scenarios where this tool shines:
-                        <br><br>
-                        <strong>1. Email attachments:</strong> Professionals frequently encounter this scenario. Instead of struggling with incompatible formats or large files, using a dedicated Compress PDF solution ensures that all records are handled perfectly in a standard, easily readable format.
-                        <br><br>
-                        <strong>2. Web uploads:</strong> Students and freelancers often rely on quick digital solutions. Applying compressing pdf files ensures that your work is professional, preserving the intended formatting and preventing any issues that might occur when viewing files on different devices.
-                        <br><br>
-                        <strong>3. Storage optimization:</strong> For legal and administrative procedures, consistency is key. Utilizing our tool guarantees that the documents are presented in a unified manner, meeting industry standards.
-                        <br><br>
-                        <strong>4. Archiving and Storage:</strong> Managing digital assets can quickly clutter your hard drive or cloud storage. Streamlining these files not only organizes your digital space but also makes retrieving and viewing these documents much more straightforward in the future.
-                    </p>
+                    <h2>Technical Specifications & Quality Settings</h2>
+                    <p>To provide granular control over the output, the Image Mode compression strategy allows users to select between three specific resolution and quality thresholds:</p>
+                    <ul>
+                        <li><strong>Screen Quality (72 DPI, 60% JPEG Quality):</strong> This represents the most aggressive compression tier. It is strictly recommended for documents that will only be viewed on standard digital displays, or when bypassing strict email attachment limits (e.g., the standard 25MB threshold). Artifacting may be visible upon high magnification.</li>
+                        <li><strong>Web Quality (96 DPI, 75% JPEG Quality):</strong> The default configuration, balancing legibility and size reduction. At 96 DPI, the resolution matches the standard CSS pixel density of modern browsers. Text remains highly readable, and images retain acceptable clarity for general distribution and archiving.</li>
+                        <li><strong>Print Quality (150 DPI, 85% JPEG Quality):</strong> The conservative compression tier. It significantly reduces the size of massive, uncompressed TIFF-based PDF scans while maintaining enough pixel density for standard A4 or Letter physical printing.</li>
+                    </ul>
 
-                    <h3>Security and Privacy: What Users Need to Know</h3>
-                    <p>
-                        When dealing with personal or sensitive information, privacy is paramount. Many online tools require you to upload your files to their servers, where they are processed and then downloaded back to your device. This process exposes your data to potential breaches, unauthorized access, and unnecessary retention on third-party servers.
-                        <br><br>
-                        ConvertPDF takes a radically different approach. Our Compress PDF utility is entirely browser-based. This means that when you begin compressing pdf files, the entire process happens locally on your device. Your files never leave your computer, tablet, or smartphone. There is no server upload, no data tracking, and no risk of your private documents being intercepted. This local-first architecture provides unparalleled peace of mind, making it the ideal solution for handling confidential business documents, personal identification, and sensitive financial records.
-                    </p>
+                    <h2>The Privacy Imperative: Why Local Processing Matters</h2>
+                    <p>The standard architecture of online utility websites involves uploading user data to a remote cloud server, processing the file, and initiating a return download. This model introduces severe vulnerabilities, particularly for enterprise professionals, legal practitioners, and healthcare providers handling sensitive information.</p>
+                    <p>When a PDF containing personally identifiable information (PII), financial records, or proprietary trade secrets is transmitted over a network, it becomes vulnerable to interception, server-side data breaches, and unauthorized retention policies. Furthermore, many free online services explicitly state in their terms of service that they reserve the right to scan, parse, or utilize uploaded documents to train machine learning models or extract telemetry data.</p>
+                    <p>ConvertPDF circumvents these risks entirely through a "Local-First" architecture. The JavaScript logic required to parse and compress the document is downloaded to your browser upon page load. Once loaded, the tool can execute the entire compression workflow even if you disconnect from the internet. The file never traverses a network boundary. It is read locally, processed locally in volatile memory, and saved locally to your hard drive. This architecture natively complies with strict data protection regulations, including the GDPR (General Data Protection Regulation) and HIPAA (Health Insurance Portability and Accountability Act), simply by ensuring the data never leaves the user's direct physical custody.</p>
 
-                    <h3>How It Works Under the Hood</h3>
-                    <p>
-                        The technical magic behind our Compress PDF tool relies on modern web technologies and client-side processing. When you load your files into the designated area, the tool utilizes advanced JavaScript and WebAssembly to interact securely with your device's memory. 
-                        <br><br>
-                        First, the data is parsed and analyzed locally. The tool intelligently applies the necessary transformations to achieve the reduce file size without sacrificing quality. Next, a virtual rendering takes place within your browser's memory, applying all settings precisely.
-                        <br><br>
-                        Finally, the completed file is serialized and saved directly to your disk. Because this entire workflow happens locally, it is incredibly fast and avoids the latency associated with uploading and downloading files over an internet connection. This architecture also ensures robust performance, even when dealing with larger tasks.
-                    </p>
+                    <h2>Optimizing Your PDF Workflow</h2>
+                    <p>Compression is often just one step in document preparation. To maximize efficiency, we recommend evaluating the structure of your PDF before applying aggressive compression strategies.</p>
+                    <p>If a document contains a mix of high-resolution images and critical vector text, applying full-page rasterization (Image Mode) might degrade the text unnecessarily. Instead, consider using the <a href="splitpdf.html">Split PDF</a> tool to isolate the image-heavy pages from the text-heavy pages. You can then apply aggressive compression solely to the image pages, leaving the text pages pristine, before using the <a href="mergepdf.html">Merge PDFs</a> tool to combine them back into a single, optimized file.</p>
+                    <p>Additionally, if the compressed document is intended for external distribution, consider applying security restrictions. The <a href="pdfencrypt.html">Password Protect PDF</a> tool allows you to encrypt the newly compressed file using robust AES-256 encryption. You can set an open password to restrict access, or configure granular owner permissions to prevent unauthorized printing, copying, or modification of the file content.</p>
 
-                    <section style="max-width:800px;margin:2rem auto;padding:1.5rem;background:var(--surface-color);border-radius:8px;border:1px solid var(--border-color);">
-                        <h2>Advanced Features and Capabilities</h2>
-                        <p>Our tool goes beyond simple operations, offering features designed for maximum utility:</p>
-                        
-                        <h3>Intuitive Drag-and-Drop Interface</h3>
-                        <p>We've designed the user interface to be as frictionless as possible. You can simply drag your files from your desktop or file explorer and drop them directly into the browser window. The streamlined interface helps you complete the task in seconds.</p>
-                        
-                        <h3>Reliable Performance</h3>
-                        <p>By leveraging client-side resources, you benefit from reduce file size, save storage, faster uploads. This reliability is critical for maintaining productivity and ensuring that your documents look consistent and professional.</p>
-
-                        <h3>Cross-Platform Compatibility</h3>
-                        <p>Because ConvertPDF runs entirely in the web browser, it is truly cross-platform. You can use it on a Windows PC, a Mac, a Linux machine, or even on your iOS or Android mobile device. As long as you have a modern web browser, you have access to a powerful, private toolset.</p>
-                    </section>
-
-                    <h3>Why Choose Local Processing?</h3>
-                    <p>
-                        Flexibility and security are key when working with digital media. Our platform ensures that:
-                        <br><br>
-                        <strong>Speed:</strong> Processing happens instantly without waiting for queue times or network transfers.
-                        <br><br>
-                        <strong>Privacy:</strong> No third-party servers ever touch your files.
-                        <br><br>
-                        <strong>Accessibility:</strong> No registration, login, or subscription fees are required to access full functionality.
-                        <br><br>
-                        <strong>Quality:</strong> Strict algorithms maintain the highest fidelity possible during compressing pdf files.
-                    </p>
-
-                    <h3>Frequently Asked Questions</h3>
-                    <h4>Is the Compress PDF tool suitable for professional and business use?</h4>
-                    <p>
-                        Absolutely. The tool is engineered for professional workflows where data security, output consistency, and speed are critical. While specialized desktop software may have a place for highly complex manipulation, our browser-based tool is incredibly efficient for everyday tasks, repeatable document preparation, and secure file handling.
-                    </p>
-
-                    <h4>Can I process large files?</h4>
-                    <p>
-                        Yes, because the processing is handled by your device's hardware, performance scales with your system's capabilities. For optimal results, especially on older devices or mobile phones, we recommend ensuring your browser has sufficient memory available for smooth, crash-free processing.
-                    </p>
-
-                    <h4>What should I do after finishing this task?</h4>
-                    <p>
-                        Once your output is generated and downloaded, you might want to further enhance or secure the document. ConvertPDF offers a suite of related tools designed to complement each other. This interconnected ecosystem allows you to manage your documents from end to end securely and privately.
-                    </p>
-                    
-                    <h3>Conclusion</h3>
-                    <p>
-                        Dealing with compress pdf tasks doesn't have to involve expensive software subscriptions, intrusive ads, or compromising your privacy by uploading files to unknown servers. With ConvertPDF's client-side processing, you have a powerful, secure, and incredibly fast tool at your fingertips. By leveraging the processing power of your own device, we ensure that your documents remain strictly yours, while delivering professional-grade results every time. Try our tool today and experience a modern, privacy-first approach to document management.
-                    </p>
+                    <h2>Frequently Asked Questions</h2>
+                    <details>
+                        <summary>Why did my file size increase after compression?</summary>
+                        <p>This counterintuitive result occasionally occurs with PDFs that are already highly optimized or consist primarily of simple vector text. If you process a 50KB vector text document through Image Mode, the engine must render that text into thousands of pixels, which often requires more data than the original vector instructions. If your file size increases, revert to Safe Mode, which simply cleans the document structure without rasterizing content.</p>
+                    </details>
+                    <details>
+                        <summary>Can I compress a PDF that is password protected?</summary>
+                        <p>Yes, provided you know the password. When you load an encrypted PDF, the tool will prompt you to enter the open password. Because processing is handled locally, entering your password here is secure; it is used solely to decrypt the file in your browser's memory so the compression engine can access the page data.</p>
+                    </details>
+                    <details>
+                        <summary>Does compression affect the physical dimensions of the document?</summary>
+                        <p>No. The compression engine recalculates the internal mapping of the PDF coordinates to ensure the final output retains the exact physical dimensions (e.g., A4, US Letter) of the original file. A 150 DPI render will stretch to fit the original document canvas precisely.</p>
+                    </details>
+                    <details>
+                        <summary>Is there a maximum file size limit for compression?</summary>
+                        <p>ConvertPDF imposes no hard limits on file size. However, because the entire file must be read into your browser's memory (RAM), attempting to compress gigabyte-sized PDFs on a device with limited memory (such as an older mobile phone) may cause the browser tab to crash. For exceptionally large files, processing on a desktop computer with adequate RAM is recommended.</p>
+                    </details>
                 </div>
             </div>
         </div>
