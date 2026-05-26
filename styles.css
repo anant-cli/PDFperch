@@ -2385,3 +2385,182 @@ canvas[aria-label] {
         padding: 0.75rem 1rem;
     }
 }
+
+/* ===========================================
+   TOOL UX POLISH (reset, organize editor)
+=========================================== */
+.tool-reset-row,
+.tool-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0.75rem 0 1.25rem;
+}
+
+.tool-clear-btn {
+    min-width: 112px;
+}
+
+.organize-controls {
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    background: var(--bg-input);
+}
+
+.organize-zoom,
+.organize-actions,
+.page-thumb-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.organize-zoom label,
+.organize-zoom span {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+
+.organize-zoom input[type="range"] {
+    width: 120px;
+    max-width: 40vw;
+}
+
+.organize-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(124px, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-thumb {
+    position: relative;
+    display: flex;
+    min-height: 190px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.55rem;
+    padding: 0.65rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-md);
+    background: var(--bg-card);
+    cursor: grab;
+    text-align: center;
+    user-select: none;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.page-thumb:active {
+    cursor: grabbing;
+}
+
+.page-thumb.dragging {
+    opacity: 0.55;
+}
+
+.page-thumb.drag-over {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(79, 158, 255, 0.18);
+}
+
+.page-drag-handle {
+    align-self: center;
+    min-height: 24px;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--r-full);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+.page-preview-frame {
+    display: flex;
+    min-height: 84px;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.page-preview-frame canvas {
+    max-height: 112px;
+    background: #fff;
+    border-radius: var(--r-sm);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease;
+}
+
+.page-thumb-label {
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.page-action-btn {
+    height: 28px;
+    min-width: 0;
+    padding: 0 0.55rem;
+    border-radius: var(--r-sm);
+    font-size: 0.75rem;
+}
+
+.danger,
+.danger-soft {
+    color: #fecaca !important;
+    border-color: rgba(248, 113, 113, 0.3) !important;
+}
+
+.danger {
+    background: rgba(239, 68, 68, 0.9) !important;
+    color: #fff !important;
+}
+
+.danger-soft {
+    background: rgba(248, 113, 113, 0.08) !important;
+}
+
+@media (max-width: 600px) {
+    .tool-panel,
+    .content-section,
+    .premium-card {
+        border-radius: var(--r-md);
+    }
+
+    .tool-reset-row,
+    .tool-action-row,
+    .organize-actions {
+        align-items: stretch;
+    }
+
+    .tool-reset-row > *,
+    .tool-action-row > *,
+    .organize-actions > * {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+
+    .organize-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .page-thumb {
+        min-height: 204px;
+    }
+
+    .page-drag-handle {
+        width: 100%;
+    }
+}

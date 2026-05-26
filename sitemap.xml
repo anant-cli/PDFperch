@@ -56,6 +56,12 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://convertpdf.pages.dev/pages/pptx2pdf.html</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
     <loc>https://convertpdf.pages.dev/pages/img2pdf.html</loc>
     <lastmod>2026-05-21</lastmod>
     <changefreq>monthly</changefreq>

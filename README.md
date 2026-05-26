@@ -15,6 +15,7 @@ ConvertPDF includes a range of tools for everyday document workflows:
 | **Markdown to PDF** | Convert Markdown into formatted PDF with math support and syntax highlighting. |
 | **DOCX to PDF** | Convert Microsoft Word documents to PDF in the browser. |
 | **PDF to Word** | Extract selectable PDF text into an editable DOCX file. |
+| **PPTX to PDF** | Convert PowerPoint slides into PDF pages or handouts. |
 | **Images to PDF** | Combine JPG or PNG images into a single PDF file. |
 | **PDF Password Protect** | Add password protection and permission restrictions to PDFs. |
 | **Merge PDFs** | Combine multiple PDF files into one document. |

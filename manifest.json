@@ -1,5 +1,5 @@
 {
-    "name": "ConvertPDF – Free Private PDF Tools",
+    "name": "ConvertPDF - Free Private PDF Tools",
     "short_name": "ConvertPDF",
     "description": "Free, private, client-side PDF and document tools. No uploads, no account required. Works entirely in your browser.",
     "lang": "en",
@@ -11,24 +11,25 @@
     "theme_color": "#4f9eff",
     "categories": ["utilities", "productivity"],
     "icons": [
-        { "src": "/favicon.png",  "sizes": "32x32",     "type": "image/png" },
-        { "src": "/icon-192.png", "sizes": "192x192",   "type": "image/png", "purpose": "any" },
-        { "src": "/icon-512.png", "sizes": "512x512",   "type": "image/png", "purpose": "any" },
-        { "src": "/icon-512.png", "sizes": "512x512",   "type": "image/png", "purpose": "maskable" }
+        { "src": "/favicon.png", "sizes": "32x32", "type": "image/png" },
+        { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
     ],
     "screenshots": [
         {
             "src": "/og-image.png",
             "sizes": "1200x630",
             "type": "image/png",
-            "label": "ConvertPDF home screen – 16 free PDF tools in your browser"
+            "label": "ConvertPDF home screen - 21 free PDF tools in your browser"
         }
     ],
     "shortcuts": [
-        { "name": "Merge PDFs",   "url": "/pages/mergepdf.html",  "description": "Combine multiple PDFs into one" },
-        { "name": "DOCX → PDF",   "url": "/pages/docx2pdf.html",  "description": "Convert Word documents to PDF" },
-        { "name": "Compress PDF", "url": "/pages/compresspdf.html","description": "Reduce PDF file size" },
-        { "name": "Sign PDF",     "url": "/pages/signpdf.html",   "description": "Add digital signatures to PDF" }
+        { "name": "Merge PDFs", "url": "/pages/mergepdf.html", "description": "Combine multiple PDFs into one" },
+        { "name": "PPTX to PDF", "url": "/pages/pptx2pdf.html", "description": "Convert PowerPoint slides to PDF" },
+        { "name": "DOCX to PDF", "url": "/pages/docx2pdf.html", "description": "Convert Word documents to PDF" },
+        { "name": "Compress PDF", "url": "/pages/compresspdf.html", "description": "Reduce PDF file size" },
+        { "name": "Sign PDF", "url": "/pages/signpdf.html", "description": "Add digital signatures to PDF" }
     ],
     "prefer_related_applications": false
 }

@@ -1,7 +1,7 @@
 /**
  * ConvertPDF Service Worker
  */
-const CACHE_NAME = 'convertpdf-v12';
+const CACHE_NAME = 'convertpdf-v13';
 
 const STATIC_ASSETS = [
     '/',
@@ -20,6 +20,7 @@ const STATIC_ASSETS = [
     '/pages/compresspdf.html',
     '/pages/docx2pdf.html',
     '/pages/pdf2word.html',
+    '/pages/pptx2pdf.html',
     '/pages/img2pdf.html',
     '/pages/img2png.html',
     '/pages/md2pdf.html',
@@ -40,6 +41,7 @@ const STATIC_ASSETS = [
     '/tools/compresspdf.js',
     '/tools/docx2pdf.js',
     '/tools/pdf2word.js',
+    '/tools/pptx2pdf.js',
     '/tools/img2pdf.js',
     '/tools/img2png.js',
     '/tools/md2pdf.js',
@@ -97,7 +99,7 @@ self.addEventListener('activate', event => {
 
 // Fetch: stale-while-revalidate for assets, network-first for navigation.
 function isCDNRequest(url) {
-    return url.includes('cdn.jsdelivr.net') || url.includes('cdnjs.cloudflare.com') || url.includes('unpkg.com');
+    return url.includes('cdn.jsdelivr.net') || url.includes('cdnjs.cloudflare.com') || url.includes('esm.sh') || url.includes('unpkg.com');
 }
 
 self.addEventListener('fetch', event => {

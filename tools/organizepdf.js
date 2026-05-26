@@ -1,9 +1,9 @@
-// organizepdf.js — PDF Page Organizer (Drag-to-reorder, rotate, delete, touch & zoom optimized)
+// organizepdf.js - PDF Page Organizer
 async function renderorganizepdf(container) {
     try {
-        const PDFJS_URL    = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
         const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const PDFLIB_URL   = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+        const PDFLIB_URL = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
 
         await Promise.all([loadScript(PDFJS_URL), loadScript(PDFLIB_URL)]);
         pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
@@ -17,10 +17,10 @@ async function renderorganizepdf(container) {
         updatePageTitle('Organize PDF Pages');
 
         area.innerHTML = `
-        <h3>🗂️ Organize PDF</h3>
+        <h3>Organize PDF</h3>
         <p class="tool-description">
-            Reorder, rotate, and delete individual pages in a PDF using a visual drag-and-drop interface.
-            Touchscreen-enabled with explicit arrows for mobile compatibility. Works completely in your browser.
+            Reorder, rotate, and delete individual pages in a PDF using a visual editor.
+            Use drag and drop, the visible move buttons, or the keyboard. Everything runs in your browser.
         </p>
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>
@@ -30,411 +30,466 @@ async function renderorganizepdf(container) {
             </details>
             <details>
                 <summary>How do I reorder pages on mobile?</summary>
-                <p>Use the left (←) and right (→) buttons below each thumbnail card to reorder pages seamlessly on mobile screens.</p>
+                <p>Use the Left and Right buttons below each page thumbnail.</p>
             </details>
         </div>
 
-        <div id="orgDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
-            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📄🔀</div>
+        <div id="orgDropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload PDF file">
+            <div aria-hidden="true" style="font-size: 2.5rem; margin-bottom: 0.5rem;">PDF</div>
             <p>Drag and drop a PDF file here</p>
             <p class="note">or click to browse files</p>
-            <input type="file" id="orgPdfInput" accept=".pdf" style="display: none;">
+            <input type="file" id="orgPdfInput" accept=".pdf,application/pdf" aria-label="PDF file" style="display: none;">
         </div>
 
-        <div id="orgStatus" style="display:none; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;"></div>
+        <div id="orgStatus" role="status" aria-live="polite" style="display:none; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.75rem;"></div>
+        <p id="orgKeyboardHelp" class="sr-only">
+            In the page grid, use Left and Right arrows to reorder the focused page, R to rotate it, Delete to remove it, and Control Z to undo.
+        </p>
 
-        <div id="orgProgressContainer" style="display:none; width:100%; background: var(--bg-input); border-radius: 4px; margin-bottom: 1rem; border:1px solid var(--border-subtle);">
-            <div id="orgProgressBar" style="width:0%; height:6px; background: var(--accent); border-radius:4px; transition: width 0.2s;"></div>
+        <div id="orgProgressContainer" class="progress-bar-bg" style="display:none; margin-bottom: 1rem;">
+            <div id="orgProgressBar" class="progress-bar-fill" style="width:0%;"></div>
         </div>
 
-        <!-- ORG CONTROL BAR -->
-        <div id="orgControls" style="display:none; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem; margin-bottom:1.25rem; padding:0.75rem 1rem; border:1px solid var(--border-subtle); border-radius:var(--r-md); background:var(--bg-input);">
-            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:var(--text-secondary);">
-                <span>🔍 Thumbnail Size:</span>
-                <input type="range" id="orgZoomSlider" min="90" max="180" value="120" style="width:100px; cursor:pointer;">
-                <span id="orgZoomValue">120px</span>
+        <div id="orgControls" class="organize-controls" style="display:none;">
+            <div class="organize-zoom">
+                <label for="orgZoomSlider">Thumbnail size</label>
+                <input type="range" id="orgZoomSlider" min="96" max="180" value="124">
+                <span id="orgZoomValue">124px</span>
             </div>
-            <div style="display:flex; gap:0.5rem;">
-                <button id="orgRotateAllBtn" class="secondary" style="font-size:0.75rem; padding:0.4rem 0.8rem; min-width:unset; height:auto; border-radius:var(--r-sm);">↻ Rotate All</button>
-                <button id="orgDeleteAllBtn" class="secondary" style="font-size:0.75rem; padding:0.4rem 0.8rem; min-width:unset; height:auto; border-radius:var(--r-sm); color:#f87171; border-color:rgba(248,113,113,0.25);">🗑️ Delete All</button>
+            <div class="organize-actions">
+                <button id="orgUndoBtn" class="secondary" type="button" disabled>Undo</button>
+                <button id="orgRotateAllBtn" class="secondary" type="button">Rotate All</button>
+                <button id="orgDeleteAllBtn" class="secondary danger-soft" type="button">Delete All</button>
             </div>
         </div>
 
-        <div id="orgThumbGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-bottom: 1.5rem;"></div>
+        <div id="orgThumbGrid" class="organize-grid" role="list" aria-describedby="orgKeyboardHelp"></div>
 
-        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-            <button id="orgSaveBtn" class="primary" disabled>💾 Save Organised PDF</button>
-            <button id="orgResetBtn" class="secondary" disabled>↺ Reset</button>
-            <button id="orgReloadBtn" class="download-btn" style="display:none; min-width:unset; padding:0 1.25rem;">↺ Load New File</button>
+        <div class="tool-action-row">
+            <button id="orgSaveBtn" class="primary" type="button" disabled>Save Organised PDF</button>
+            <button id="orgResetBtn" class="secondary" type="button" disabled>Reset</button>
+            <button id="orgReloadBtn" class="download-btn" type="button" style="display:none;">Load New File</button>
         </div>
         `;
 
-        // ── DOM refs ──────────────────────────────────────────────────────────
-        const dropZone   = document.getElementById('orgDropZone');
-        const inp        = document.getElementById('orgPdfInput');
-        const statusDiv  = document.getElementById('orgStatus');
-        const progCon    = document.getElementById('orgProgressContainer');
-        const progBar    = document.getElementById('orgProgressBar');
-        const thumbGrid  = document.getElementById('orgThumbGrid');
-        const saveBtn    = document.getElementById('orgSaveBtn');
-        const resetBtn   = document.getElementById('orgResetBtn');
-        const reloadBtn  = document.getElementById('orgReloadBtn');
-        const orgControls = document.getElementById('orgControls');
+        const dropZone = document.getElementById('orgDropZone');
+        const input = document.getElementById('orgPdfInput');
+        const statusDiv = document.getElementById('orgStatus');
+        const progressWrap = document.getElementById('orgProgressContainer');
+        const progressBar = document.getElementById('orgProgressBar');
+        const thumbGrid = document.getElementById('orgThumbGrid');
+        const saveBtn = document.getElementById('orgSaveBtn');
+        const resetBtn = document.getElementById('orgResetBtn');
+        const reloadBtn = document.getElementById('orgReloadBtn');
+        const controls = document.getElementById('orgControls');
         const zoomSlider = document.getElementById('orgZoomSlider');
-        const zoomValue  = document.getElementById('orgZoomValue');
-        const rotAllBtn  = document.getElementById('orgRotateAllBtn');
-        const delAllBtn  = document.getElementById('orgDeleteAllBtn');
+        const zoomValue = document.getElementById('orgZoomValue');
+        const undoBtn = document.getElementById('orgUndoBtn');
+        const rotateAllBtn = document.getElementById('orgRotateAllBtn');
+        const deleteAllBtn = document.getElementById('orgDeleteAllBtn');
 
-        // State
-        let pages = [];               // [{ pageIndex, rotation }]
+        let pages = [];
+        let originalPages = [];
         let originalBuffer = null;
-        let originalName   = '';
-        let pdfjsDoc       = null;
+        let originalName = '';
+        let pdfjsDoc = null;
+        let draggedIndex = null;
+        let undoStack = [];
+        const MAX_UNDO = 25;
 
-        // ── Controls Setup ───────────────────────────────────────────────────
-        zoomSlider.addEventListener('input', (e) => {
-            const val = e.target.value;
-            zoomValue.textContent = val + 'px';
-            thumbGrid.style.gridTemplateColumns = `repeat(auto-fill, minmax(${val}px, 1fr))`;
+        function snapshotPages() {
+            return pages.map(page => ({ pageIndex: page.pageIndex, rotation: page.rotation }));
+        }
+
+        function pushUndo() {
+            undoStack.push(snapshotPages());
+            if (undoStack.length > MAX_UNDO) undoStack.shift();
+            updateUndoButton();
+        }
+
+        function updateUndoButton() {
+            undoBtn.disabled = undoStack.length === 0;
+        }
+
+        async function undoLastChange() {
+            const previous = undoStack.pop();
+            if (!previous) return;
+            pages = previous.map(page => ({ ...page }));
+            updateUndoButton();
+            await renderAllThumbnails();
+            if (window.showToast) showToast('Last change undone.', 'info');
+        }
+
+        function setProgress(value) {
+            const percent = Math.max(0, Math.min(100, Math.round(value)));
+            progressBar.style.width = `${percent}%`;
+            progressBar.setAttribute('aria-valuenow', String(percent));
+        }
+
+        function setLoadedState(isLoaded) {
+            dropZone.style.display = isLoaded ? 'none' : 'block';
+            controls.style.display = isLoaded ? 'flex' : 'none';
+            reloadBtn.style.display = isLoaded ? 'inline-flex' : 'none';
+            resetBtn.disabled = !isLoaded;
+            saveBtn.disabled = !isLoaded || pages.length === 0;
+        }
+
+        function clearState() {
+            pages = [];
+            originalPages = [];
+            originalBuffer = null;
+            originalName = '';
+            pdfjsDoc = null;
+            draggedIndex = null;
+            undoStack = [];
+            input.value = '';
+            thumbGrid.innerHTML = '';
+            statusDiv.style.display = 'none';
+            progressWrap.style.display = 'none';
+            setProgress(0);
+            updateUndoButton();
+            setLoadedState(false);
+            if (window.resetDropZone) resetDropZone('orgDropZone', 'Drag and drop a PDF file here');
+        }
+
+        function syncAfterChange(message) {
+            saveBtn.disabled = pages.length === 0;
+            statusDiv.textContent = message || `${pages.length} page${pages.length !== 1 ? 's' : ''} ready`;
+            statusDiv.style.display = 'block';
+            updateUndoButton();
+        }
+
+        zoomSlider.addEventListener('input', () => {
+            const value = zoomSlider.value;
+            zoomValue.textContent = `${value}px`;
+            thumbGrid.style.gridTemplateColumns = `repeat(auto-fill, minmax(${value}px, 1fr))`;
         });
 
-        rotAllBtn.addEventListener('click', () => {
-            pages.forEach(p => p.rotation = (p.rotation + 90) % 360);
-            renderAllThumbnails();
-        });
-
-        delAllBtn.addEventListener('click', () => {
-            if (confirm('🗑️ Are you sure you want to remove all pages?')) {
-                pages = [];
-                renderAllThumbnails();
+        dropZone.addEventListener('click', () => input.click());
+        dropZone.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                input.click();
             }
         });
 
-        // ── Drop zone ─────────────────────────────────────────────────────────
-        dropZone.addEventListener('click', () => inp.click());
         if (typeof setupDropZone === 'function') {
             setupDropZone('orgDropZone', 'orgPdfInput');
         }
 
-        inp.addEventListener('change', () => {
-            if (inp.files[0]) handleFile(inp.files[0]);
+        input.addEventListener('change', () => {
+            if (input.files && input.files[0]) handleFile(input.files[0]);
         });
 
-        reloadBtn.addEventListener('click', () => {
-            pages = []; originalBuffer = null; pdfjsDoc = null; originalName = '';
-            thumbGrid.innerHTML = '';
-            saveBtn.disabled = true;
-            reloadBtn.style.display = 'none';
-            statusDiv.style.display = 'none';
-            orgControls.style.display = 'none';
-            dropZone.style.display = 'block';
+        reloadBtn.addEventListener('click', clearState);
+
+        resetBtn.addEventListener('click', async () => {
+            if (!originalPages.length) return;
+            pushUndo();
+            pages = originalPages.map(page => ({ ...page }));
+            await renderAllThumbnails();
+            if (window.showToast) showToast('Page order reset.', 'info');
         });
 
-        // ── File load ─────────────────────────────────────────────────────────
+        undoBtn.addEventListener('click', undoLastChange);
+
+        rotateAllBtn.addEventListener('click', async () => {
+            if (pages.length === 0) return;
+            pushUndo();
+            pages.forEach(page => {
+                page.rotation = (page.rotation + 90) % 360;
+            });
+            await renderAllThumbnails();
+        });
+
+        deleteAllBtn.addEventListener('click', async () => {
+            if (pages.length === 0) return;
+            if (!confirm('Remove all pages from the working copy?')) return;
+            pushUndo();
+            pages = [];
+            await renderAllThumbnails();
+            if (window.showToast) showToast('All pages removed.', 'warning');
+        });
+
         async function handleFile(file) {
-            if (!file || !file.name.toLowerCase().endsWith('.pdf')) {
-                if (window.showToast) showToast('Please select a .pdf file.', 'error');
+            const validation = typeof validateFile === 'function'
+                ? validateFile(file, { extensions: ['.pdf'], mimeTypes: ['application/pdf'], label: 'PDF' })
+                : { valid: file && /\.pdf$/i.test(file.name) };
+
+            if (!validation.valid) {
+                if (window.showToast) showToast(validation.message || 'Please select a valid PDF.', 'error');
+                input.value = '';
                 return;
             }
 
-            if (typeof validateFile === 'function') {
-                if (!validateFile(file).valid) return;
-            }
-
+            clearState();
             originalName = file.name;
             if (window.showFileOnDropZone) showFileOnDropZone('orgDropZone', file);
-            dropZone.style.display = 'none';
 
             try {
-                if (window.showSpinner) showSpinner('Reading PDF…');
-                originalBuffer = await file.arrayBuffer();
-                const pdfData  = new Uint8Array(originalBuffer);
-                pdfjsDoc       = await pdfjsLib.getDocument({ data: pdfData }).promise;
-
-                const total = pdfjsDoc.numPages;
-                if (total > 50) {
-                    if (window.showToast) showToast('Large document — generating thumbnails…', 'warning');
-                }
-
-                pages = Array.from({ length: total }, (_, i) => ({ pageIndex: i, rotation: 0 }));
-                const originalPages = pages.map(p => ({ ...p })); // snapshot for reset
-
-                statusDiv.textContent = `Loaded: ${file.name} · ${total} pages`;
+                if (window.showSpinner) showSpinner('Reading PDF...');
+                statusDiv.textContent = 'Reading PDF...';
                 statusDiv.style.display = 'block';
-                orgControls.style.display = 'flex';
-                reloadBtn.style.display = 'inline-block';
-                saveBtn.disabled = false;
-                resetBtn.disabled = false;
 
-                resetBtn.onclick = async () => {
-                    pages = originalPages.map(p => ({ ...p }));
-                    await renderAllThumbnails();
-                    if (window.showToast) showToast('Page order reset.');
-                };
+                originalBuffer = await file.arrayBuffer();
+                const pdfData = new Uint8Array(originalBuffer);
+                pdfjsDoc = await pdfjsLib.getDocument({ data: pdfData }).promise;
 
-                if (window.hideSpinner) hideSpinner();
+                pages = Array.from({ length: pdfjsDoc.numPages }, (_, index) => ({ pageIndex: index, rotation: 0 }));
+                originalPages = snapshotPages();
+                undoStack = [];
+                updateUndoButton();
+                setLoadedState(true);
+
                 await renderAllThumbnails();
-
-            } catch (e) {
+            } catch (error) {
+                console.error(error);
+                clearState();
+                if (window.showToast) showToast('Failed to load PDF: ' + error.message, 'error');
+            } finally {
                 if (window.hideSpinner) hideSpinner();
-                if (window.showToast) showToast('Failed to load PDF: ' + e.message, 'error');
-                console.error(e);
-                dropZone.style.display = 'block';
             }
         }
 
-        // ── Render thumbnails ─────────────────────────────────────────────────
         async function renderAllThumbnails() {
             thumbGrid.innerHTML = '';
-            progCon.style.display = 'block';
-            progBar.style.width = '0%';
+            setLoadedState(Boolean(pdfjsDoc));
+            progressWrap.style.display = pages.length > 0 ? 'block' : 'none';
+            setProgress(0);
 
-            const total = pages.length;
-            for (let i = 0; i < total; i++) {
-                progBar.style.width = `${Math.round(((i + 1) / total) * 100)}%`;
-                statusDiv.textContent = `Rendering page thumbnail ${i + 1} of ${total}…`;
-                await renderThumbCard(i);
-                // Yield thread to keep UI fluid and responsive
-                if (i % 5 === 0) await yieldToMainThread();
+            for (let index = 0; index < pages.length; index++) {
+                setProgress(((index + 1) / pages.length) * 100);
+                statusDiv.textContent = `Rendering thumbnail ${index + 1} of ${pages.length}...`;
+                statusDiv.style.display = 'block';
+                await renderThumbCard(index);
+                if (index % 4 === 0 && window.yieldToMainThread) await yieldToMainThread();
             }
 
-            progCon.style.display = 'none';
-            progBar.style.width = '0%';
-            statusDiv.textContent = `${total} page${total !== 1 ? 's' : ''} — drag or use arrows to reorder`;
-            saveBtn.disabled = (pages.length === 0);
+            progressWrap.style.display = 'none';
+            setProgress(0);
+            syncAfterChange(`${pages.length} page${pages.length !== 1 ? 's' : ''} - drag, use buttons, or use keyboard arrows to reorder`);
             attachDragHandlers();
+            if (window.ensureCanvasAccessibility) window.ensureCanvasAccessibility(thumbGrid);
         }
 
-        async function renderThumbCard(gridIdx) {
-            const entry    = pages[gridIdx];
-            const pdfPage  = await pdfjsDoc.getPage(entry.pageIndex + 1);
+        async function renderThumbCard(gridIndex) {
+            const entry = pages[gridIndex];
+            const pdfPage = await pdfjsDoc.getPage(entry.pageIndex + 1);
             const viewport = pdfPage.getViewport({ scale: 0.25 });
 
-            const canvas   = document.createElement('canvas');
-            canvas.width   = Math.round(viewport.width);
-            canvas.height  = Math.round(viewport.height);
-            const ctx      = canvas.getContext('2d');
-            ctx.fillStyle  = '#ffffff';
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(viewport.width);
+            canvas.height = Math.round(viewport.height);
+            canvas.setAttribute('role', 'img');
+            canvas.setAttribute('aria-label', `Page ${entry.pageIndex + 1} preview`);
+
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             await pdfPage.render({ canvasContext: ctx, viewport }).promise;
-
-            // Apply rotation via CSS
             canvas.style.transform = `rotate(${entry.rotation}deg)`;
-            canvas.style.transition = 'transform 0.3s ease';
 
             const card = document.createElement('div');
             card.className = 'page-thumb';
-            card.dataset.gridIndex = String(gridIdx);
+            card.dataset.gridIndex = String(gridIndex);
+            card.dataset.pageNumber = String(entry.pageIndex + 1);
             card.draggable = true;
-            card.style.cssText = `
-                position: relative;
-                background: var(--bg-card);
-                border-radius: var(--r-md);
-                padding: 10px;
-                text-align: center;
-                border: 1px solid var(--border-subtle);
-                cursor: grab;
-                transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-                user-select: none;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                gap: 6px;
-            `;
+            card.tabIndex = 0;
+            card.setAttribute('role', 'listitem');
+            card.setAttribute('aria-label', `Page ${entry.pageIndex + 1}. Position ${gridIndex + 1} of ${pages.length}. Use arrow keys to reorder, R to rotate, Delete to remove.`);
 
-            const overflow = document.createElement('div');
-            overflow.style.cssText = 'overflow:hidden; display:flex; align-items:center; justify-content:center; min-height:80px; flex: 1;';
-            overflow.appendChild(canvas);
+            const handle = document.createElement('div');
+            handle.className = 'page-drag-handle';
+            handle.textContent = 'Drag';
+            handle.setAttribute('aria-hidden', 'true');
+
+            const preview = document.createElement('div');
+            preview.className = 'page-preview-frame';
+            preview.appendChild(canvas);
 
             const label = document.createElement('div');
+            label.className = 'page-thumb-label';
             label.textContent = `Page ${entry.pageIndex + 1}`;
-            label.style.cssText = 'font-size:0.75rem; font-weight:600; color: var(--text-secondary);';
 
-            const btnRow = document.createElement('div');
-            btnRow.style.cssText = 'display:flex; justify-content:center; gap:4px; flex-wrap:wrap;';
+            const actions = document.createElement('div');
+            actions.className = 'page-thumb-actions';
 
-            // Rotate button
-            const rotBtn = document.createElement('button');
-            rotBtn.className = 'secondary';
-            rotBtn.title = 'Rotate 90°';
-            rotBtn.textContent = '↻';
-            rotBtn.style.cssText = 'font-size:0.8rem; padding:2px 6px; min-width:unset; height:24px; border-radius:4px; cursor:pointer;';
-            rotBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const idx = parseInt(card.dataset.gridIndex);
-                pages[idx].rotation = (pages[idx].rotation + 90) % 360;
-                canvas.style.transform = `rotate(${pages[idx].rotation}deg)`;
-            });
+            const leftBtn = makeThumbButton('Left', `Move page ${entry.pageIndex + 1} left`, () => movePage(gridIndex, gridIndex - 1));
+            const rotateBtn = makeThumbButton('Rotate', `Rotate page ${entry.pageIndex + 1}`, () => rotatePage(gridIndex));
+            const rightBtn = makeThumbButton('Right', `Move page ${entry.pageIndex + 1} right`, () => movePage(gridIndex, gridIndex + 1));
+            const removeBtn = makeThumbButton('Remove', `Remove page ${entry.pageIndex + 1}`, () => removePage(gridIndex), 'danger');
 
-            // Move Left Button (Mobile reorder)
-            const leftBtn = document.createElement('button');
-            leftBtn.className = 'secondary';
-            leftBtn.title = 'Move Left';
-            leftBtn.textContent = '←';
-            leftBtn.style.cssText = 'font-size:0.8rem; padding:2px 6px; min-width:unset; height:24px; border-radius:4px; cursor:pointer;';
-            if (gridIdx === 0) leftBtn.style.visibility = 'hidden';
-            leftBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const idx = parseInt(card.dataset.gridIndex);
-                if (idx > 0) {
-                    [pages[idx - 1], pages[idx]] = [pages[idx], pages[idx - 1]];
-                    renderAllThumbnails();
-                }
-            });
+            leftBtn.disabled = gridIndex === 0;
+            rightBtn.disabled = gridIndex === pages.length - 1;
 
-            // Move Right Button (Mobile reorder)
-            const rightBtn = document.createElement('button');
-            rightBtn.className = 'secondary';
-            rightBtn.title = 'Move Right';
-            rightBtn.textContent = '→';
-            rightBtn.style.cssText = 'font-size:0.8rem; padding:2px 6px; min-width:unset; height:24px; border-radius:4px; cursor:pointer;';
-            if (gridIdx === pages.length - 1) rightBtn.style.visibility = 'hidden';
-            rightBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const idx = parseInt(card.dataset.gridIndex);
-                if (idx < pages.length - 1) {
-                    [pages[idx], pages[idx + 1]] = [pages[idx + 1], pages[idx]];
-                    renderAllThumbnails();
-                }
-            });
+            actions.append(leftBtn, rotateBtn, rightBtn, removeBtn);
+            card.append(handle, preview, label, actions);
 
-            // Delete Button
-            const delBtn = document.createElement('button');
-            delBtn.className = 'secondary';
-            delBtn.title = 'Remove page';
-            delBtn.textContent = '✕';
-            delBtn.style.cssText = 'font-size:0.8rem; padding:2px 6px; min-width:unset; height:24px; background:#ef4444; color:#fff; border:none; border-radius:4px; cursor:pointer;';
-            delBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const idx = parseInt(card.dataset.gridIndex);
-                pages.splice(idx, 1);
-                card.remove();
-                
-                // Re-index remaining cards
-                [...thumbGrid.querySelectorAll('.page-thumb')].forEach((c, i) => {
-                    c.dataset.gridIndex = String(i);
-                });
-                saveBtn.disabled = (pages.length === 0);
-                if (pages.length === 0 && window.showToast) {
-                    showToast('All pages removed.', 'warning');
-                }
-                renderAllThumbnails();
-            });
-
-            btnRow.appendChild(leftBtn);
-            btnRow.appendChild(rotBtn);
-            btnRow.appendChild(rightBtn);
-            btnRow.appendChild(delBtn);
-
-            card.appendChild(overflow);
-            card.appendChild(label);
-            card.appendChild(btnRow);
+            card.addEventListener('keydown', event => handleCardKeydown(event, gridIndex));
             thumbGrid.appendChild(card);
         }
 
-        // ── Drag-and-drop reorder ─────────────────────────────────────────────
-        let draggedGridIdx = null;
+        function makeThumbButton(text, label, onClick, variant) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = variant === 'danger' ? 'secondary danger page-action-btn' : 'secondary page-action-btn';
+            button.textContent = text;
+            button.setAttribute('aria-label', label);
+            button.addEventListener('click', event => {
+                event.stopPropagation();
+                onClick();
+            });
+            return button;
+        }
+
+        async function handleCardKeydown(event, index) {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
+                event.preventDefault();
+                await undoLastChange();
+                return;
+            }
+            if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                await movePage(index, index - 1);
+                return;
+            }
+            if (event.key === 'ArrowRight') {
+                event.preventDefault();
+                await movePage(index, index + 1);
+                return;
+            }
+            if (event.key.toLowerCase() === 'r') {
+                event.preventDefault();
+                await rotatePage(index);
+                return;
+            }
+            if (event.key === 'Delete' || event.key === 'Backspace') {
+                event.preventDefault();
+                await removePage(index);
+            }
+        }
+
+        async function movePage(from, to) {
+            if (to < 0 || to >= pages.length || from === to) return;
+            pushUndo();
+            const [moved] = pages.splice(from, 1);
+            pages.splice(to, 0, moved);
+            await renderAllThumbnails();
+            focusThumb(to);
+        }
+
+        async function rotatePage(index) {
+            if (!pages[index]) return;
+            pushUndo();
+            pages[index].rotation = (pages[index].rotation + 90) % 360;
+            await renderAllThumbnails();
+            focusThumb(index);
+        }
+
+        async function removePage(index) {
+            if (!pages[index]) return;
+            pushUndo();
+            pages.splice(index, 1);
+            await renderAllThumbnails();
+            focusThumb(Math.min(index, pages.length - 1));
+        }
+
+        function focusThumb(index) {
+            if (index < 0) return;
+            requestAnimationFrame(() => {
+                const target = thumbGrid.querySelector(`.page-thumb[data-grid-index="${index}"]`);
+                if (target) target.focus();
+            });
+        }
 
         function attachDragHandlers() {
-            thumbGrid.addEventListener('dragstart', onDragStart);
-            thumbGrid.addEventListener('dragover',  onDragOver);
-            thumbGrid.addEventListener('dragleave', onDragLeave);
-            thumbGrid.addEventListener('drop',      onDrop);
-            thumbGrid.addEventListener('dragend',   onDragEnd);
-        }
+            if (thumbGrid.dataset.dragReady === 'true') return;
+            thumbGrid.dataset.dragReady = 'true';
 
-        function onDragStart(e) {
-            const card = e.target.closest('.page-thumb');
-            if (!card) return;
-            draggedGridIdx = parseInt(card.dataset.gridIndex);
-            card.style.opacity = '0.45';
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function onDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            const card = e.target.closest('.page-thumb');
-            if (card) card.style.outline = '2px dashed var(--accent)';
-        }
-
-        function onDragLeave(e) {
-            const card = e.target.closest('.page-thumb');
-            if (card) card.style.outline = '';
-        }
-
-        function onDrop(e) {
-            e.preventDefault();
-            const targetCard = e.target.closest('.page-thumb');
-            if (!targetCard || draggedGridIdx === null) return;
-            const targetIdx = parseInt(targetCard.dataset.gridIndex);
-            targetCard.style.outline = '';
-            if (draggedGridIdx === targetIdx) return;
-
-            const [moved] = pages.splice(draggedGridIdx, 1);
-            pages.splice(targetIdx, 0, moved);
-
-            renderAllThumbnails();
-        }
-
-        function onDragEnd(e) {
-            [...thumbGrid.querySelectorAll('.page-thumb')].forEach(c => {
-                c.style.opacity = '';
-                c.style.outline = '';
+            thumbGrid.addEventListener('dragstart', event => {
+                const card = event.target.closest('.page-thumb');
+                if (!card) return;
+                draggedIndex = Number(card.dataset.gridIndex);
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', String(draggedIndex));
+                card.classList.add('dragging');
             });
-            draggedGridIdx = null;
+
+            thumbGrid.addEventListener('dragover', event => {
+                const card = event.target.closest('.page-thumb');
+                if (!card) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = 'move';
+                card.classList.add('drag-over');
+            });
+
+            thumbGrid.addEventListener('dragleave', event => {
+                const card = event.target.closest('.page-thumb');
+                if (card) card.classList.remove('drag-over');
+            });
+
+            thumbGrid.addEventListener('drop', async event => {
+                const card = event.target.closest('.page-thumb');
+                if (!card) return;
+                event.preventDefault();
+                card.classList.remove('drag-over');
+
+                const from = Number.isFinite(draggedIndex) ? draggedIndex : Number(event.dataTransfer.getData('text/plain'));
+                const to = Number(card.dataset.gridIndex);
+                draggedIndex = null;
+                await movePage(from, to);
+            });
+
+            thumbGrid.addEventListener('dragend', () => {
+                thumbGrid.querySelectorAll('.page-thumb').forEach(card => {
+                    card.classList.remove('dragging', 'drag-over');
+                });
+                draggedIndex = null;
+            });
         }
 
-        // ── Save / Export ─────────────────────────────────────────────────────
         saveBtn.addEventListener('click', async () => {
-            if (pages.length === 0) {
+            if (pages.length === 0 || !originalBuffer) {
                 if (window.showToast) showToast('Add at least one page before saving.', 'warning');
                 return;
             }
 
             saveBtn.disabled = true;
-            saveBtn.textContent = '⏳ Saving…';
-            if (window.showSpinner) showSpinner('Building organised PDF…');
+            saveBtn.textContent = 'Saving...';
+            if (window.showSpinner) showSpinner('Building organised PDF...');
 
             try {
-                const newDoc   = await PDFLib.PDFDocument.create();
-                const srcDoc   = await PDFLib.PDFDocument.load(originalBuffer);
-                const indices  = pages.map(p => p.pageIndex);
-                const copied   = await newDoc.copyPages(srcDoc, indices);
+                const newDoc = await PDFLib.PDFDocument.create();
+                const sourceDoc = await PDFLib.PDFDocument.load(originalBuffer);
+                const copiedPages = await newDoc.copyPages(sourceDoc, pages.map(page => page.pageIndex));
 
-                for (let i = 0; i < copied.length; i++) {
-                    const page = copied[i];
-                    page.setRotation(PDFLib.degrees(pages[i].rotation));
-                    newDoc.addPage(page);
-                    if (i % 5 === 0) await yieldToMainThread();
+                for (let index = 0; index < copiedPages.length; index++) {
+                    copiedPages[index].setRotation(PDFLib.degrees(pages[index].rotation));
+                    newDoc.addPage(copiedPages[index]);
+                    if (index % 6 === 0 && window.yieldToMainThread) await yieldToMainThread();
                 }
 
-                const bytes    = await newDoc.save();
-                const blob     = new Blob([bytes], { type: 'application/pdf' });
-                
-                // Track in MemoryManager
-                if (window.MemoryManager) window.MemoryManager.registerObjectUrl(URL.createObjectURL(blob));
+                const bytes = await newDoc.save();
+                const baseName = originalName.replace(/\.pdf$/i, '') || 'document';
+                downloadBlob(new Blob([bytes], { type: 'application/pdf' }), `organised-${baseName}.pdf`);
 
-                const base     = originalName.replace(/\.pdf$/i, '') || 'document';
-                downloadBlob(blob, `organised-${base}.pdf`);
-                
-                if (window.showToast) showToast(`Saved — ${pages.length} pages in output PDF`);
+                if (window.showToast) showToast(`Saved ${pages.length} page${pages.length !== 1 ? 's' : ''}.`);
                 if (window.triggerSuccessConfetti) window.triggerSuccessConfetti();
-            } catch (e) {
-                if (window.showToast) showToast('Export failed: ' + e.message, 'error');
-                console.error(e);
+            } catch (error) {
+                console.error(error);
+                if (window.showToast) showToast('Export failed: ' + error.message, 'error');
             } finally {
-                saveBtn.disabled = (pages.length === 0);
-                saveBtn.textContent = '💾 Save Organised PDF';
+                saveBtn.disabled = pages.length === 0;
+                saveBtn.textContent = 'Save Organised PDF';
                 if (window.hideSpinner) hideSpinner();
             }
         });
-
-    } catch (___err) {
-        console.error('renderorganizepdf error:', ___err);
+    } catch (error) {
+        console.error('renderorganizepdf error:', error);
         const warn = document.createElement('div');
         warn.className = 'warning';
-        warn.textContent = '⚠️ Tool failed to load: ' + ___err.message + '. Please check your internet connection and refresh.';
+        warn.setAttribute('role', 'alert');
+        warn.textContent = 'Tool failed to load: ' + error.message + '. Please check your internet connection and refresh.';
         container.replaceChildren(warn);
     }
 }

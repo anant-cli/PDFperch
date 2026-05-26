@@ -792,6 +792,88 @@ function resetDropZone(dropZoneId, defaultText = 'Drag and drop a file here') {
     dropZone.classList.remove('dragover');
 }
 
+/**
+ * Adds a consistent Clear all control to rendered tools.
+ * The loader can pass a full tool reset callback so internal tool state is also cleared.
+ * @param {HTMLElement} root
+ * @param {Object} options
+ */
+function enhanceToolUX(root, options = {}) {
+    if (!root || !(root instanceof HTMLElement)) return;
+
+    ensureCanvasAccessibility(root);
+
+    const dropZones = Array.from(root.querySelectorAll('.drop-zone'));
+    if (dropZones.length === 0 || root.querySelector('[data-clear-tool-files]')) return;
+
+    const clearWrap = document.createElement('div');
+    clearWrap.className = 'tool-reset-row';
+
+    const clearBtn = document.createElement('button');
+    clearBtn.type = 'button';
+    clearBtn.className = 'secondary tool-clear-btn';
+    clearBtn.dataset.clearToolFiles = 'true';
+    clearBtn.textContent = 'Clear all';
+    clearBtn.setAttribute('aria-label', 'Clear selected files and reset this tool');
+
+    clearBtn.addEventListener('click', () => {
+        root.dispatchEvent(new CustomEvent('convertpdf:clear', { bubbles: true }));
+
+        if (typeof options.onClear === 'function') {
+            options.onClear();
+            return;
+        }
+
+        root.querySelectorAll('input[type="file"]').forEach(input => {
+            input.value = '';
+        });
+        root.querySelectorAll('.file-list').forEach(list => {
+            list.innerHTML = '';
+        });
+        root.querySelectorAll('.preview-box').forEach(box => {
+            box.innerHTML = '<p class="text-muted">Preview cleared.</p>';
+        });
+        dropZones.forEach(zone => {
+            const firstText = zone.querySelector('p');
+            resetDropZone(zone.id, firstText ? firstText.textContent || 'Drag and drop a file here' : 'Drag and drop a file here');
+            zone.style.display = '';
+        });
+        root.querySelectorAll('button').forEach(button => {
+            if (button !== clearBtn && /download|merge|save|convert|compress|split|rotate|protect/i.test(button.textContent || '')) {
+                button.disabled = true;
+            }
+        });
+        if (window.showToast) showToast('Selections cleared.', 'info');
+    });
+
+    clearWrap.appendChild(clearBtn);
+    const target = dropZones[dropZones.length - 1];
+    target.insertAdjacentElement('afterend', clearWrap);
+}
+
+/**
+ * Gives canvas previews a readable fallback for assistive technology.
+ * @param {HTMLElement} root
+ */
+function ensureCanvasAccessibility(root = document) {
+    root.querySelectorAll('canvas').forEach((canvas, index) => {
+        if (!canvas.getAttribute('role')) {
+            canvas.setAttribute('role', 'img');
+        }
+        if (!canvas.getAttribute('aria-label')) {
+            const pageCard = canvas.closest('[data-page-number], .page-thumb');
+            const pageLabel = pageCard && (pageCard.getAttribute('data-page-number') || pageCard.textContent.match(/Page\s+\d+/i)?.[0]);
+            canvas.setAttribute('aria-label', pageLabel ? `${pageLabel} preview` : `Document preview ${index + 1}`);
+        }
+        if (!canvas.nextElementSibling || !canvas.nextElementSibling.classList.contains('canvas-fallback-text')) {
+            const fallback = document.createElement('span');
+            fallback.className = 'sr-only canvas-fallback-text';
+            fallback.textContent = canvas.getAttribute('aria-label');
+            canvas.insertAdjacentElement('afterend', fallback);
+        }
+    });
+}
+
 // ==================== MEMORY MANAGEMENT ====================
 
 /**
@@ -843,6 +925,8 @@ window.addEventListener('beforeunload', () => {
 
 // Export for global use
 window.MemoryManager = MemoryManager;
+window.enhanceToolUX = enhanceToolUX;
+window.ensureCanvasAccessibility = ensureCanvasAccessibility;
 
 /**
  * Yields execution to the browser main thread to prevent blocking and allow garbage collection

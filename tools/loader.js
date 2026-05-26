@@ -19,6 +19,7 @@
             'md2pdf':       'rendermd2pdf',
             'docx2pdf':     'renderdocx2pdf',
             'pdf2word':     'renderpdf2word',
+            'pptx2pdf':     'renderpptx2pdf',
             'img2pdf':      'renderimg2pdf',
             'img2png':      'renderimg2png',
             'mergepdf':     'rendermergepdf',
@@ -56,11 +57,42 @@
             return;
         }
 
-        container.innerHTML =
-            '<div class="loading-state" role="status" aria-live="polite">' +
-            '  <div class="spinner"></div>' +
-            '  <p>Loading tool\u2026</p>' +
-            '</div>';
+        var isRendering = false;
+        function renderActiveTool(showLoading) {
+            if (isRendering) return Promise.resolve();
+            isRendering = true;
+
+            if (showLoading !== false) {
+                container.innerHTML =
+                    '<div class="loading-state" role="status" aria-live="polite">' +
+                    '  <div class="spinner"></div>' +
+                    '  <p>Loading tool\u2026</p>' +
+                    '</div>';
+            }
+
+            return Promise.resolve(renderFunc(container)).then(function() {
+                if (typeof window.enhanceToolUX === 'function') {
+                    window.enhanceToolUX(container, {
+                        onClear: function() {
+                            renderActiveTool(true).then(function() {
+                                if (typeof window.showToast === 'function') {
+                                    window.showToast('Selections cleared.', 'info');
+                                }
+                            });
+                        }
+                    });
+                }
+                if (typeof window.ensureCanvasAccessibility === 'function') {
+                    window.ensureCanvasAccessibility(container);
+                }
+            }).finally(function() {
+                isRendering = false;
+            });
+        }
+
+        window.reloadCurrentTool = function() {
+            return renderActiveTool(true);
+        };
 
         // Race the render promise against a timeout so a stalled CDN load
         // never leaves the user staring at a spinner indefinitely.
@@ -72,7 +104,7 @@
         });
 
         Promise.race([
-            Promise.resolve(renderFunc(container)),
+            renderActiveTool(true),
             timeoutPromise
         ]).then(function() {
             clearTimeout(timeoutId);

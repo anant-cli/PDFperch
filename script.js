@@ -28,6 +28,15 @@ const TOOL_SVGS = {
     <path d="M8 31h4M14 31h4M20 31h4M26 31h4M8 34h8M20 34h6" stroke="currentColor" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
   </svg>`,
 
+  pptx2pdf: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="5" y="5" width="18" height="24" rx="3" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
+    <rect x="9" y="10" width="10" height="6" rx="1.2" fill="currentColor" opacity="0.35"/>
+    <path d="M9 20h10M9 24h7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.65"/>
+    <path d="M23 17h5M25 14l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="27" y="22" width="9" height="12" rx="1.6" fill="currentColor" opacity="0.9"/>
+    <text x="31.5" y="30.5" text-anchor="middle" font-size="4.8" font-weight="700" fill="var(--bg-root,#0b0f1a)" font-family="monospace">PDF</text>
+  </svg>`,
+
   img2pdf: `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <rect x="4" y="8" width="22" height="18" rx="3" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/>
     <circle cx="11" cy="15" r="3" fill="currentColor" opacity="0.5"/>
@@ -178,6 +187,7 @@ const tools = [
     { id: 'md2pdf',      name: 'Markdown to PDF',    desc: 'Convert .md files to formatted PDF',           url: 'pages/md2pdf.html' },
     { id: 'docx2pdf',    name: 'Word to PDF',         desc: 'Convert Word documents to PDF',                url: 'pages/docx2pdf.html' },
     { id: 'pdf2word',    name: 'PDF to Word',         desc: 'Extract PDF text into editable DOCX',          url: 'pages/pdf2word.html' },
+    { id: 'pptx2pdf',    name: 'PPTX to PDF',         desc: 'Convert PowerPoint slides to PDF',             url: 'pages/pptx2pdf.html' },
     { id: 'img2pdf',     name: 'Images to PDF',       desc: 'Combine JPG and PNG into one PDF',             url: 'pages/img2pdf.html' },
     { id: 'pdfencrypt',  name: 'PDF Password',        desc: 'Protect PDF files with encryption',            url: 'pages/pdfencrypt.html' },
     { id: 'mergepdf',    name: 'Merge PDFs',          desc: 'Combine multiple PDF files',                   url: 'pages/mergepdf.html' },
