@@ -3110,4 +3110,188 @@ canvas[aria-label] {
     .sign-button-row > .sign-btn {
         flex: 1 1 100%;
     }
-}
+}
+/* ============================================
+   MOBILE RESPONSIVENESS IMPROVEMENTS
+   Tool pages - consistent layout across all tools
+   ============================================ */
+
+/* Force all flex/grid tool controls to stack on mobile */
+@media (max-width: 600px) {
+    /* Tool area inner flex rows */
+    .area > div[style*="display: flex"],
+    .area > div[style*="display:flex"] {
+        flex-wrap: wrap !important;
+    }
+
+    /* Two-column grids inside .area collapse to single column */
+    .area > div[style*="grid-template-columns"],
+    .area div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* Settings bars (page size + orientation rows) */
+    .orientation-selector {
+        flex-direction: column !important;
+        gap: 0.6rem !important;
+        width: 100%;
+    }
+    .orientation-selector label {
+        width: 100%;
+    }
+    .orientation-selector select {
+        width: 100%;
+    }
+
+    /* Full-width selects and inputs on mobile */
+    .area select,
+    .area input[type="text"],
+    .area input[type="number"],
+    .area input[type="range"] {
+        width: 100% !important;
+        min-width: unset !important;
+    }
+
+    /* Buttons full width on mobile */
+    .area button.primary,
+    .area button.secondary,
+    button.primary,
+    button.secondary {
+        width: 100% !important;
+        min-width: unset;
+    }
+
+    /* SEO meta grid: single column */
+    .seo-meta-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Preview box padding reduction */
+    .preview-box {
+        padding: 0.75rem !important;
+    }
+
+    /* Input groups */
+    .input-group {
+        width: 100%;
+    }
+
+    /* Stats display flex wrap */
+    div[style*="display:flex; flex-wrap:wrap"] {
+        flex-direction: column;
+    }
+
+    /* Breadcrumb */
+    nav[aria-label="Breadcrumb"] {
+        padding: 0.5rem 1rem 0 !important;
+        font-size: 0.8rem !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Tool panel adjustments */
+    .tool-panel {
+        padding: 1rem !important;
+        border-radius: var(--r-md) !important;
+    }
+
+    .area {
+        padding: 0 !important;
+    }
+
+    /* app-container padding */
+    .app-container {
+        padding: 0.75rem !important;
+    }
+
+    /* Floating download button */
+    .floating-action {
+        bottom: 1rem !important;
+        right: 1rem !important;
+        left: 1rem !important;
+        width: calc(100% - 2rem) !important;
+        max-width: none !important;
+        justify-content: center !important;
+    }
+
+    /* Download button full width */
+    .download-btn {
+        width: 100% !important;
+    }
+
+    /* FAQ section details full width */
+    .faq-section details,
+    details {
+        width: 100%;
+    }
+
+    /* Header hamburger - make nav scrollable on very small screens */
+    .main-nav ul {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+    }
+    .main-nav ul li a {
+        font-size: 0.78rem;
+        padding: 0.3rem 0.5rem;
+    }
+
+    /* Advanced section: textarea */
+    .area textarea {
+        min-height: 200px !important;
+        font-size: 0.9rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Even smaller phones */
+    .area h3 {
+        font-size: 1.2rem;
+    }
+    .area .tool-description {
+        font-size: 0.9rem;
+    }
+    .drop-zone {
+        padding: 1.25rem 0.75rem !important;
+        min-height: 140px !important;
+    }
+    .drop-zone p:first-of-type {
+        font-size: 0.95rem !important;
+    }
+    /* Compress PDF stats bars */
+    #sizeBarContainer {
+        font-size: 0.75rem;
+    }
+}
+
+/* ============================================
+   HEADER MOBILE HAMBURGER MENU
+   ============================================ */
+@media (max-width: 768px) {
+    .site-header .header-container {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .main-nav {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .main-nav::-webkit-scrollbar {
+        display: none;
+    }
+    .main-nav ul {
+        flex-wrap: nowrap;
+        gap: 0;
+        padding-bottom: 0.25rem;
+    }
+    .main-nav ul li a {
+        white-space: nowrap;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.82rem;
+    }
+}

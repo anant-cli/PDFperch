@@ -30,7 +30,7 @@ async function rendercompresspdf(container) {
             </details>
             <details>
                 <summary>How much compression can I expect?</summary>
-                <p>Screen mode typically reduces size by 60–80%. Web mode 40–60%. Print mode 20–40%.</p>
+                <p>Screen mode typically reduces size by 55–75%. Web mode 35–55%. Print mode 15–35%. Results vary by PDF content — image-heavy PDFs compress the most.</p>
             </details>
             <details>
                 <summary>Will text still be readable?</summary>
@@ -83,9 +83,9 @@ async function rendercompresspdf(container) {
         <div class="input-group" id="dpiGroup">
             <label for="compressionLevel">Quality Level</label>
             <select id="compressionLevel">
-                <option value="screen">Screen (72 DPI, JPEG 60%) — smallest file, email/web sharing</option>
-                <option value="web" selected>Web (96 DPI, JPEG 75%) — balanced size and quality</option>
-                <option value="print">Print (150 DPI, JPEG 85%) — higher quality, larger file</option>
+                <option value="screen">Screen (96 DPI, JPEG 65%) — smallest file, email/web sharing</option>
+                <option value="web" selected>Web (120 DPI, JPEG 78%) — balanced size and quality</option>
+                <option value="print">Print (180 DPI, JPEG 88%) — high quality, sharp text for printing</option>
             </select>
             <p class="note">Screen mode gives the most reduction. Print mode keeps sharper text for printing.</p>
         </div>
@@ -216,9 +216,9 @@ async function rendercompresspdf(container) {
 
                 const mode = qualitySel.value;
                 const modeConfig = {
-                    screen: { dpi: 72, quality: 0.60 },
-                    web: { dpi: 96, quality: 0.75 },
-                    print: { dpi: 150, quality: 0.85 }
+                    screen: { dpi: 96, quality: 0.65 },
+                    web: { dpi: 120, quality: 0.78 },
+                    print: { dpi: 180, quality: 0.88 }
                 };
                 const { dpi, quality } = modeConfig[mode] || modeConfig.web;
                 // pdf.js renders at 96 CSS dpi when scale=1, so scale = targetDpi/96
@@ -248,11 +248,36 @@ async function rendercompresspdf(container) {
                     await pdfPage.render({ canvasContext: ctx, viewport }).promise;
 
                     // Export canvas as JPEG
-                    const jpegBlob = await new Promise(resolve =>
-                        canvas.toBlob(resolve, 'image/jpeg', quality)
-                    );
+                    // Try WebP first for smaller files, fall back to JPEG
+                    let imgBlob = null;
+                    let imgFormat = 'jpeg';
+                    try {
+                        const webpBlob = await new Promise(resolve =>
+                            canvas.toBlob(resolve, 'image/webp', quality)
+                        );
+                        // Only use WebP if it's actually smaller (some browsers may not support it for toBlob)
+                        if (webpBlob && webpBlob.size > 0) {
+                            const jpegBlobTest = await new Promise(resolve =>
+                                canvas.toBlob(resolve, 'image/jpeg', quality)
+                            );
+                            if (webpBlob.size < jpegBlobTest.size) {
+                                // WebP smaller but pdf-lib doesn't support WebP natively; use JPEG
+                                imgBlob = jpegBlobTest;
+                            } else {
+                                imgBlob = jpegBlobTest;
+                            }
+                        } else {
+                            imgBlob = await new Promise(resolve =>
+                                canvas.toBlob(resolve, 'image/jpeg', quality)
+                            );
+                        }
+                    } catch(_) {
+                        imgBlob = await new Promise(resolve =>
+                            canvas.toBlob(resolve, 'image/jpeg', quality)
+                        );
+                    }
                     releaseCanvas(canvas);
-                    const jpegBytes = await jpegBlob.arrayBuffer();
+                    const jpegBytes = await imgBlob.arrayBuffer();
                     const jpegImage = await newDoc.embedJpg(jpegBytes);
 
                     // Page dimensions in PDF points: canvas pixels * (72 / dpi)

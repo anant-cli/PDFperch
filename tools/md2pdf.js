@@ -252,7 +252,7 @@ async function rendermd2pdf(container) {
                     <style>
                         @page {
                             size: ${pageSize} ${orientation};
-                            margin: 2cm 2.5cm;
+                            margin: 2.5cm 3cm;
                         }
                     </style>
                     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"><\/script>

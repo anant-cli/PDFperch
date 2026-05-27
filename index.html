@@ -175,7 +175,7 @@
                     <li><a href="blog/blog_index.html">Blog</a></li>
                     <li><a href="about.html">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="privacy.html">Privacy &#128274;</a></li>
+                    <li><a href="privacy.html">Privacy;</a></li>
                 </ul>
             </nav>
         </div>
@@ -193,11 +193,7 @@
                     <div class="stat-item">&#9889; <strong>Zero</strong> uploads</div>
                     <div class="stat-item">&#127379; <strong>Always</strong> free</div>
                 </div>
-                <!-- Live usage counter (social proof) -->
-                <div class="usage-counter" id="usageCounter" aria-live="polite">
-                    <span class="counter-dot"></span>
-                    <span id="counterText">Loading usage stats…</span>
-                </div>
+
                 <div class="hero-cta">
                     <a href="#tools" class="button">Explore Tools</a>
                     <a href="blog/blog_index.html" class="button secondary">Read Blog</a>
@@ -400,35 +396,7 @@
     <script defer src="utils.js"></script>
     <script defer src="script.js"></script>
     <script defer src="components.js"></script>
-    <script>
-    // Usage counter — reads/increments a localStorage key to show a plausible session count
-    (function() {
-        function initCounter() {
-            const el = document.getElementById('counterText');
-            if (!el) return;
-            try {
-                // Seed a realistic base count and grow it per session
-                const BASE = 184200;
-                const stored = parseInt(localStorage.getItem('cpdf_sessions') || '0', 10);
-                const sessions = stored + 1;
-                localStorage.setItem('cpdf_sessions', sessions);
-                // Add a random daily increment so the number feels live
-                const dailySeed = Math.floor(Date.now() / 86400000);
-                const dailyRnd = ((dailySeed * 1103515245 + 12345) & 0x7fffffff) % 800 + 100;
-                const total = BASE + sessions * 3 + dailyRnd;
-                const formatted = total.toLocaleString();
-                el.textContent = formatted + ' files processed — no data ever uploaded';
-            } catch(e) {
-                el.textContent = '100,000+ files processed — no data ever uploaded';
-            }
-        }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initCounter);
-        } else {
-            initCounter();
-        }
-    })();
-    </script>
+
 </body>
 
 </html>

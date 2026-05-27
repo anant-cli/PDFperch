@@ -111,20 +111,25 @@ async function renderdocx2pdf(container) {
         const docxPrintStyles = `
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: 'Calibri','Segoe UI',Roboto,sans-serif; line-height: 1.6; color: #2c3e50; background: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { font-family: 'Calibri', 'Georgia', 'Segoe UI', Roboto, sans-serif; font-size: 12pt; line-height: 1.8; color: #1a1a2e; background: white; padding: 0; margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
             .docx-body { width: 100%; max-width: 100%; }
-            .docx-body h1 { font-size: 28px; color: #1e2b4f; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 30px; margin-bottom: 20px; page-break-after: avoid; }
-            .docx-body h2 { font-size: 24px; color: #2c3e50; border-bottom: 1px solid #bdc3c7; padding-bottom: 8px; margin-top: 25px; margin-bottom: 15px; page-break-after: avoid; }
-            .docx-body h3 { font-size: 20px; color: #34495e; margin-top: 20px; margin-bottom: 10px; page-break-after: avoid; }
-            .docx-body p  { margin: 0 0 1rem; orphans: 3; widows: 3; }
-            .docx-body code,.docx-body pre { font-family: 'Consolas',monospace; background: #f4f4f4; border: 1px solid #e0e0e0; border-radius: 4px; }
-            .docx-body pre { padding: 15px; overflow-x: auto; page-break-inside: avoid; }
-            .docx-body table { border-collapse: collapse; width: 100%; margin: 20px 0; page-break-inside: avoid; }
-            .docx-body th { background: #3498db; color: white; padding: 12px; border: 1px solid #2980b9; }
-            .docx-body td { padding: 10px 12px; border: 1px solid #ddd; }
-            .docx-body tr:nth-child(even) { background: #f8f9fa; }
-            .docx-body img { max-width: 100%; height: auto; page-break-inside: avoid; display:block; margin:0 auto; }
-            @media print { .page-break { page-break-before: always; } }
+            .docx-body h1 { font-size: 30px; font-weight: 700; color: #0d1b3e; border-bottom: 2.5px solid #2563eb; padding-bottom: 12px; margin-top: 36px; margin-bottom: 22px; page-break-after: avoid; letter-spacing: -0.01em; }
+            .docx-body h2 { font-size: 24px; font-weight: 600; color: #1e2b4f; border-bottom: 1px solid #d0d7de; padding-bottom: 9px; margin-top: 30px; margin-bottom: 18px; page-break-after: avoid; }
+            .docx-body h3 { font-size: 20px; font-weight: 600; color: #2c3e50; margin-top: 24px; margin-bottom: 12px; page-break-after: avoid; }
+            .docx-body h4 { font-size: 17px; font-weight: 600; color: #34495e; margin-top: 18px; margin-bottom: 10px; page-break-after: avoid; }
+            .docx-body p { margin: 0 0 1.2rem; orphans: 3; widows: 3; font-size: 12pt; }
+            .docx-body li { margin-bottom: 0.5rem; font-size: 12pt; }
+            .docx-body ul, .docx-body ol { margin: 0 0 1.2rem 1.8rem; }
+            .docx-body code,.docx-body pre { font-family: 'Cascadia Code', 'SF Mono', 'Consolas', monospace; background: #f6f8fa; border: 1px solid #e1e4e8; border-radius: 4px; font-size: 10pt; }
+            .docx-body pre { padding: 16px; overflow-x: auto; page-break-inside: avoid; margin-bottom: 1.2rem; }
+            .docx-body code { padding: 2px 6px; }
+            .docx-body table { border-collapse: collapse; width: 100%; margin: 22px 0; page-break-inside: avoid; font-size: 11pt; }
+            .docx-body th { background: #2563eb; color: white; padding: 13px 14px; border: 1px solid #1d4ed8; font-weight: 600; }
+            .docx-body td { padding: 11px 14px; border: 1px solid #d0d7de; }
+            .docx-body tr:nth-child(even) { background: #f8fafc; }
+            .docx-body blockquote { margin: 1.2rem 0; padding: 0.8rem 1.2rem; color: #57606a; border-left: 4px solid #2563eb; background: rgba(37,99,235,0.05); border-radius: 0 4px 4px 0; }
+            .docx-body img { max-width: 100%; height: auto; page-break-inside: avoid; display:block; margin: 1rem auto; }
+            @media print { .page-break { page-break-before: always; } body { font-size: 11pt; } }
         </style>`;
 
         // Create a scoped preview stylesheet to avoid leaking global rules into the host page
@@ -250,7 +255,7 @@ async function renderdocx2pdf(container) {
     <meta charset="UTF-8">
     <title>${docTitle} \u2013 ConvertPDF</title>
     ${docxPrintStyles}
-    <style>@page { size: ${pageSize} ${orientation}; margin: 2cm 2.5cm; }</style>
+    <style>@page { size: ${pageSize} ${orientation}; margin: 2.5cm 3cm; }</style>
 </head>
 <body>
     <div class="docx-body">${window.currentDocxHtml}</div>

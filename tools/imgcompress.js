@@ -73,16 +73,20 @@ async function renderimgcompress(container) {
                 <label for="icFormat">Output Format</label>
                 <select id="icFormat">
                     <option value="same" selected>Same as input</option>
-                    <option value="image/jpeg">JPEG</option>
-                    <option value="image/png">PNG</option>
-                    <option value="image/webp">WebP</option>
+                    <option value="image/jpeg">JPEG (photos, smallest)</option>
+                    <option value="image/png">PNG (lossless, transparency)</option>
+                    <option value="image/webp">WebP (best ratio, modern)</option>
                 </select>
             </div>
         </div>
 
         <div class="input-group" style="margin-bottom: 1.5rem;">
-            <label for="icQuality">Quality: <span id="icQualityLabel">80</span>%</label>
-            <input type="range" id="icQuality" min="10" max="100" value="80" style="width: 100%;">
+            <label for="icQuality">Quality: <span id="icQualityLabel">82</span>%
+                <span style="font-size:0.8em; color:var(--text-muted); margin-left:0.5rem;">
+                    (JPEG/WebP: 80–85% is near-lossless; PNG ignores quality)
+                </span>
+            </label>
+            <input type="range" id="icQuality" min="10" max="100" value="82" style="width: 100%;">
         </div>
 
         <button id="icCompressBtn" class="primary" disabled>Compress Image</button>
@@ -215,6 +219,9 @@ async function renderimgcompress(container) {
                         initialQuality: quality,
                         useWebWorker: true,
                         fileType: safeMime,
+                        // Enable sharper downscaling
+                        alwaysKeepResolution: !maxW,
+                        exifOrientation: -1,      // respect EXIF rotation
                         onProgress: (p) => {
                             progressBar.style.width = `${30 + p * 0.6}%`;
                         }
@@ -300,6 +307,9 @@ async function renderimgcompress(container) {
                         ctx.fillStyle = '#ffffff';
                         ctx.fillRect(0, 0, w, h);
                     }
+                    // Use high quality image smoothing for better results
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(img, 0, 0, w, h);
                     canvas.toBlob(blob => {
                         if (blob) resolve(blob);
