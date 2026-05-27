@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- ==================== HOMEPAGE ==================== -->
   <url>
     <loc>https://convertpdf.pages.dev/</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.00</priority>
   </url>
-
-  <!-- ==================== CORE PAGES ==================== -->
   <url>
     <loc>https://convertpdf.pages.dev/all-tools.html</loc>
     <lastmod>2026-05-27</lastmod>
@@ -46,136 +42,132 @@
     <changefreq>monthly</changefreq>
     <priority>0.50</priority>
   </url>
-
-  <!-- ==================== TOOL PAGES ==================== -->
   <url>
-    <loc>https://convertpdf.pages.dev/pages/mergepdf.html</loc>
+    <loc>https://convertpdf.pages.dev/merge-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/compresspdf.html</loc>
+    <loc>https://convertpdf.pages.dev/compress-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/splitpdf.html</loc>
+    <loc>https://convertpdf.pages.dev/split-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/docx2pdf.html</loc>
+    <loc>https://convertpdf.pages.dev/rotate-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/img2pdf.html</loc>
-    <lastmod>2026-05-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.90</priority>
-  </url>
-  <url>
-    <loc>https://convertpdf.pages.dev/pages/pdf2jpg.html</loc>
+    <loc>https://convertpdf.pages.dev/pdf-to-jpg</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/pdf2word.html</loc>
+    <loc>https://convertpdf.pages.dev/jpg-to-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/pdfencrypt.html</loc>
+    <loc>https://convertpdf.pages.dev/word-to-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/pptx2pdf.html</loc>
+    <loc>https://convertpdf.pages.dev/pdf-to-word</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/md2pdf.html</loc>
+    <loc>https://convertpdf.pages.dev/pdf-password</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/ocrtool.html</loc>
+    <loc>https://convertpdf.pages.dev/sign-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/organizepdf.html</loc>
+    <loc>https://convertpdf.pages.dev/watermark-pdf</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/ocr</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/markdown-to-pdf</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/html-to-pdf</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://convertpdf.pages.dev/qr-code-generator</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/rotatepdf.html</loc>
+    <loc>https://convertpdf.pages.dev/compress-images</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/watermarkpdf.html</loc>
+    <loc>https://convertpdf.pages.dev/organize-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/signpdf.html</loc>
+    <loc>https://convertpdf.pages.dev/image-converter</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/pagenumbers.html</loc>
+    <loc>https://convertpdf.pages.dev/page-numbers</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/imgcompress.html</loc>
+    <loc>https://convertpdf.pages.dev/txt-to-word</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/pages/img2png.html</loc>
+    <loc>https://convertpdf.pages.dev/pptx-to-pdf</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
-  <url>
-    <loc>https://convertpdf.pages.dev/pages/qrmaker.html</loc>
-    <lastmod>2026-05-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://convertpdf.pages.dev/pages/txt2docx.html</loc>
-    <lastmod>2026-05-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-  <url>
-    <loc>https://convertpdf.pages.dev/pages/web2pdf.html</loc>
-    <lastmod>2026-05-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.80</priority>
-  </url>
-
-  <!-- ==================== BLOG POSTS ==================== -->
   <url>
     <loc>https://convertpdf.pages.dev/blog/blog_index.html</loc>
     <lastmod>2026-05-27</lastmod>
@@ -231,7 +223,7 @@
     <priority>0.65</priority>
   </url>
   <url>
-    <loc>https://convertpdf.pages.dev/blog/add-watermark-pdf-free.html</loc>
+    <loc>https://convertpdf.pages.dev/blog/add-watermark-pdf-free</loc>
     <lastmod>2026-05-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
@@ -368,5 +360,4 @@
     <changefreq>monthly</changefreq>
     <priority>0.65</priority>
   </url>
-
 </urlset>
