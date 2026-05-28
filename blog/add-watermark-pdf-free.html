@@ -76,40 +76,58 @@
 
                 <p>Watermarks are used to mark drafts, indicate confidentiality, assert ownership, or deter unauthorised distribution. Adobe Acrobat charges a monthly fee for this feature. ConvertPDF does it for free, in your browser, without uploading your file anywhere.</p>
 
+                <h2>What Is a PDF Watermark?</h2>
+                <p>A watermark is text (or an image) overlaid on the content of each page of a document. It sits on top of the existing content, typically at a reduced opacity so the underlying text and images remain readable. In the PDF format, a watermark is added as an additional content layer — it becomes part of the page itself, not a separate overlay that can be toggled off in a standard PDF reader.</p>
+                <p>Text watermarks have been used in publishing for centuries, originally stamped on physical paper to indicate origin, quality, or ownership. In the digital world, they serve exactly the same purposes: communicating status, asserting rights, and discouraging misuse. A "DRAFT" watermark across a document immediately signals to any recipient that the content is not final. A "CONFIDENTIAL" mark communicates the expected handling and sharing restrictions at a glance, before the reader even begins to read the first line.</p>
+
                 <h2>Step-by-Step: Watermark a PDF</h2>
                 <ol>
                     <li>Open the <a href="../pages/watermarkpdf.html">Watermark PDF tool</a>.</li>
-                    <li>Upload your PDF by dragging it onto the drop zone or clicking to browse.</li>
-                    <li>Type your watermark text — "CONFIDENTIAL", "DRAFT", your name, or anything else.</li>
-                    <li>Customise: choose font size, opacity (how transparent the watermark appears), rotation angle, and colour.</li>
-                    <li>Click Add Watermark and download the result.</li>
+                    <li>Upload your PDF by dragging it onto the drop zone or clicking to browse your files.</li>
+                    <li>Type your watermark text — "CONFIDENTIAL", "DRAFT", your company name, your website URL, or anything else you need.</li>
+                    <li>Customise the appearance:
+                        <ul>
+                            <li><strong>Font size:</strong> Larger text (80–120pt) spans the full page; smaller text (40–60pt) creates a subtler mark.</li>
+                            <li><strong>Opacity:</strong> Controls how transparent the watermark appears, from 0% (invisible) to 100% (fully opaque). Most use cases call for 20–40%.</li>
+                            <li><strong>Rotation:</strong> 45° is the classic diagonal watermark. 0° gives a horizontal stamp. Choose what fits your document layout.</li>
+                            <li><strong>Colour:</strong> Any hex colour. Light grey for subtlety; red for maximum visibility; custom brand colours for professional documents.</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Add Watermark</strong> and download the result. The watermark is applied to every page automatically.</li>
                 </ol>
 
                 <h2>Common Watermark Use Cases</h2>
                 <ul>
-                    <li><strong>DRAFT</strong> — mark in-progress documents shared for review so recipients don't treat them as final.</li>
-                    <li><strong>CONFIDENTIAL</strong> — remind recipients of the document's sensitivity and discourage casual sharing.</li>
-                    <li><strong>SAMPLE</strong> — share previews of work (reports, templates, designs) without giving away the finished product.</li>
-                    <li><strong>Your name or website URL</strong> — mark PDFs you publish so readers know their source.</li>
-                    <li><strong>DO NOT COPY</strong> — deter reproduction of licensed documents.</li>
+                    <li><strong>DRAFT</strong> — mark in-progress documents shared for review so recipients don't treat them as final or quote them externally. Particularly important for reports, proposals, and policy documents that go through multiple revision cycles.</li>
+                    <li><strong>CONFIDENTIAL</strong> — remind recipients of the document's sensitivity before they read a single word. Contracts, financial projections, personnel records, and M&amp;A materials commonly carry this mark.</li>
+                    <li><strong>SAMPLE</strong> — share previews of work — reports, templates, design deliverables — without giving away the finished product. A freelancer sharing a sample portfolio PDF might use this to indicate that the full resolution, unrestricted version requires payment.</li>
+                    <li><strong>Your name or website URL</strong> — mark PDFs you publish or distribute so that readers always know the original source, even if the document is shared, copied, or re-uploaded elsewhere by a third party.</li>
+                    <li><strong>DO NOT COPY / NOT FOR DISTRIBUTION</strong> — deter reproduction of licensed documents, training materials, or proprietary research. While a watermark alone cannot prevent copying, it creates a clear record of intent and can support legal action if the document is misused.</li>
+                    <li><strong>FOR REVIEW ONLY</strong> — distinguish review copies from final versions in professional workflows, particularly in legal, publishing, and architectural contexts where the distinction between draft and final has contractual implications.</li>
                 </ul>
 
                 <h2>Tips for Effective Watermarks</h2>
                 <ul>
-                    <li><strong>Opacity 20–35%</strong> is usually ideal — visible enough to notice but not so heavy it obscures the content.</li>
-                    <li><strong>45° rotation</strong> is the classic diagonal watermark. 0° gives a horizontal stamp look.</li>
-                    <li><strong>Large font size (80–120pt)</strong> ensures the watermark spans the whole page on A4/Letter.</li>
-                    <li>Use a <strong>light grey or pale colour</strong> for the subtlest effect; bright red for maximum visibility.</li>
+                    <li><strong>Opacity 20–35%</strong> is usually ideal for formal documents — visible enough to notice but not so heavy that it obscures the content. For security-focused use cases where legibility of the watermark is paramount, go up to 50–60%.</li>
+                    <li><strong>45° rotation</strong> is the classic diagonal watermark and the hardest to overlook. A 0° horizontal stamp looks more like a rubber stamp mark and suits informal or internal documents.</li>
+                    <li><strong>Large font size (80–120pt)</strong> ensures the watermark spans the whole page on A4/Letter dimensions. At smaller sizes the watermark may only appear in one corner, which looks accidental rather than intentional.</li>
+                    <li>Use a <strong>light grey colour</strong> for documents where readability of the underlying content is the top priority. Use <strong>bright red or orange</strong> for maximum visibility — appropriate for "DO NOT DISTRIBUTE" or "CONFIDENTIAL" marks on highly sensitive material.</li>
+                    <li><strong>Test before distributing:</strong> Print or print-preview the watermarked document to verify the mark is visible at the intended opacity on a printed page. Screen rendering and print rendering of transparency can differ.</li>
                 </ul>
 
                 <h2>Is a Watermark Permanent?</h2>
-                <p>The text watermark is embedded into the PDF page content — it cannot be removed without specialist software. However, for truly sensitive documents, consider also <a href="../pages/pdfencrypt.html">password protecting the PDF</a> to prevent editing entirely.</p>
+                <p>The text watermark added by this tool is embedded directly into the PDF's page content stream. It is not a separate layer that a standard PDF reader can hide or remove with a checkbox. Removing it would require specialist PDF editing software capable of manipulating content streams at a low level — tools like Adobe Acrobat Pro's advanced editing functions, or command-line tools like pdftk or Ghostscript with specific parameters. For the vast majority of recipients viewing the document in a standard PDF reader, the watermark is permanent and cannot be removed without visible quality loss to the underlying content.</p>
+                <p>For documents requiring stronger protection — not just watermarking, but preventing editing, printing, or copying of text — consider also <a href="../pages/pdfencrypt.html">password protecting the PDF</a>. Combining a watermark with encryption gives you both a visible deterrent and a technical barrier.</p>
+
+                <h2>Why Not Just Use Adobe Acrobat?</h2>
+                <p>Adobe Acrobat Pro — the standard tool for PDF watermarking in professional settings — costs around $20 per month as of 2026. For users who need to watermark PDFs occasionally, this is a difficult subscription to justify. Free alternatives have historically required either uploading your file to a cloud server (raising privacy concerns for confidential documents) or installing desktop software. ConvertPDF's watermark tool runs the entire process in your browser using pdf-lib, meaning no subscription, no installation, and no file upload. Your confidential "CONFIDENTIAL" document stays confidential.</p>
 
                 <h2>Frequently Asked Questions</h2>
-                <details><summary>Is my PDF uploaded to a server?</summary><p>No. The watermark is applied using pdf-lib entirely within your browser. Your file never leaves your device.</p></details>
-                <details><summary>Can I watermark all pages at once?</summary><p>Yes — the watermark is applied to every page of the document automatically.</p></details>
-                <details><summary>Can I add an image watermark (logo)?</summary><p>The current tool supports text watermarks only. Image watermark support is planned for a future update.</p></details>
-                <details><summary>Will the watermark work on password-protected PDFs?</summary><p>No — you'll need to open it with the password tools first using the <a href="../pages/pdfencrypt.html">Password Protect tool</a>, watermark it, then re-protect if needed.</p></details>
+                <details><summary>Is my PDF uploaded to a server?</summary><p>No. The watermark is applied using pdf-lib entirely within your browser. Your file never leaves your device. You can verify this in your browser's Network tab — no document data is transmitted.</p></details>
+                <details><summary>Can I watermark all pages at once?</summary><p>Yes — the watermark is applied to every page of the document automatically. There is no per-page configuration in the current version.</p></details>
+                <details><summary>Can I add an image watermark (logo)?</summary><p>The current tool supports text watermarks only. Image watermark support (for logos and custom graphics) is planned for a future update.</p></details>
+                <details><summary>Will the watermark work on password-protected PDFs?</summary><p>No — you'll need to remove the password protection first. Use the <a href="../pages/pdfencrypt.html">Password Protect tool</a> to decrypt the PDF, apply your watermark, then re-encrypt if needed.</p></details>
+                <details><summary>Can I remove a watermark I've already added?</summary><p>Not with this tool — the watermark is written into the page content. Removal requires specialised PDF editing software. Always keep an unmarked copy of your original document before watermarking.</p></details>
 
                 <div style="margin-top:2.5rem; padding:1.5rem; background:var(--bg-input); border-radius:12px; border:1px solid var(--border-subtle); text-align:center;">
                     <p style="margin-bottom:0.8rem; font-weight:600;">Ready to try it?</p>

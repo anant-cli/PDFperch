@@ -1,7 +1,7 @@
 /**
  * ConvertPDF Service Worker
  */
-const CACHE_NAME = 'convertpdf-v13';
+const CACHE_NAME = 'convertpdf-v14';
 
 const STATIC_ASSETS = [
     '/',
@@ -69,6 +69,17 @@ function isNavigationRequest(req) {
     return req.mode === 'navigate';
 }
 
+function isThirdPartyAdRequest(url) {
+    return url.includes('google') || 
+           url.includes('doubleclick') || 
+           url.includes('googlesyndication') || 
+           url.includes('adtrafficquality') || 
+           url.includes('googletagmanager') || 
+           url.includes('googletagservices') || 
+           url.includes('adservice.google') || 
+           url.includes('partner.googleadservices');
+}
+
 // Install: cache assets individually so a single 404 won't fail the whole SW.
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -105,6 +116,7 @@ function isCDNRequest(url) {
 self.addEventListener('fetch', event => {
     if (event.request.method !== 'GET') return;
     if (isFontRequest(event.request.url)) return;
+    if (isThirdPartyAdRequest(event.request.url)) return; // Early bypass for ads/analytics
 
     // Navigation: try network first, fall back to cached index
     if (isNavigationRequest(event.request)) {
@@ -159,10 +171,8 @@ self.addEventListener('fetch', event => {
                     }
                     return networkResponse;
                 }).catch(() =>
-                    cachedResponse || new Response('Network error', {
-                        status: 503,
-                        statusText: 'Service Unavailable',
-                        headers: { 'Content-Type': 'text/plain' }
+                    cachedResponse || new Response('<html><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
+                        headers: { 'Content-Type': 'text/html' }
                     })
                 );
 
