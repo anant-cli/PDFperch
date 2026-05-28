@@ -1,52 +1,173 @@
-// Ensure gtag exists if consent.js loads before the primary GA snippet
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
+// consent.js - GDPR Cookie Consent Banner with Google Consent Mode v2
+(function() {
+    // ---------- Google Consent Mode Default (required before any updates) ----------
+    if (typeof gtag !== 'undefined') {
+        gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+            wait_for_update: 500
+        });
+    }
 
-// 1. Set default Consent Mode v2 state immediately
-gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
+    // ---------- Helper: Update Google Consent ----------
+    function updateGoogleConsent(state) {
+        if (typeof gtag !== 'undefined') {
+            gtag('consent', 'update', {
+                ad_storage: state,
+                analytics_storage: state
+            });
+        }
+    }
 
-// 2. Fire immediate update if consent was previously saved
-const savedConsent = localStorage.getItem('consent');
-if (savedConsent) {
-  gtag('consent', 'update', { ad_storage: savedConsent, analytics_storage: savedConsent });
-}
+    // ---------- DOM Elements & Banner Management ----------
+    let bannerElement = null;
 
-function initConsent() {
-  if (localStorage.getItem('consent')) return;
-  let banner = document.getElementById('cookie-banner');
-  
-  if (!banner) {
-    banner = document.createElement('div');
-    banner.id = 'cookie-banner';
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#0f172a;color:#ffffff;padding:16px 24px;z-index:9999;border-radius:16px 16px 0 0;font-family:sans-serif;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;box-shadow:0 -4px 20px rgba(0,0,0,0.3);';
-    banner.innerHTML = `
-      <div style="font-size:14px;max-width:600px;line-height:1.4;">We use cookies to analyze site traffic and serve personalized ads.</div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <button id="c-rej" style="background:transparent;color:#ffffff;border:1px solid #64748b;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:14px;">Reject non-essential</button>
-        <button id="c-acc" style="background:#3b82f6;color:#ffffff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:14px;font-weight:600;">Accept all</button>
-      </div>
-    `;
-    document.body.appendChild(banner);
+    function hideBanner() {
+        if (bannerElement) bannerElement.style.display = 'none';
+    }
 
-    const handleConsent = (status) => {
-      localStorage.setItem('consent', status);
-      gtag('consent', 'update', { ad_storage: status, analytics_storage: status });
-      banner.style.display = 'none';
-    };
+    function showBanner() {
+        if (bannerElement) bannerElement.style.display = 'flex';
+    }
 
-    document.getElementById('c-acc').onclick = () => handleConsent('granted');
-    document.getElementById('c-rej').onclick = () => handleConsent('denied');
-  }
-  banner.style.display = 'flex';
-}
+    // ---------- Create Banner HTML & CSS (injected once) ----------
+    function createBanner() {
+        if (document.getElementById('consent-banner-root')) return;
 
-window.openConsentSettings = () => {
-  localStorage.removeItem('consent');
-  initConsent();
-};
+        const style = document.createElement('style');
+        style.textContent = `
+            #consent-banner-root {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #0f172a;
+                color: white;
+                font-family: system-ui, -apple-system, sans-serif;
+                z-index: 9999;
+                border-radius: 12px 12px 0 0;
+                box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+                padding: 1rem;
+                display: none;
+                justify-content: center;
+                backdrop-filter: blur(2px);
+                border-top: 1px solid #1e293b;
+            }
+            .consent-content {
+                max-width: 1200px;
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+            }
+            .consent-text {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                flex: 2;
+                min-width: 200px;
+            }
+            .consent-buttons {
+                display: flex;
+                gap: 0.75rem;
+                flex-wrap: wrap;
+            }
+            .btn-accept {
+                background: #3b82f6;
+                border: none;
+                color: white;
+                padding: 0.5rem 1.25rem;
+                border-radius: 9999px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: 0.2s;
+                font-size: 0.85rem;
+            }
+            .btn-accept:hover { background: #2563eb; }
+            .btn-reject {
+                background: transparent;
+                border: 1px solid #64748b;
+                color: #e2e8f0;
+                padding: 0.5rem 1.25rem;
+                border-radius: 9999px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: 0.2s;
+                font-size: 0.85rem;
+            }
+            .btn-reject:hover { background: #1e293b; border-color: #94a3b8; }
+            @media (max-width: 640px) {
+                .consent-content { flex-direction: column; text-align: center; }
+                .consent-buttons { justify-content: center; }
+            }
+        `;
+        document.head.appendChild(style);
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initConsent);
-} else {
-  initConsent();
-}
+        const bannerDiv = document.createElement('div');
+        bannerDiv.id = 'consent-banner-root';
+        bannerDiv.innerHTML = `
+            <div class="consent-content">
+                <div class="consent-text">
+                    🍪 We value your privacy. This site uses cookies for analytics and personalized ads.
+                    Choose "Accept all" or "Reject non-essential" to continue.
+                </div>
+                <div class="consent-buttons">
+                    <button class="btn-accept" id="consent-accept-btn">Accept all</button>
+                    <button class="btn-reject" id="consent-reject-btn">Reject non-essential</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(bannerDiv);
+        bannerElement = bannerDiv;
+
+        // Attach button events
+        document.getElementById('consent-accept-btn').addEventListener('click', () => {
+            localStorage.setItem('consent', 'granted');
+            updateGoogleConsent('granted');
+            hideBanner();
+        });
+        document.getElementById('consent-reject-btn').addEventListener('click', () => {
+            localStorage.setItem('consent', 'denied');
+            updateGoogleConsent('denied');
+            hideBanner();
+        });
+    }
+
+    // ---------- Handle Footer Link: "Cookie Settings" ----------
+    function bindFooterLink() {
+        const settingsLink = document.getElementById('cookie-settings-link');
+        if (settingsLink) {
+            settingsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('consent');
+                showBanner();
+            });
+        }
+    }
+
+    // ---------- Initialize on Page Load ----------
+    function init() {
+        createBanner();
+        bindFooterLink();
+
+        const existingConsent = localStorage.getItem('consent');
+        if (existingConsent === 'granted') {
+            updateGoogleConsent('granted');
+            hideBanner();
+        } else if (existingConsent === 'denied') {
+            updateGoogleConsent('denied');
+            hideBanner();
+        } else {
+            // No consent stored → show banner
+            showBanner();
+        }
+    }
+
+    // Run after DOM is ready to ensure footer link exists
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();

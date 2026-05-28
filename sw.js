@@ -114,9 +114,14 @@ function isCDNRequest(url) {
 }
 
 self.addEventListener('fetch', event => {
+    // Only handle GET requests
     if (event.request.method !== 'GET') return;
+
+    // Early bypass for third-party ad requests (prevents 503 errors)
+    if (isThirdPartyAdRequest(event.request.url)) return;
+
+    // Skip font requests entirely
     if (isFontRequest(event.request.url)) return;
-    if (isThirdPartyAdRequest(event.request.url)) return; // Early bypass for ads/analytics
 
     // Navigation: try network first, fall back to cached index
     if (isNavigationRequest(event.request)) {
@@ -161,7 +166,7 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Same-origin assets: stale-while-revalidate
+    // Same-origin assets: stale-while-revalidate (never returns a 503)
     event.respondWith(
         caches.open(CACHE_NAME).then(cache => {
             return cache.match(event.request).then(cachedResponse => {
@@ -170,11 +175,14 @@ self.addEventListener('fetch', event => {
                         cache.put(event.request, networkResponse.clone());
                     }
                     return networkResponse;
-                }).catch(() =>
-                    cachedResponse || new Response('<html><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
+                }).catch(() => {
+                    // Fallback to cached response or a simple offline HTML (never a 503)
+                    if (cachedResponse) return cachedResponse;
+                    return new Response('<html><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
+                        status: 200,
                         headers: { 'Content-Type': 'text/html' }
-                    })
-                );
+                    });
+                });
 
                 return cachedResponse || fetchPromise;
             });
