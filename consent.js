@@ -1,15 +1,6 @@
 // consent.js - GDPR Cookie Consent Banner with Google Consent Mode v2
 (function() {
-    // ---------- Google Consent Mode Default (required before any updates) ----------
-    if (typeof gtag !== 'undefined') {
-        gtag('consent', 'default', {
-            ad_storage: 'denied',
-            analytics_storage: 'denied',
-            wait_for_update: 500
-        });
-    }
-
-    // ---------- Helper: Update Google Consent ----------
+        // ---------- Helper: Update Google Consent ----------
     function updateGoogleConsent(state) {
         if (typeof gtag !== 'undefined') {
             gtag('consent', 'update', {
