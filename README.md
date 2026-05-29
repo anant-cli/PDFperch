@@ -80,7 +80,7 @@ This repository includes professional content and legal pages that support priva
 
 ## Support
 
-For questions, feedback, or security reports, please contact: convertpdf.contact@gmail.com.
+For questions, feedback, or security reports, please contact: support.convertpdf@gmail.com.
 
 ---
 
