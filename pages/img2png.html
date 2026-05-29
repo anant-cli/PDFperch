@@ -29,9 +29,12 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#0f172a">
-    <link rel="preload" href="../styles.css" as="style">
+    <link rel="preload" href="../styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="../styles.css"></noscript>
     <link rel="apple-touch-icon" href="/favicon.png">
     <link rel="icon" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -41,9 +44,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="ConvertPDF">
     <meta name="description"
-        content="Convert images to PNG free online — JPG, WebP, GIF to PNG conversion. No upload, runs in browser. Also supports transparency and batch convert.">
+        content="Convert images to PNG free online. Supports JPG, WebP, AVIF, BMP and more. No upload required — runs privately in your browser with no quality loss.">
+    <meta name="keywords" content="image to png, convert to png, jpg to png, webp to png, jpeg to png, image converter, convert image to png free, jpg to png converter, png converter online, change image format to png, gif to png, image format converter">
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-    <title>Image to PNG Converter Free Online — JPG WebP to PNG | ConvertPDF</title>
+    <title>Image to PNG Free — JPG & WebP to PNG | ConvertPDF</title>
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Image to PNG Free Online | ConvertPDF">
@@ -101,10 +105,6 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="ConvertPDF">
-    <link rel="stylesheet" href="../styles.css">
-
-
-
 <script type="application/ld+json">
     {
         "@context":  "https://schema.org",
@@ -313,7 +313,7 @@
                         Finally, the completed file is serialized and saved directly to your disk. Because this entire workflow happens locally, it is incredibly fast and avoids the latency associated with uploading and downloading files over an internet connection. This architecture also ensures robust performance, even when dealing with larger tasks.
                     </p>
 
-                    <section style="max-width:800px;margin:2rem auto;padding:1.5rem;background:var(--surface-color);border-radius:8px;border:1px solid var(--border-color);">
+                    <section style="max-width:800px;margin:2rem auto;padding:1.5rem;background:var(--bg-card);border-radius:8px;border:1px solid var(--border-card);">
                         <h2>Advanced Features and Capabilities</h2>
                         <p>Our tool goes beyond simple operations, offering features designed for maximum utility:</p>
                         

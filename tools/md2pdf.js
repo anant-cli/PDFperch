@@ -87,7 +87,8 @@ async function rendermd2pdf(container) {
         const printBtn = document.getElementById('printMdBtn');
         const mdFloatingBtn = document.getElementById('mdFloatingDownload');
 
-        const sampleMd = `# Sample Document\n\nThis is a sample **Markdown** document.\n\n## Math Support\n\nInline math: $E = mc^2$\n\nDisplay math:\n$$\\int_a^b f(x)dx = F(b) - F(a)$$\n\n## Syntax Highlighting\n\n\`\`\`javascript\nfunction hello() {\n  console.log("Hello World");\n}\n\`\`\`\n\n## Page Breaks\nUse \\newpage or <!-- pagebreak --> to force a new page.`;
+        const sampleMd = `# Sample Document\n\nThis is a sample **Markdown** document.\n\n## Math Support\n\nInline math: $E = mc^2$\n\nDisplay math:\n$$\\int_a^b f(x)dx = F(b) - F(a)$$\n\n## Syntax Highlighting\n\n\`\`\`javascript\nfunction hello() {\n
+\n}\n\`\`\`\n\n## Page Breaks\nUse \\newpage or <!-- pagebreak --> to force a new page.`;
 
         toggleEditor.addEventListener('change', () => {
             editorSection.style.display = toggleEditor.checked ? 'block' : 'none';
