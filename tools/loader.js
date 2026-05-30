@@ -2,10 +2,10 @@
     'use strict';
 
     // How long (ms) to wait for a tool's render() to settle before showing an error.
-    var LOAD_TIMEOUT_MS = 20000;
+    const LOAD_TIMEOUT_MS = 20000;
 
     function showToolError(container, message) {
-        var warn = document.createElement('div');
+        const warn = document.createElement('div');
         warn.className = 'warning';
         warn.setAttribute('role', 'alert');
         warn.textContent = message;
@@ -13,9 +13,9 @@
     }
 
     function getToolNameFromPath() {
-        var path = window.location.pathname;
-        var filename = path.split('/').pop().replace('.html', '');
-        var toolMap = {
+        const path = window.location.pathname;
+        const filename = path.split('/').pop().replace('.html', '');
+        const toolMap = {
             'md2pdf':       'rendermd2pdf',
             'docx2pdf':     'renderdocx2pdf',
             'pdf2word':     'renderpdf2word',
@@ -42,22 +42,22 @@
     }
 
     function initTool() {
-        var container = document.getElementById('toolContainer');
+        const container = document.getElementById('toolContainer');
         if (!container) return;
 
-        var renderFuncName = getToolNameFromPath();
+        const renderFuncName = getToolNameFromPath();
         if (!renderFuncName) {
             showToolError(container, 'This tool is not available from the current page.');
             return;
         }
 
-        var renderFunc = window[renderFuncName];
+        const renderFunc = window[renderFuncName];
         if (typeof renderFunc !== 'function') {
             showToolError(container, 'This tool did not load correctly. Please refresh the page and try again.');
             return;
         }
 
-        var isRendering = false;
+        let isRendering = false;
         function renderActiveTool(showLoading) {
             if (isRendering) return Promise.resolve();
             isRendering = true;
@@ -96,8 +96,8 @@
 
         // Race the render promise against a timeout so a stalled CDN load
         // never leaves the user staring at a spinner indefinitely.
-        var timeoutId;
-        var timeoutPromise = new Promise(function(_, reject) {
+        let timeoutId;
+        const timeoutPromise = new Promise(function(_, reject) {
             timeoutId = setTimeout(function() {
                 reject(new Error('Tool load timed out after ' + (LOAD_TIMEOUT_MS / 1000) + 's'));
             }, LOAD_TIMEOUT_MS);
@@ -112,9 +112,9 @@
             clearTimeout(timeoutId);
             // Only show the error UI if the container hasn't been replaced by
             // the tool itself (some tools clear innerHTML early).
-            var stillLoading = container.querySelector('.loading-state');
+            const stillLoading = container.querySelector('.loading-state');
             if (stillLoading || !container.hasChildNodes()) {
-                var isTimeout = err && err.message && err.message.includes('timed out');
+                const isTimeout = err && err.message && err.message.includes('timed out');
                 showToolError(
                     container,
                     isTimeout

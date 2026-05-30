@@ -369,20 +369,8 @@ function loadImage(file) {
         reader.onload = (e) => {
             const img = new Image();
             
-            img.onload = () => {
-                // Clean up object URL if used
-                if (img.src.startsWith('blob:')) {
-                    URL.revokeObjectURL(img.src);
-                }
-                resolve(img);
-            };
-            
-            img.onerror = () => {
-                if (img.src.startsWith('blob:')) {
-                    URL.revokeObjectURL(img.src);
-                }
-                reject(new Error('Failed to load image'));
-            };
+            img.onload = () => resolve(img);
+            img.onerror = () => reject(new Error('Failed to load image'));
             
             img.src = e.target.result;
         };
@@ -680,8 +668,8 @@ function formatFileSize(bytes) {
     
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.min(sizes.length - 1, Math.floor(Math.log(n) / Math.log(k)));
-    
+    const i = Math.max(0, Math.min(sizes.length - 1, Math.floor(Math.log(n) / Math.log(k))));
+
     return parseFloat((n / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
@@ -953,15 +941,29 @@ function showPopupBlockedWarning(toolName) {
     const toast = document.createElement('div');
     toast.className = 'toast warning popup-blocked-toast';
     toast.setAttribute('role', 'alert');
-    toast.innerHTML = `
-        <span class="toast-icon">🚫</span>
-        <span>
-            <strong>Pop-up blocked!</strong> Your browser blocked the ${toolName} window.
-            Please allow pop-ups for this site in your browser's address bar, then click again.
-        </span>
-        <button class="toast-close" aria-label="Dismiss">✕</button>
-    `;
-    toast.querySelector('.toast-close').onclick = () => toast.remove();
+
+    const icon = document.createElement('span');
+    icon.className = 'toast-icon';
+    icon.textContent = '🚫';
+
+    const msg = document.createElement('span');
+    const strong = document.createElement('strong');
+    strong.textContent = 'Pop-up blocked! ';
+    const detail = document.createTextNode(
+        `Your browser blocked the ${toolName} window. Please allow pop-ups for this site in your browser's address bar, then click again.`
+    );
+    msg.appendChild(strong);
+    msg.appendChild(detail);
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'toast-close';
+    closeBtn.setAttribute('aria-label', 'Dismiss');
+    closeBtn.textContent = '✕';
+    closeBtn.onclick = () => toast.remove();
+
+    toast.appendChild(icon);
+    toast.appendChild(msg);
+    toast.appendChild(closeBtn);
     container.appendChild(toast);
     // Do NOT auto-remove — user must read and act
 }

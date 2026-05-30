@@ -70,14 +70,13 @@ function isNavigationRequest(req) {
 }
 
 function isThirdPartyAdRequest(url) {
-    return url.includes('google') || 
-           url.includes('doubleclick') || 
-           url.includes('googlesyndication') || 
-           url.includes('adtrafficquality') || 
-           url.includes('googletagmanager') || 
-           url.includes('googletagservices') || 
-           url.includes('adservice.google') || 
-           url.includes('partner.googleadservices');
+    return url.includes('doubleclick.net') ||
+           url.includes('googlesyndication.com') ||
+           url.includes('adtrafficquality.google') ||
+           url.includes('googletagmanager.com') ||
+           url.includes('googletagservices.com') ||
+           url.includes('adservice.google') ||
+           url.includes('partner.googleadservices.com');
 }
 
 // Install: cache assets individually so a single 404 won't fail the whole SW.

@@ -218,7 +218,8 @@ if (grid) {
         const iconWrap = document.createElement('div');
         iconWrap.className = 'tool-icon';
         iconWrap.setAttribute('aria-hidden', 'true');
-        iconWrap.innerHTML = TOOL_SVGS[t.id] || `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="6" width="24" height="28" rx="3" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/></svg>`;
+        iconWrap.innerHTML = TOOL_SVGS[t.id]
+            ?? `<svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="6" width="24" height="28" rx="3" fill="currentColor" opacity="0.2" stroke="currentColor" stroke-width="1.5"/></svg>`;
 
         const name = document.createElement('div');
         name.className = 'tool-name';

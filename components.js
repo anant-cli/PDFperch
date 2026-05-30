@@ -49,7 +49,7 @@
             toggle.classList.add('active');
             toggle.setAttribute('aria-expanded', 'true');
             backdrop.classList.add('visible');
-            document.body.style.overflow = '';
+            document.body.style.overflow = 'hidden';
             trapFocus(nav);
         }
 
@@ -509,9 +509,6 @@
     }
 
     /**
-     * Clear stale consent/analytics data left from previous site version
-     */
-    /**
      * Set up premium theme toggle (Dark / Light mode)
      */
     function setupThemeToggle() {
@@ -585,7 +582,8 @@
         setupHamburger();
         setActiveNavLink();
         ensureToastContainer();
-        
+        setupThemeToggle();
+
         // Premium UI features
         initPremiumUI();
     }
@@ -688,8 +686,16 @@ function renderRelatedTools() {
 }
 
 // Auto-run when DOM is ready and again after tool renders
+function scheduleRelatedTools() {
+    const timerId = setTimeout(() => {
+        if (document.body) renderRelatedTools();
+    }, 800);
+    // Cancel if the page is being unloaded before the timer fires
+    window.addEventListener('pagehide', () => clearTimeout(timerId), { once: true });
+}
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(renderRelatedTools, 800));
+    document.addEventListener('DOMContentLoaded', scheduleRelatedTools);
 } else {
-    setTimeout(renderRelatedTools, 800);
+    scheduleRelatedTools();
 }
