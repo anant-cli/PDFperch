@@ -2,15 +2,6 @@
 // TODO: Add SRI hash for browser-image-compression CDN script (see utils.js CDN_INTEGRITY)
 async function renderimgcompress(container) {
     try {
-        // Try to load browser-image-compression; fall back to canvas-only path
-        let useLibrary = false;
-        try {
-            await loadScript('https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js');
-            if (typeof window.imageCompression === 'function') useLibrary = true;
-        } catch (e) {
-            console.warn('[imgcompress] browser-image-compression failed to load, using canvas fallback:', e);
-        }
-
         container.innerHTML = '';
         const area = document.createElement('div');
         area.className = 'area';
@@ -210,30 +201,9 @@ async function renderimgcompress(container) {
                 const safeMime = ['image/jpeg', 'image/png', 'image/webp'].includes(outputMime)
                     ? outputMime : 'image/png';
 
-                progressBar.style.width = '30%';
-
-                let blob;
-                if (useLibrary) {
-                    const opts = {
-                        maxSizeMB: 100,           // no aggressive MB cap — let quality drive it
-                        initialQuality: quality,
-                        useWebWorker: true,
-                        fileType: safeMime,
-                        // Enable sharper downscaling
-                        alwaysKeepResolution: !maxW,
-                        exifOrientation: -1,      // respect EXIF rotation
-                        onProgress: (p) => {
-                            progressBar.style.width = `${30 + p * 0.6}%`;
-                        }
-                    };
-                    if (maxW) opts.maxWidthOrHeight = maxW;
-
-                    const compressed = await imageCompression(originalFile, opts);
-                    blob = new Blob([await compressed.arrayBuffer()], { type: safeMime });
-                } else {
-                    // Canvas fallback
-                    blob = await canvasFallbackCompress(originalFile, safeMime, quality, maxW);
-                }
+                progressBar.style.width = '50%';
+                const blob = await canvasFallbackCompress(originalFile, safeMime, quality, maxW);
+                progressBar.style.width = '90%';
 
                 progressBar.style.width = '100%';
                 compressedBlob = blob;

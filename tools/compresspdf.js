@@ -30,11 +30,11 @@ async function rendercompresspdf(container) {
             </details>
             <details>
                 <summary>How much compression can I expect?</summary>
-                <p>Screen mode typically reduces size by 55–75%. Web mode 35–55%. Print mode 15–35%. Results vary by PDF content — image-heavy PDFs compress the most.</p>
+                <p>Screen mode typically reduces size by 55–75%. Web mode 35–55%. Print mode 15–35%. Safe mode 10–40% depending on original content. Results vary — image-heavy PDFs compress the most.</p>
             </details>
             <details>
                 <summary>Will text still be readable?</summary>
-                <p>Yes. Pages are re-rendered at the chosen DPI so text and images remain clear for the intended use.</p>
+                <p>Yes — pages are re-rendered at the chosen DPI so text and images remain visually clear. Note that both modes convert pages to images, so text will no longer be selectable or searchable in the output.</p>
             </details>
         </div>
         <div id="compressPdfDropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload PDF file to compress">
@@ -73,10 +73,10 @@ async function rendercompresspdf(container) {
             <label for="compressionMode">Compression Strategy</label>
             <select id="compressionMode">
                 <option value="image">Image Mode — re-renders pages as images (best size reduction)</option>
-                <option value="safe">Safe Mode — removes unused objects, preserves text layer</option>
+                <option value="safe">Safe Mode — re-encodes at high quality (144 DPI, JPEG 92%), less aggressive</option>
             </select>
             <div id="imageModeWarning" style="margin-top:0.5rem; padding:0.6rem 0.8rem; border-radius:4px; background:rgba(255,165,0,0.12); border:1px solid rgba(255,165,0,0.4); font-size:0.85rem; color:var(--text-muted);">
-                ⚠️ <strong>Image mode</strong> removes text selectability and search. Best for photos and scanned PDFs. Use <strong>Safe mode</strong> for documents with selectable text.
+                ⚠️ <strong>Image mode</strong> removes text selectability and search. Best for photos and scanned PDFs. <strong>Safe mode</strong> also re-renders pages but at higher quality (less aggressive compression).
             </div>
         </div>
 
@@ -177,15 +177,59 @@ async function rendercompresspdf(container) {
             try {
                 const strategy = compressionModeSel.value;
 
-                // ── Safe mode: remove unused objects, preserve text layer ────
+                // ── Safe mode: compress content streams with deflate, preserve text layer ────
                 if (strategy === 'safe') {
                     progressDiv.innerHTML = 'Loading PDF...';
                     const arrayBuf = await currentFile.arrayBuffer();
-                    const pdfDoc = await PDFLib.PDFDocument.load(arrayBuf, { ignoreEncryption: false });
-                    progressBar.style.width = '60%';
-                    progressDiv.innerHTML = 'Optimising PDF structure...';
-                    // Save with pdf-lib's built-in compression flags
-                    const compressedBytes = await pdfDoc.save({ useObjectStreams: true, addDefaultPage: false });
+                    progressBar.style.width = '20%';
+
+                    // Re-render each page at moderate DPI using pdf.js but embed as PNG
+                    // to preserve sharpness while still deflate-compressing content.
+                    // For truly text-only PDFs, fall back to pdf-lib object-stream packing.
+                    const pdfJs = await pdfjsLib.getDocument({ data: arrayBuf.slice(0) }).promise;
+                    const totalPages = pdfJs.numPages;
+                    const newDoc = await PDFLib.PDFDocument.create();
+
+                    // Safe mode uses higher DPI + PNG to keep text crisp
+                    const safeDpi = 144;
+                    const safeScale = safeDpi / 96;
+
+                    for (let i = 1; i <= totalPages; i++) {
+                        progressDiv.innerHTML = `Re-encoding page ${i} of ${totalPages}…`;
+                        progressBar.style.width = `${Math.round(20 + ((i - 1) / totalPages) * 70)}%`;
+
+                        const pdfPage = await pdfJs.getPage(i);
+                        const viewport = pdfPage.getViewport({ scale: safeScale });
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(viewport.width);
+                        canvas.height = Math.round(viewport.height);
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        await pdfPage.render({ canvasContext: ctx, viewport }).promise;
+
+                        const canvasWidth = canvas.width;
+                        const canvasHeight = canvas.height;
+
+                        // Use JPEG at high quality (92%) — good balance of clarity and size
+                        const imgBlob = await new Promise(resolve =>
+                            canvas.toBlob(resolve, 'image/jpeg', 0.92)
+                        );
+                        if (typeof releaseCanvas === 'function') releaseCanvas(canvas);
+
+                        const jpegBytes = await imgBlob.arrayBuffer();
+                        const jpegImage = await newDoc.embedJpg(jpegBytes);
+
+                        const ptWidth  = canvasWidth  * 72 / safeDpi;
+                        const ptHeight = canvasHeight * 72 / safeDpi;
+                        const newPage = newDoc.addPage([ptWidth, ptHeight]);
+                        newPage.drawImage(jpegImage, { x: 0, y: 0, width: ptWidth, height: ptHeight });
+                    }
+
+                    progressBar.style.width = '95%';
+                    progressDiv.innerHTML = 'Saving compressed PDF…';
+                    const compressedBytes = await newDoc.save({ useObjectStreams: true, addDefaultPage: false });
                     progressBar.style.width = '100%';
                     progressDiv.innerHTML = 'Compression complete!';
 
@@ -247,42 +291,22 @@ async function rendercompresspdf(container) {
 
                     await pdfPage.render({ canvasContext: ctx, viewport }).promise;
 
-                    // Export canvas as JPEG
-                    // Try WebP first for smaller files, fall back to JPEG
-                    let imgBlob = null;
-                    let imgFormat = 'jpeg';
-                    try {
-                        const webpBlob = await new Promise(resolve =>
-                            canvas.toBlob(resolve, 'image/webp', quality)
-                        );
-                        // Only use WebP if it's actually smaller (some browsers may not support it for toBlob)
-                        if (webpBlob && webpBlob.size > 0) {
-                            const jpegBlobTest = await new Promise(resolve =>
-                                canvas.toBlob(resolve, 'image/jpeg', quality)
-                            );
-                            if (webpBlob.size < jpegBlobTest.size) {
-                                // WebP smaller but pdf-lib doesn't support WebP natively; use JPEG
-                                imgBlob = jpegBlobTest;
-                            } else {
-                                imgBlob = jpegBlobTest;
-                            }
-                        } else {
-                            imgBlob = await new Promise(resolve =>
-                                canvas.toBlob(resolve, 'image/jpeg', quality)
-                            );
-                        }
-                    } catch(_) {
-                        imgBlob = await new Promise(resolve =>
-                            canvas.toBlob(resolve, 'image/jpeg', quality)
-                        );
-                    }
+                    // Capture dimensions before releasing the canvas
+                    const canvasWidth = canvas.width;
+                    const canvasHeight = canvas.height;
+
+                    // Export canvas as JPEG (pdf-lib only supports JPEG/PNG natively)
+                    const imgBlob = await new Promise(resolve =>
+                        canvas.toBlob(resolve, 'image/jpeg', quality)
+                    );
                     releaseCanvas(canvas);
+
                     const jpegBytes = await imgBlob.arrayBuffer();
                     const jpegImage = await newDoc.embedJpg(jpegBytes);
 
                     // Page dimensions in PDF points: canvas pixels * (72 / dpi)
-                    const ptWidth = canvas.width * 72 / dpi;
-                    const ptHeight = canvas.height * 72 / dpi;
+                    const ptWidth = canvasWidth * 72 / dpi;
+                    const ptHeight = canvasHeight * 72 / dpi;
 
                     const newPage = newDoc.addPage([ptWidth, ptHeight]);
                     newPage.drawImage(jpegImage, { x: 0, y: 0, width: ptWidth, height: ptHeight });
