@@ -1,22 +1,15 @@
-/* ============================================
-   ConvertPDF – Premium Dark Design System
-   Dark Mode · Glassmorphism · Fluid Animations
-   ============================================ */
 
-/* -- Google Fonts -- */
-/* Font loaded via non-blocking <link> in HTML — no @import needed */
 
-/* -- Design Tokens -- */
 :root {
     color-scheme: dark;
 
-    /* Brand */
+    
     --accent: #4f9eff;
     --accent-vivid: #2979ff;
     --accent-light: #80bdff;
     --accent-glow: rgba(79, 158, 255, 0.25);
 
-    /* Backgrounds */
+    
     --bg-root: #0b0f1a;
     --bg-surface: #111827;
     --bg-card: #161d2e;
@@ -28,26 +21,26 @@
     --bg-accent-soft: rgba(79, 158, 255, 0.12);
     --bg-accent-softer: rgba(79, 158, 255, 0.08);
 
-    /* Text */
+    
     --text-primary: #f0f4ff;
     --text-secondary: #c3d3ee;
     --text-muted: #9fb1cf;
     --text-inverse: #ffffff;
     --text-on-accent: #ffffff;
 
-    /* Borders */
+    
     --border-subtle: rgba(255, 255, 255, 0.06);
     --border-card: rgba(79, 158, 255, 0.12);
     --border-focus: rgba(79, 158, 255, 0.5);
 
-    /* Shadows */
+    
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 24px rgba(79, 158, 255, 0.18);
     --shadow-hover: 0 20px 50px rgba(0, 0, 0, 0.42);
 
-    /* Semantic colors */
+    
     --success: #4ade80;
     --success-strong: #16a34a;
     --success-bg: rgba(34, 197, 94, 0.14);
@@ -60,17 +53,17 @@
     --danger-bg: rgba(248, 113, 113, 0.14);
     --danger-border: rgba(248, 113, 113, 0.38);
 
-    /* Radius */
+    
     --r-sm: 6px;
     --r-md: 12px;
     --r-lg: 18px;
     --r-xl: 28px;
     --r-full: 9999px;
 
-    /* Spacing */
+    
     --header-h: 68px;
 
-    /* Font */
+    
     --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     --input-h: 50px;
 }
@@ -78,13 +71,13 @@
 :root[data-theme="light"] {
     color-scheme: light;
 
-    /* Brand */
+    
     --accent: #2563eb;
     --accent-vivid: #1d4ed8;
     --accent-light: #3b82f6;
     --accent-glow: rgba(37, 99, 235, 0.12);
 
-    /* Backgrounds */
+    
     --bg-root: #f8fafc;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
@@ -96,26 +89,26 @@
     --bg-accent-soft: rgba(37, 99, 235, 0.1);
     --bg-accent-softer: rgba(37, 99, 235, 0.06);
 
-    /* Text */
+    
     --text-primary: #0f172a;
     --text-secondary: #334155;
     --text-muted: #475569;
     --text-inverse: #ffffff;
     --text-on-accent: #ffffff;
 
-    /* Borders */
+    
     --border-subtle: rgba(15, 23, 42, 0.06);
     --border-card: rgba(37, 99, 235, 0.16);
     --border-focus: rgba(37, 99, 235, 0.5);
 
-    /* Shadows */
+    
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.04);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.06);
     --shadow-glow: 0 0 24px rgba(37, 99, 235, 0.06);
     --shadow-hover: 0 18px 42px rgba(15, 23, 42, 0.12);
 
-    /* Semantic colors */
+    
     --success: #15803d;
     --success-strong: #166534;
     --success-bg: rgba(22, 163, 74, 0.1);
@@ -129,7 +122,6 @@
     --danger-border: rgba(153, 27, 27, 0.25);
 }
 
-/* -- Theme Toggle Button -- */
 .theme-toggle-btn {
     background: var(--bg-accent-softer);
     border: 1px solid var(--border-subtle);
@@ -203,7 +195,6 @@
     display: none;
 }
 
-/* -- Reset -- */
 *,
 *::before,
 *::after {
@@ -230,7 +221,6 @@ body {
     transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Smooth global transitions for theme toggles */
 body,
 header,
 footer,
@@ -257,7 +247,6 @@ canvas,
         box-shadow var(--theme-transition, 0s) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-
 img,
 iframe,
 canvas,
@@ -265,7 +254,6 @@ svg {
     max-width: 100%;
 }
 
-/* -- Root noise texture overlay -- */
 body::before {
     content: '';
     position: fixed;
@@ -275,7 +263,6 @@ body::before {
     z-index: 0;
 }
 
-/* -- Typography -- */
 h1,
 h2,
 h3,
@@ -332,11 +319,10 @@ textarea:focus-visible,
     outline: 3px solid var(--accent-light);
     outline-offset: 3px;
     border-radius: 3px;
-    /* Visible even on coloured backgrounds */
+    
     box-shadow: 0 0 0 1px var(--bg-root), 0 0 0 4px var(--accent-light);
 }
 
-/* Extra clarity for tool cards when keyboard-navigated */
 .tool-card:focus-visible {
     outline: 3px solid var(--accent);
     outline-offset: 4px;
@@ -369,7 +355,6 @@ code {
     font-size: 0.875em;
 }
 
-/* -- Container -- */
 .app-container {
     max-width: 1380px;
     width: 100%;
@@ -380,9 +365,6 @@ code {
     overflow-x: clip;
 }
 
-/* ===========================================
-   HEADER
-=========================================== */
 .site-header {
     background: var(--bg-header);
     backdrop-filter: blur(20px) saturate(160%);
@@ -460,7 +442,6 @@ code {
     border: 1px solid var(--border-card);
 }
 
-/* Hamburger */
 .nav-toggle {
     display: none;
     flex-direction: column;
@@ -496,9 +477,6 @@ code {
     transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ===========================================
-   HERO
-=========================================== */
 .hero {
     position: relative;
     overflow: hidden;
@@ -511,7 +489,6 @@ code {
     box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-/* Animated aurora behind hero */
 .hero::before {
     content: '';
     position: absolute;
@@ -534,7 +511,6 @@ code {
     }
 }
 
-/* Grid overlay on hero */
 .hero::after {
     content: '';
     position: absolute;
@@ -606,7 +582,6 @@ code {
     flex-wrap: wrap;
 }
 
-/* Live usage counter */
 .usage-counter {
     display: inline-flex;
     align-items: center;
@@ -648,9 +623,6 @@ code {
     }
 }
 
-/* ===========================================
-   BUTTONS
-=========================================== */
 .button,
 button,
 .download-btn,
@@ -788,17 +760,13 @@ button:disabled,
     }
 }
 
-/* ===========================================
-   TOOL GRID (HOME)
-=========================================== */
 #homeSection h2,
 .home-grid-title {
-    font-size: 1.6rem;
+    font-size: 0.8rem;
     color: var(--text-secondary);
     font-weight: 600;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    font-size: 0.8rem;
     border: none;
     margin-bottom: 1.5rem;
     padding-bottom: 0;
@@ -895,7 +863,6 @@ button:disabled,
     line-height: 1.45;
 }
 
-/* Section header above tools */
 #homeSection {
     margin: 0;
 }
@@ -910,9 +877,6 @@ button:disabled,
     font-weight: 700;
 }
 
-/* ===========================================
-   TOOL PANEL & CONTENT SECTIONS
-=========================================== */
 .tool-panel,
 .content-section,
 .premium-card {
@@ -950,7 +914,6 @@ button:disabled,
     color: var(--accent-light);
 }
 
-/* -- How It Works -- */
 .steps-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -988,7 +951,6 @@ button:disabled,
     box-shadow: 0 4px 12px rgba(41, 121, 255, 0.4);
 }
 
-/* -- FAQ -- */
 .faq-list {
     margin-top: 2rem;
 }
@@ -1004,7 +966,6 @@ button:disabled,
     margin-bottom: 0.5rem;
 }
 
-/* -- Blog Highlights -- */
 .blog-highlights {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1082,7 +1043,6 @@ button:disabled,
     flex-wrap: wrap;
 }
 
-/* Breadcrumbs */
 .breadcrumb {
     margin-bottom: 1rem;
     font-size: 0.875rem;
@@ -1097,9 +1057,6 @@ button:disabled,
     color: var(--accent);
 }
 
-/* ===========================================
-   FORM ELEMENTS
-=========================================== */
 .area {
     background: var(--bg-input);
     border-radius: var(--r-md);
@@ -1172,7 +1129,6 @@ textarea::placeholder {
     color: var(--text-muted);
 }
 
-/* Labels */
 label {
     font-size: 0.875rem;
     font-weight: 500;
@@ -1181,7 +1137,6 @@ label {
     margin-bottom: 0.3rem;
 }
 
-/* Color input */
 input[type="color"] {
     height: 42px;
     padding: 0.2rem;
@@ -1190,9 +1145,6 @@ input[type="color"] {
     max-width: 100%;
 }
 
-/* ===========================================
-   FILE LISTS
-=========================================== */
 .file-list {
     list-style: none;
     padding: 0;
@@ -1251,9 +1203,6 @@ input[type="color"] {
     transform: none;
 }
 
-/* ===========================================
-   PREVIEW BOXES
-=========================================== */
 .preview-box {
     background: var(--bg-input);
     border-radius: var(--r-md);
@@ -1273,9 +1222,6 @@ input[type="color"] {
     border-radius: var(--r-sm);
 }
 
-/* ===========================================
-   TOOL DESCRIPTION BOX
-=========================================== */
 .tool-description {
     background: var(--bg-accent-softer);
     border-radius: var(--r-md);
@@ -1287,9 +1233,6 @@ input[type="color"] {
     line-height: 1.65;
 }
 
-/* ===========================================
-   PERMISSIONS / OPTIONS GRIDS
-=========================================== */
 .permissions-grid {
     display: flex;
     gap: 1rem;
@@ -1315,14 +1258,12 @@ input[type="color"] {
     flex-wrap: wrap;
 }
 
-/* Password strength */
 .password-strength {
     margin: 0.5rem 0;
     font-weight: 600;
     font-size: 0.875rem;
 }
 
-/* QR options grid */
 .qr-options-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -1342,9 +1283,6 @@ input[type="color"] {
     font-size: 0.875rem;
 }
 
-/* ===========================================
-   FAQ
-=========================================== */
 .faq-section {
     margin: 2rem 0;
     border-radius: var(--r-md);
@@ -1399,9 +1337,6 @@ input[type="color"] {
     font-size: 0.9rem;
 }
 
-/* ===========================================
-   TOAST NOTIFICATIONS
-=========================================== */
 .toast-container {
     position: fixed;
     bottom: 2rem;
@@ -1450,9 +1385,6 @@ input[type="color"] {
     }
 }
 
-/* ===========================================
-   FOOTER
-=========================================== */
 .site-footer {
     background: var(--bg-surface);
     border-top: 1px solid var(--border-subtle);
@@ -1484,7 +1416,7 @@ input[type="color"] {
 .footer-col p {
     font-size: 0.875rem;
     color: var(--text-secondary);
-    /* WCAG AA: 5.57:1 on #111827 — was var(--text-muted)=#4e6082 at 2.8:1 */
+    
     line-height: 1.6;
 }
 
@@ -1499,7 +1431,7 @@ input[type="color"] {
 
 .footer-col a {
     color: var(--text-muted);
-    /* WCAG AA upgrade from --text-muted (#4e6082) on dark bg */
+    
     font-size: 0.875rem;
     font-weight: 400;
     transition: opacity 0.15s, padding-left 0.15s;
@@ -1546,12 +1478,12 @@ input[type="color"] {
     border-top: 1px solid var(--border-subtle);
     font-size: 0.8rem;
     color: var(--text-muted);
-    /* WCAG AA: 5.57:1 on #111827 — was var(--text-muted)=#4e6082 at 2.8:1 */
+    
 }
 
 .footer-bottom a {
     color: var(--text-muted);
-    /* WCAG AA upgrade from --text-muted on dark bg */
+    
     margin: 0 0.4rem;
 }
 
@@ -1559,9 +1491,6 @@ input[type="color"] {
     color: var(--accent);
 }
 
-/* ===========================================
-   BLOG CARDS
-=========================================== */
 .blog-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1621,7 +1550,6 @@ input[type="color"] {
     margin-top: auto;
 }
 
-/* Blog article body */
 .blog-article {
     max-width: 740px;
     margin: 0 auto;
@@ -1644,9 +1572,6 @@ input[type="color"] {
     margin: 1.5rem 0 0.5rem;
 }
 
-/* ===========================================
-   PROGRESS / STATUS
-=========================================== */
 .progress-bar {
     width: 100%;
     height: 6px;
@@ -1672,9 +1597,6 @@ input[type="color"] {
     min-height: 1.2em;
 }
 
-/* ===========================================
-   ABOUT / PRIVACY / TERMS PAGES
-=========================================== */
 .page-hero {
     background: var(--bg-card);
     border-radius: var(--r-lg);
@@ -1695,9 +1617,6 @@ input[type="color"] {
     margin: 0 auto;
 }
 
-/* ===========================================
-   RESPONSIVE
-=========================================== */
 @media (max-width: 1100px) {
     .home-grid {
         grid-template-columns: repeat(4, 1fr);
@@ -1733,7 +1652,7 @@ input[type="color"] {
         grid-template-columns: repeat(3, 1fr);
     }
 
-    /* Mobile nav */
+    
     .nav-toggle {
         display: flex;
         z-index: 1001;
@@ -1799,7 +1718,7 @@ input[type="color"] {
         border-color: var(--border-focus);
     }
 
-    /* Overlay backdrop when nav is open */
+    
     .nav-backdrop {
         display: none;
         position: fixed;
@@ -1864,9 +1783,6 @@ input[type="color"] {
     }
 }
 
-/* ===========================================
-   UTILITY CLASSES
-=========================================== */
 .text-muted {
     color: var(--text-muted);
 }
@@ -1892,7 +1808,6 @@ input[type="color"] {
     gap: 0.3rem;
 }
 
-/* Fade-in animation for page load */
 @keyframes fadeUp {
     from {
         opacity: 0;
@@ -1909,9 +1824,6 @@ input[type="color"] {
     animation: fadeUp 0.5s ease forwards;
 }
 
-/* ===========================================
-   DROP ZONE
-=========================================== */
 .drop-zone {
     border: 2px dashed rgba(79, 158, 255, 0.25);
     border-radius: var(--r-lg);
@@ -1964,10 +1876,6 @@ input[type="color"] {
     animation: border-pulse 1.8s infinite ease-in-out;
 }
 
-
-/* ===========================================
-   PROGRESS BAR (legacy compat)
-=========================================== */
 .progress-bar-bg {
     width: 100%;
     height: 6px;
@@ -1984,9 +1892,6 @@ input[type="color"] {
     box-shadow: 0 0 10px rgba(79, 158, 255, 0.4);
 }
 
-/* ===========================================
-   MISC TOOL ELEMENTS
-=========================================== */
 .hidden {
     display: none !important;
 }
@@ -2002,19 +1907,16 @@ input[type="color"] {
     line-height: 1.6;
 }
 
-/* QR controls */
 .qr-controls {
     margin-bottom: 1rem;
 }
 
-/* img thumbnail in file list */
 .img-thumbnail {
     object-fit: cover;
     border-radius: var(--r-sm);
     border: 1px solid var(--border-subtle);
 }
 
-/* Preview title label */
 .preview-title {
     font-size: 0.75rem;
     font-weight: 600;
@@ -2024,10 +1926,6 @@ input[type="color"] {
     margin-bottom: 0.5rem;
 }
 
-
-/* ===========================================
-   POLICY PAGES (Privacy, Terms)
-=========================================== */
 .policy-section {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
@@ -2084,11 +1982,6 @@ input[type="color"] {
     }
 }
 
-/* ===========================================
-   PREMIUM UPGRADES (Top-Tier UI)
-=========================================== */
-
-/* Scroll Reveal Animations */
 .reveal {
     opacity: 0;
     transform: translateY(40px);
@@ -2100,7 +1993,6 @@ input[type="color"] {
     transform: translateY(0);
 }
 
-/* 3D Tilt Cards (Spotlight effect) */
 .tool-card::after {
     content: '';
     position: absolute;
@@ -2116,7 +2008,6 @@ input[type="color"] {
     opacity: 1;
 }
 
-/* Custom Cursor */
 .custom-cursor {
     width: 20px;
     height: 20px;
@@ -2186,7 +2077,7 @@ input[type="color"] {
 .spinner {
     animation: spin 0.8s linear infinite;
     border: 4px solid rgba(255, 255, 255, 0.16);
-    border-top-color: var(--primary);
+    border-top-color: var(--accent-vivid);
     border-radius: 50%;
     height: 42px;
     width: 42px;
@@ -2203,13 +2094,9 @@ input[type="color"] {
     }
 }
 
-/* ==============================================
-   ACCESSIBILITY: prefers-reduced-motion
-   Critical for ADHD/OCD users — kills ALL motion
-   ============================================== */
 @media (prefers-reduced-motion: reduce) {
 
-    /* Kill every transition and animation site-wide */
+    
     *,
     *::before,
     *::after {
@@ -2220,26 +2107,26 @@ input[type="color"] {
         scroll-behavior: auto !important;
     }
 
-    /* Hide the custom cursor entirely */
+    
     .custom-cursor {
         display: none !important;
     }
 
-    /* Disable aurora gradient animation on hero */
+    
     .hero-bg,
     .hero-aurora {
         animation: none !important;
         background-image: none !important;
     }
 
-    /* Reveal elements immediately — no fade-up */
+    
     .reveal {
         opacity: 1 !important;
         transform: none !important;
         transition: none !important;
     }
 
-    /* Page-load fadeUp — show instantly */
+    
     .page-fade,
     main,
     .tool-wrapper {
@@ -2248,7 +2135,7 @@ input[type="color"] {
         transform: none !important;
     }
 
-    /* Card tilt / 3-D transforms — flatten */
+    
     .tool-card,
     .blog-card,
     .step-card,
@@ -2258,7 +2145,7 @@ input[type="color"] {
         transition: none !important;
     }
 
-    /* Magnetic buttons — lock in place */
+    
     .button,
     .download-btn,
     .back-btn {
@@ -2266,31 +2153,31 @@ input[type="color"] {
         transition: none !important;
     }
 
-    /* Progress bars — jump to value immediately */
+    
     .progress-fill,
     .quality-fill {
         transition: none !important;
     }
 
-    /* Toast — appear instantly */
+    
     .toast {
         animation: none !important;
     }
 
-    /* Spinner — freeze it (still shows, just not spinning) */
+    
     .spinner,
     .spinner-icon {
         animation: none !important;
     }
 
-    /* Mobile nav slide — instant open/close */
+    
     .main-nav ul,
     .main-nav {
         transition: none !important;
         max-height: none !important;
     }
 
-    /* Scroll reveal observer target — always visible */
+    
     [data-reveal],
     [data-animate] {
         opacity: 1 !important;
@@ -2298,10 +2185,6 @@ input[type="color"] {
     }
 }
 
-/* ==============================================
-   ACCESSIBILITY: prefers-color-scheme light
-   Ensure readable contrast for light-mode users
-   ============================================== */
 @media (prefers-color-scheme: light) {
     :root {
         --bg-root: #f4f7ff;
@@ -2321,12 +2204,12 @@ input[type="color"] {
         --shadow-glow: 0 0 24px rgba(79, 158, 255, 0.12);
     }
 
-    /* Invert aurora so it's subtle on light background */
+    
     .hero-bg {
         opacity: 0.25;
     }
 
-    /* Inputs */
+    
     input,
     select,
     textarea {
@@ -2335,10 +2218,6 @@ input[type="color"] {
     }
 }
 
-/* ==============================================
-   ACCESSIBILITY: forced-colors / high-contrast
-   Windows High Contrast Mode support
-   ============================================== */
 @media (forced-colors: active) {
 
     .button,
@@ -2355,7 +2234,6 @@ input[type="color"] {
     }
 }
 
-/* Cookie consent (AdSense / GDPR-friendly disclosure) */
 .cookie-consent-root {
     position: fixed;
     bottom: 0;
@@ -2408,12 +2286,6 @@ input[type="color"] {
     }
 }
 
-
-/* ===========================================
-   FIXES & POLISH (v2 pass)
-=========================================== */
-
-/* Canvas / tool interactive elements — focus ring */
 canvas:focus-visible,
 .drop-zone:focus-visible {
     outline: 3px solid var(--accent-light);
@@ -2421,13 +2293,11 @@ canvas:focus-visible,
     box-shadow: 0 0 0 1px var(--bg-root), 0 0 0 4px var(--accent-light);
 }
 
-/* Screen-reader fallback label for canvas elements */
 canvas[aria-label] {
-    /* Ensures aria-label is surfaced */
+    
     display: block;
 }
 
-/* Mobile hero counter layout */
 @media (max-width: 600px) {
     .usage-counter {
         font-size: 0.8rem;
@@ -2444,7 +2314,6 @@ canvas[aria-label] {
     }
 }
 
-/* Tool icon — smaller on mobile cards */
 @media (max-width: 480px) {
     .tool-icon {
         width: 52px;
@@ -2461,21 +2330,18 @@ canvas[aria-label] {
     }
 }
 
-/* Ensure nav-backdrop doesn't show on desktop */
 @media (min-width: 801px) {
     .nav-backdrop {
         display: none !important;
     }
 }
 
-/* Improve drop-zone mobile tap targets */
 @media (max-width: 600px) {
     .drop-zone {
         min-height: 140px !important;
     }
 }
 
-/* PDF print quality — ensure @page is respected */
 @media print {
     body {
         margin: 0 !important;
@@ -2483,12 +2349,10 @@ canvas[aria-label] {
     }
 }
 
-/* tool-desc contrast bump for readability */
 .tool-desc {
     color: var(--text-secondary);
 }
 
-/* Floating action button — clearer on mobile */
 @media (max-width: 600px) {
     .floating-action {
         font-size: 0.88rem;
@@ -2496,9 +2360,6 @@ canvas[aria-label] {
     }
 }
 
-/* ===========================================
-   TOOL UX POLISH (reset, organize editor)
-=========================================== */
 .tool-reset-row,
 .tool-action-row {
     display: flex;
@@ -2676,13 +2537,6 @@ canvas[aria-label] {
     }
 }
 
-/* ============================================================
-   TOOL COMPONENT CLASSES
-   Replaces all inline style="" attributes in tool JS files.
-   Theme-safe: all colours use CSS variables.
-   ============================================================ */
-
-/* -- Shared helpers -- */
 .drop-zone-icon {
     font-size: 2.2rem;
     margin-bottom: 0.75rem;
@@ -2690,7 +2544,6 @@ canvas[aria-label] {
     display: block;
 }
 
-/* Hidden file inputs (replaced display:none inline) */
 .sr-only-input {
     position: absolute;
     opacity: 0;
@@ -2700,7 +2553,6 @@ canvas[aria-label] {
     overflow: hidden;
 }
 
-/* Screen reader only utility class */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -2713,12 +2565,10 @@ canvas[aria-label] {
     border: 0;
 }
 
-/* Normalise input-group spacing */
 .input-group {
     margin-bottom: 1rem;
 }
 
-/* Generic button row used across tools */
 .tool-btn-row {
     display: flex;
     gap: 0.75rem;
@@ -2727,13 +2577,11 @@ canvas[aria-label] {
     align-items: center;
 }
 
-/* Drop zone — file selected state */
 .drop-zone--selected {
     border-color: var(--accent);
     background: var(--bg-accent-softer);
 }
 
-/* Status message (replaces pptxStatus inline style) */
 .status-msg {
     font-size: 0.9rem;
     color: var(--text-muted);
@@ -2741,7 +2589,6 @@ canvas[aria-label] {
     min-height: 1.2em;
 }
 
-/* -- OCR Tool -- */
 .ocr-progress-wrap {
     margin-top: 1rem;
 }
@@ -2808,7 +2655,6 @@ canvas[aria-label] {
     box-shadow: 0 0 0 3px rgba(79, 158, 255, 0.12);
 }
 
-/* -- Sign PDF Tool -- */
 .sign-options {
     margin-bottom: 1rem;
 }
@@ -2841,7 +2687,6 @@ canvas[aria-label] {
     margin-bottom: 0;
 }
 
-/* Signature drawing canvas */
 .sig-canvas {
     border: 2px solid var(--accent);
     border-radius: var(--r-sm);
@@ -2857,7 +2702,6 @@ canvas[aria-label] {
     box-shadow: 0 0 12px var(--accent-glow);
 }
 
-/* Upload preview canvas — hidden until image loaded */
 .sig-canvas-preview {
     border: 2px solid var(--accent);
     border-radius: var(--r-sm);
@@ -2866,7 +2710,6 @@ canvas[aria-label] {
     background: var(--bg-input);
 }
 
-/* Small compact action buttons (Clear / Undo / Redo) */
 .sig-action-btn {
     min-width: unset !important;
     padding: 0.5rem 1rem !important;
@@ -2880,7 +2723,6 @@ canvas[aria-label] {
     margin-top: 1rem;
 }
 
-/* Placement viewer (wraps preview-box) */
 .placement-viewer {
     padding: 1.25rem;
     margin-top: 1.5rem;
@@ -2942,7 +2784,6 @@ canvas[aria-label] {
     background: #ffffff;
 }
 
-/* Draggable floating signature overlay */
 .floating-sig {
     position: absolute;
     left: 40px;
@@ -2981,7 +2822,6 @@ canvas[aria-label] {
     font-weight: bold;
 }
 
-/* Resize handle corner dot */
 .sig-resize-handle {
     position: absolute;
     right: -5px;
@@ -3025,7 +2865,6 @@ canvas[aria-label] {
     font-size: 0.875rem;
 }
 
-/* -- Related Tools Section (replaces ALL inline styles in components.js) -- */
 .related-tools-section {
     margin-top: 2.5rem;
     padding-top: 1.5rem;
@@ -3077,7 +2916,6 @@ canvas[aria-label] {
     line-height: 1;
 }
 
-/* -- Toast: Warning variant (popup blocked) -- */
 .toast.warning {
     border-left: 3px solid var(--warning);
 }
@@ -3115,7 +2953,6 @@ canvas[aria-label] {
     background: none;
 }
 
-/* -- Light theme overrides for new classes -- */
 :root[data-theme="light"] .sig-canvas,
 :root[data-theme="light"] .sig-canvas-preview {
     background: var(--bg-input);
@@ -3135,7 +2972,6 @@ canvas[aria-label] {
     border-color: var(--border-card);
 }
 
-/* -- Responsive overrides for new classes -- */
 @media (max-width: 600px) {
     .sign-options-grid {
         grid-template-columns: 1fr;
@@ -3149,20 +2985,15 @@ canvas[aria-label] {
         flex: 1 1 100%;
     }
 }
-/* ============================================
-   MOBILE RESPONSIVENESS IMPROVEMENTS
-   Tool pages - consistent layout across all tools
-   ============================================ */
 
-/* Force all flex/grid tool controls to stack on mobile */
 @media (max-width: 600px) {
-    /* Tool area inner flex rows */
+    
     .area > div[style*="display: flex"],
     .area > div[style*="display:flex"] {
         flex-wrap: wrap !important;
     }
 
-    /* Two-column grids inside .area collapse to single column */
+    
     .area > div[style*="grid-template-columns"],
     .area div[style*="grid-template-columns: 1fr 1fr"] {
         grid-template-columns: 1fr !important;
@@ -3170,7 +3001,7 @@ canvas[aria-label] {
         flex-direction: column !important;
     }
 
-    /* Settings bars (page size + orientation rows) */
+    
     .orientation-selector {
         flex-direction: column !important;
         gap: 0.6rem !important;
@@ -3183,7 +3014,7 @@ canvas[aria-label] {
         width: 100%;
     }
 
-    /* Full-width selects and inputs on mobile */
+    
     .area select,
     .area input[type="text"],
     .area input[type="number"],
@@ -3192,7 +3023,7 @@ canvas[aria-label] {
         min-width: unset !important;
     }
 
-    /* Buttons full width on mobile */
+    
     .area button.primary,
     .area button.secondary,
     button.primary,
@@ -3201,27 +3032,27 @@ canvas[aria-label] {
         min-width: unset;
     }
 
-    /* SEO meta grid: single column */
+    
     .seo-meta-grid {
         grid-template-columns: 1fr !important;
     }
 
-    /* Preview box padding reduction */
+    
     .preview-box {
         padding: 0.75rem !important;
     }
 
-    /* Input groups */
+    
     .input-group {
         width: 100%;
     }
 
-    /* Stats display flex wrap */
+    
     div[style*="display:flex; flex-wrap:wrap"] {
         flex-direction: column;
     }
 
-    /* Breadcrumb */
+    
     nav[aria-label="Breadcrumb"] {
         padding: 0.5rem 1rem 0 !important;
         font-size: 0.8rem !important;
@@ -3230,7 +3061,7 @@ canvas[aria-label] {
         text-overflow: ellipsis;
     }
 
-    /* Tool panel adjustments */
+    
     .tool-panel {
         padding: 1rem !important;
         border-radius: var(--r-md) !important;
@@ -3240,12 +3071,12 @@ canvas[aria-label] {
         padding: 0 !important;
     }
 
-    /* app-container padding */
+    
     .app-container {
         padding: 0.75rem !important;
     }
 
-    /* Floating download button */
+    
     .floating-action {
         bottom: 1rem !important;
         right: 1rem !important;
@@ -3255,18 +3086,18 @@ canvas[aria-label] {
         justify-content: center !important;
     }
 
-    /* Download button full width */
+    
     .download-btn {
         width: 100% !important;
     }
 
-    /* FAQ section details full width */
+    
     .faq-section details,
     details {
         width: 100%;
     }
 
-    /* Header hamburger - make nav scrollable on very small screens */
+    
     .main-nav ul {
         flex-wrap: wrap;
         gap: 0.3rem;
@@ -3276,7 +3107,7 @@ canvas[aria-label] {
         padding: 0.3rem 0.5rem;
     }
 
-    /* Advanced section: textarea */
+    
     .area textarea {
         min-height: 200px !important;
         font-size: 0.9rem !important;
@@ -3284,7 +3115,7 @@ canvas[aria-label] {
 }
 
 @media (max-width: 480px) {
-    /* Even smaller phones */
+    
     .area h3 {
         font-size: 1.2rem;
     }
@@ -3298,15 +3129,12 @@ canvas[aria-label] {
     .drop-zone p:first-of-type {
         font-size: 0.95rem !important;
     }
-    /* Compress PDF stats bars */
+    
     #sizeBarContainer {
         font-size: 0.75rem;
     }
 }
 
-/* ============================================
-   HEADER MOBILE HAMBURGER MENU
-   ============================================ */
 @media (max-width: 768px) {
     .site-header .header-container {
         flex-wrap: wrap;
@@ -3334,12 +3162,6 @@ canvas[aria-label] {
     }
 }
 
-/* ============================================
-   MOBILE RESPONSIVENESS — ENHANCED
-   All fixes verified against 320px–767px range
-   ============================================ */
-
-/* ── Touch target minimum (WCAG 2.5.8) ── */
 @media (max-width: 800px) {
     button,
     .button,
@@ -3354,13 +3176,13 @@ canvas[aria-label] {
         min-height: 44px;
     }
 
-    /* Drop zone larger tap area on touch */
+    
     .drop-zone {
         min-height: 160px !important;
         cursor: pointer;
     }
 
-    /* Tool card full-width tap target */
+    
     .tool-card a {
         display: flex;
         width: 100%;
@@ -3368,20 +3190,19 @@ canvas[aria-label] {
     }
 }
 
-/* ── Small phones: 320px–480px ── */
 @media (max-width: 480px) {
 
-    /* Base typography scale-down */
+    
     body {
         font-size: 15px;
     }
 
-    /* App container: tighter side padding */
+    
     .app-container {
         padding: 0.75rem;
     }
 
-    /* Page hero on static pages */
+    
     .page-hero {
         padding: 2rem 1rem;
         margin: 1rem 0;
@@ -3391,7 +3212,7 @@ canvas[aria-label] {
         font-size: 0.95rem;
     }
 
-    /* Hero on home */
+    
     .hero {
         padding: 2.5rem 1rem 2rem;
         margin: 1rem 0 1.25rem;
@@ -3407,7 +3228,7 @@ canvas[aria-label] {
         padding: 0.3rem 0.75rem;
     }
 
-    /* Buttons stack and fill width on phone */
+    
     .hero-cta {
         flex-direction: column;
         align-items: stretch;
@@ -3421,7 +3242,7 @@ canvas[aria-label] {
         justify-content: center;
     }
 
-    /* Tool panels */
+    
     .tool-panel,
     .content-section,
     .premium-card,
@@ -3430,7 +3251,7 @@ canvas[aria-label] {
         border-radius: var(--r-md) !important;
     }
 
-    /* File action buttons stack */
+    
     .file-actions {
         flex-direction: column;
         gap: 0.5rem;
@@ -3440,13 +3261,13 @@ canvas[aria-label] {
         width: 100%;
     }
 
-    /* Options grids collapse */
+    
     .options-grid,
     .settings-grid {
         grid-template-columns: 1fr !important;
     }
 
-    /* Labels and selects */
+    
     .area label {
         font-size: 0.875rem;
     }
@@ -3454,12 +3275,12 @@ canvas[aria-label] {
     .area select,
     .area input[type="text"],
     .area input[type="number"] {
-        font-size: 1rem; /* Prevents iOS zoom on focus */
+        font-size: 1rem; 
         min-height: 44px;
         padding: 0.6rem 0.75rem;
     }
 
-    /* Blog article typography */
+    
     .blog-article {
         padding: 0 0.25rem;
     }
@@ -3474,7 +3295,7 @@ canvas[aria-label] {
         line-height: 1.65;
     }
 
-    /* Tables overflow scroll */
+    
     .blog-article table,
     .content-section table {
         display: block;
@@ -3483,7 +3304,7 @@ canvas[aria-label] {
         max-width: 100%;
     }
 
-    /* Code blocks */
+    
     pre,
     code {
         font-size: 0.8rem;
@@ -3496,18 +3317,17 @@ canvas[aria-label] {
         -webkit-overflow-scrolling: touch;
     }
 
-    /* Footer */
+    
     .footer-container {
         gap: 1.25rem;
     }
 
-    /* Home grid: 2-col on small phones (1fr already set at 480px) */
+    
     .home-grid {
         gap: 0.6rem;
     }
 }
 
-/* ── Range 481px–600px ── */
 @media (min-width: 481px) and (max-width: 600px) {
     .hero-cta {
         flex-wrap: wrap;
@@ -3520,7 +3340,6 @@ canvas[aria-label] {
     }
 }
 
-/* ── Prevent iOS font-size zoom on focused inputs ── */
 @media (max-width: 768px) {
     input[type="text"],
     input[type="email"],
@@ -3535,7 +3354,6 @@ canvas[aria-label] {
     }
 }
 
-/* ── Better horizontal scroll on small screens ── */
 @media (max-width: 600px) {
     .seo-meta-grid,
     .features-grid,
@@ -3544,20 +3362,19 @@ canvas[aria-label] {
         grid-template-columns: 1fr !important;
     }
 
-    /* Inline code doesn't overflow */
+    
     code {
         word-break: break-all;
         white-space: pre-wrap;
     }
 
-    /* Floating action button: move to bottom-left on very small screens */
+    
     .floating-action {
         right: auto;
         left: 1rem;
     }
 }
 
-/* ── Landscape phones ── */
 @media (max-height: 500px) and (orientation: landscape) {
     .hero {
         padding: 1.5rem 1rem;
@@ -3569,7 +3386,6 @@ canvas[aria-label] {
     }
 }
 
-/* ── Safe area insets (iPhone notch / Dynamic Island) ── */
 @supports (padding: env(safe-area-inset-bottom)) {
     .site-footer {
         padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
@@ -3580,14 +3396,12 @@ canvas[aria-label] {
     }
 }
 
-/* ── Scroll snap for tool card rows on mobile ── */
 @media (max-width: 600px) {
     .home-grid {
-        scroll-snap-type: none; /* keep natural flow */
+        scroll-snap-type: none; 
     }
 }
 
-/* ── Improved focus states for keyboard / touch ── */
 @media (max-width: 800px) {
     :focus-visible {
         outline: 2px solid var(--accent);
@@ -3596,9 +3410,6 @@ canvas[aria-label] {
     }
 }
 
-/* ── Mobile responsiveness additions ── */
-
-/* Touch targets: ensure all interactive elements are ≥44px tall (WCAG 2.5.5) */
 @media (pointer: coarse) {
     button,
     .button,
@@ -3612,7 +3423,7 @@ canvas[aria-label] {
     .nav-toggle {
         min-height: 44px;
     }
-    /* Drop zone larger on mobile for easier drag target */
+    
     .drop-zone,
     .upload-area,
     [class*="drop-area"] {
@@ -3620,21 +3431,20 @@ canvas[aria-label] {
     }
 }
 
-/* Prevent long unbroken strings overflowing on narrow screens */
 @media (max-width: 480px) {
     h1, h2, h3, .hero-title {
         word-break: break-word;
         overflow-wrap: break-word;
         hyphens: auto;
     }
-    /* Blog article body text */
+    
     .blog-content p,
     .article-body p,
     .post-body p {
         font-size: 1rem;
         line-height: 1.75;
     }
-    /* Tables in blog/privacy/terms pages scroll horizontally */
+    
     table {
         display: block;
         overflow-x: auto;
@@ -3643,7 +3453,6 @@ canvas[aria-label] {
     }
 }
 
-/* Small-phone typography scale */
 @media (max-width: 375px) {
     :root {
         font-size: 15px;
@@ -3653,7 +3462,6 @@ canvas[aria-label] {
     }
 }
 
-/* Full-width buttons on small screens */
 @media (max-width: 480px) {
     .hero-cta .button,
     .hero-cta button,
@@ -3665,7 +3473,6 @@ canvas[aria-label] {
     }
 }
 
-/* Remove min-width from nav items on mobile so they don't overflow */
 @media (max-width: 800px) {
     .main-nav a {
         min-width: unset;
@@ -3673,7 +3480,6 @@ canvas[aria-label] {
     }
 }
 
-/* Sticky top bar safe area for notch devices */
 @supports (padding-top: env(safe-area-inset-top)) {
     .site-header,
     header[role="banner"] {
@@ -3681,18 +3487,15 @@ canvas[aria-label] {
     }
 }
 
-/* Prevent horizontal overflow at root level */
 html, body {
     max-width: 100%;
     overflow-x: hidden;
 }
 
-/* Smoother tap highlight on iOS */
 a, button, [role="button"] {
     -webkit-tap-highlight-color: rgba(79, 158, 255, 0.12);
 }
 
-/* Better readability for blog content on mobile */
 @media (max-width: 600px) {
     .blog-container,
     .article-container,

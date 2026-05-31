@@ -1,7 +1,4 @@
-/**
- * ConvertPDF Service Worker
- */
-const CACHE_NAME = 'convertpdf-v15';
+const CACHE_NAME = 'convertpdf-v16';
 
 const STATIC_ASSETS = [
     '/',
@@ -77,10 +74,12 @@ function isThirdPartyAdRequest(url) {
            url.includes('googletagmanager.com') ||
            url.includes('googletagservices.com') ||
            url.includes('adservice.google') ||
-           url.includes('partner.googleadservices.com');
+           url.includes('partner.googleadservices.com') ||
+           url.includes('google-analytics.com') ||
+           url.includes('analytics.google.com') ||
+           url.includes('stats.g.doubleclick.net');
 }
 
-// Install: cache assets individually so a single 404 won't fail the whole SW.
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
@@ -94,7 +93,6 @@ self.addEventListener('install', event => {
     );
 });
 
-// Activate: delete stale caches.
 self.addEventListener('activate', event => {
     event.waitUntil(
         caches.keys()
@@ -108,22 +106,18 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch: stale-while-revalidate for assets, network-first for navigation.
 function isCDNRequest(url) {
     return url.includes('cdn.jsdelivr.net') || url.includes('cdnjs.cloudflare.com') || url.includes('esm.sh') || url.includes('unpkg.com');
 }
 
 self.addEventListener('fetch', event => {
-    // Only handle GET requests
+
     if (event.request.method !== 'GET') return;
 
-    // Early bypass for third-party ad requests (prevents 503 errors)
     if (isThirdPartyAdRequest(event.request.url)) return;
 
-    // Skip font requests entirely
     if (isFontRequest(event.request.url)) return;
 
-    // Navigation: try network first, fall back to cached page or the offline shell.
     if (isNavigationRequest(event.request)) {
         event.respondWith(
             fetch(event.request)
@@ -143,8 +137,6 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // CDN assets: use explicit CORS mode so the response is not opaque and can be cached.
-    // Strategy: cache-first (libs are versioned/immutable), fall back to network.
     if (isCDNRequest(event.request.url)) {
         event.respondWith(
             caches.open(CACHE_NAME).then(cache =>
@@ -166,7 +158,6 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    // Same-origin assets: stale-while-revalidate (never returns a 503)
     event.respondWith(
         caches.open(CACHE_NAME).then(cache => {
             return cache.match(event.request).then(cachedResponse => {
@@ -176,7 +167,7 @@ self.addEventListener('fetch', event => {
                     }
                     return networkResponse;
                 }).catch(() => {
-                    // Fallback to cached response or a simple offline HTML (never a 503)
+
                     if (cachedResponse) return cachedResponse;
                     return new Response('<!DOCTYPE html><html lang="en"><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
                         status: 200,
