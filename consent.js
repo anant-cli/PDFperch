@@ -5,7 +5,9 @@
         if (typeof gtag !== 'undefined') {
             gtag('consent', 'update', {
                 ad_storage: state,
-                analytics_storage: state
+                analytics_storage: state,
+                ad_personalization: state,
+                ad_user_data: state
             });
         }
     }
@@ -59,6 +61,11 @@
                 flex: 2;
                 min-width: 200px;
             }
+            .consent-text a {
+                color: #93c5fd;
+                text-decoration: underline;
+                text-underline-offset: 2px;
+            }
             .consent-buttons {
                 display: flex;
                 gap: 0.75rem;
@@ -100,8 +107,9 @@
         bannerDiv.innerHTML = `
             <div class="consent-content">
                 <div class="consent-text">
-                    🍪 We value your privacy. This site uses cookies for analytics and personalized ads.
+                    We value your privacy. This site uses cookies for analytics and personalized ads.
                     Choose "Accept all" or "Reject non-essential" to continue.
+                    <a href="/privacy.html">Privacy Policy</a>
                 </div>
                 <div class="consent-buttons">
                     <button class="btn-accept" id="consent-accept-btn">Accept all</button>

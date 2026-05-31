@@ -519,8 +519,6 @@
 
         const toggleBtn = document.createElement('button');
         toggleBtn.className = 'theme-toggle-btn';
-        toggleBtn.setAttribute('aria-label', 'Toggle light/dark theme');
-        toggleBtn.setAttribute('title', 'Toggle Light/Dark Theme');
         
         const storedTheme = localStorage.getItem('cpdf_theme');
         let currentTheme = 'dark'; 
@@ -530,15 +528,13 @@
             currentTheme = 'light';
         }
         
-        document.documentElement.setAttribute('data-theme', currentTheme);
-        updateToggleIcon(toggleBtn, currentTheme);
+        applyTheme(currentTheme, toggleBtn);
 
         toggleBtn.addEventListener('click', function () {
             document.documentElement.style.setProperty('--theme-transition', '0.3s');
             const nextTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', nextTheme);
             localStorage.setItem('cpdf_theme', nextTheme);
-            updateToggleIcon(toggleBtn, nextTheme);
+            applyTheme(nextTheme, toggleBtn);
             if (window.showToast) {
                 showToast(`Switched to ${nextTheme} mode!`, 'info');
             }
@@ -552,11 +548,29 @@
         }
     }
 
+    function applyTheme(theme, toggleBtn) {
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeMeta(theme);
+        if (toggleBtn) {
+            updateToggleIcon(toggleBtn, theme);
+        }
+    }
+
+    function updateThemeMeta(theme) {
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+            meta.setAttribute('content', theme === 'light' ? '#f8fafc' : '#0b0f1a');
+        }
+    }
+
     function updateToggleIcon(btn, theme) {
+        const nextTheme = theme === 'light' ? 'dark' : 'light';
+        btn.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
+        btn.setAttribute('title', `Switch to ${nextTheme} theme`);
         if (theme === 'light') {
-            btn.innerHTML = '🌙'; 
+            btn.innerHTML = '<span aria-hidden="true">D</span><span class="sr-only">Switch to dark theme</span>';
         } else {
-            btn.innerHTML = '☀️'; 
+            btn.innerHTML = '<span aria-hidden="true">L</span><span class="sr-only">Switch to light theme</span>';
         }
     }
 

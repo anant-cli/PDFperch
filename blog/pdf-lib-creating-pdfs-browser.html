@@ -1,4 +1,4 @@
-Ôªø<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,22 +11,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KJV2GQDD');</script>
 <!-- End Google Tag Manager -->
 <meta name="google-site-verification" content="6j7iWvC0z9G6KtwJ2Re-irErms-lub6HvOYWlKUb9nE" />
-<!-- Google Consent Mode v2 ‚Äì default denied (must be BEFORE GA tag) -->
+<!-- Google Consent Mode v2 ñ default denied (must be BEFORE GA tag) -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('consent', 'default', {
     ad_storage: 'denied',
     analytics_storage: 'denied',
+    ad_personalization: 'denied',
+    ad_user_data: 'denied',
     wait_for_update: 500
   });
 </script>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GCBDWNXHN2"></script>
-<script>
-  gtag('js', new Date());
-  gtag('config', 'G-GCBDWNXHN2');
-</script>
+
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1745874358886453"
      crossorigin="anonymous"></script>
@@ -41,7 +38,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="theme-color" content="#0f172a">
     <link rel="preload" href="../styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="../styles.css"></noscript>
-    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <link rel="icon" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="manifest" href="/manifest.json">
@@ -77,7 +74,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     <!-- Canonical -->
     <link rel="canonical" href="https://convertpdf.pages.dev/blog/pdf-lib-creating-pdfs-browser.html">
-    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
     <link rel="icon" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="manifest" href="/manifest.json">
@@ -86,7 +83,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="ConvertPDF">
 <script
-        type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Creating PDFs in the Browser with pdf-lib","description":"Technical guide to using pdf-lib.js for creating and manipulating PDFs entirely in the browser.","datePublished":"2026-04-08","author":{"@type":"Person","name":"Anant","url":"https://convertpdf.pages.dev/author/anant.html"},"publisher":{"@type":"Organization","name":"ConvertPDF","url":"https://convertpdf.pages.dev"}}</script>
+        type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Creating PDFs in the Browser with pdf-lib","description":"Technical guide to using pdf-lib.js for creating and manipulating PDFs entirely in the browser.","datePublished":"2026-04-08","author":{"@type":"Person","name":"Anant","url":"https://convertpdf.pages.dev/author/anant.html"},"publisher":{"@type":"Organization","name":"ConvertPDF","url":"https://convertpdf.pages.dev"},"image":"https://convertpdf.pages.dev/og-image.png"}</script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -102,7 +99,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","@id":"https://convertpdf.pages.dev/blog/pdf-lib-creating-pdfs-browser.html#faq","mainEntity":[{"@type":"Question","name":"What is pdf-lib and what can it do?","acceptedAnswer":{"@type":"Answer","text":"pdf-lib is an open-source JavaScript library for creating and modifying PDF files entirely in the browser or Node.js. It supports text, images, pages, form fields, encryption, and annotations ‚Äî no server or native dependencies needed."}},{"@type":"Question","name":"Is pdf-lib free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. pdf-lib is open source under the MIT licence and free for commercial and personal use with no restrictions."}},{"@type":"Question","name":"Can pdf-lib handle large PDF files?","acceptedAnswer":{"@type":"Answer","text":"pdf-lib can handle large files, but performance depends on available browser memory. Files up to 100MB are generally well-supported on modern devices with 8GB RAM or more."}}]}
+{"@context":"https://schema.org","@type":"FAQPage","@id":"https://convertpdf.pages.dev/blog/pdf-lib-creating-pdfs-browser.html#faq","mainEntity":[{"@type":"Question","name":"What is pdf-lib and what can it do?","acceptedAnswer":{"@type":"Answer","text":"pdf-lib is an open-source JavaScript library for creating and modifying PDF files entirely in the browser or Node.js. It supports text, images, pages, form fields, encryption, and annotations ó no server or native dependencies needed."}},{"@type":"Question","name":"Is pdf-lib free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes. pdf-lib is open source under the MIT licence and free for commercial and personal use with no restrictions."}},{"@type":"Question","name":"Can pdf-lib handle large PDF files?","acceptedAnswer":{"@type":"Answer","text":"pdf-lib can handle large files, but performance depends on available browser memory. Files up to 100MB are generally well-supported on modern devices with 8GB RAM or more."}}]}
 </script>
 <script type="application/ld+json">
 {
@@ -120,6 +117,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KJV2GQDD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
     <header class="site-header">
         <div class="header-container">
             <div class="logo">
@@ -146,7 +147,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <div class="blog-post">
                 <h1>A Developer's Guide to PDF-Lib: Creating PDFs in the Browser</h1>
                 <p class="post-byline">By <strong>Anant</strong> &middot; April 8, 2026</p>
-                <p class="post-meta">Published on April 8, 2026 | üìå Development, JavaScript</p>
+                <p class="post-meta">Published on April 8, 2026 | ?? Development, JavaScript</p>
 
                 <section>
                     <h2>Introduction</h2>
@@ -166,7 +167,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 </section>
 
                 <section>
-                    <h2>What Is pdf-lib ‚ú®</h2>
+                    <h2>What Is pdf-lib ?</h2>
                     <p>
                         pdf-lib is an open-source JavaScript library created by Andrew Dillon. Unlike older PDF
                         libraries that rely on HTML-to-PDF rendering (which essentially takes a screenshot of HTML
@@ -304,7 +305,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 <section><h2>The 'Stateless' Advantage: Why Ephemeral Processing is the Future</h2>
                 <p>One of the most profound shifts in modern web development is the move toward "Stateless" or
                     "Ephemeral" processing. In a traditional server-side model, every document conversion creates a
-                    state on a remote machine‚Äîa temporary file, a database entry, a log of the operation. This state is
+                    state on a remote machineóa temporary file, a database entry, a log of the operation. This state is
                     a liability; it must be managed, secured, and eventually deleted. Failure to do so leads to data
                     accumulation and increased risk. pdf-lib allows us to move away from this model by performing
                     all operations in the most ephemeral environment possible: the user's browser memory.</p>
@@ -316,7 +317,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     ensures that the system is always in a "known good" state for the next user. Each conversion is a
                     fresh, isolated event that leaves no digital footprint behind.</p>
                 <p>Furthermore, this model aligns perfectly with the principles of "Edge Computing." By moving the
-                    compute power as close to the user as possible‚Äîliterally onto their own hardware‚Äîwe are reducing the
+                    compute power as close to the user as possibleóliterally onto their own hardwareówe are reducing the
                     energy consumption and carbon footprint associated with data transmission. Every megabyte that doesn't
                     have to travel to a data center and back is a win for both performance and the environment. As we
                     look toward a future of increasingly decentralized and privacy-focused software, libraries like
@@ -388,7 +389,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     <li><a href="../about.html">About Us</a></li>
                     <li><a href="../contact.html">Contact</a></li>
                     <li><a href="../privacy.html">Privacy Policy</a></li>
-                    <li><a href="../terms.html">Terms of Service</a></li>                                            <li><a href="#" id="cookie-settings-link">üç™ Cookie Settings</a></li>
+                    <li><a href="../terms.html">Terms of Service</a></li>                                            <li><a href="#" id="cookie-settings-link">?? Cookie Settings</a></li>
                 </ul>
             </div>
             <div class="footer-col">

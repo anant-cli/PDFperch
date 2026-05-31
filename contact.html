@@ -18,15 +18,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   gtag('consent', 'default', {
     ad_storage: 'denied',
     analytics_storage: 'denied',
+    ad_personalization: 'denied',
+    ad_user_data: 'denied',
     wait_for_update: 500
   });
 </script>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GCBDWNXHN2"></script>
-<script>
-  gtag('js', new Date());
-  gtag('config', 'G-GCBDWNXHN2');
-</script>
+
 <!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1745874358886453"
      crossorigin="anonymous"></script>
@@ -61,7 +58,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <meta name="twitter:description" content="Questions? Feedback? Bugs? We'd love to hear from you.">
   <meta name="twitter:image" content="https://convertpdf.pages.dev/og-image.png">
 
-  <link rel="apple-touch-icon" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
   <link rel="canonical" href="https://convertpdf.pages.dev/contact.html">
   <link rel="icon" href="/favicon.png">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -84,6 +81,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </head>
 
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KJV2GQDD"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
   <header class="site-header">
     <div class="header-container">
       <div class="logo">
@@ -113,7 +114,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <p>ConvertPDF is a passion project built for privacy. If something isn't working, or you have an idea to make
           it better, I'd love to hear from you.</p>
 
-        <form class="contact-form" id="contact-form" novalidate>
+        <form class="contact-form" id="contact-form" action="mailto:support.convertpdf@gmail.com" method="post" enctype="text/plain">
 
           <div class="form-group">
             <label for="contact-name">Name <span class="required">*</span></label>

@@ -25,11 +25,11 @@
         }
     ],
     "shortcuts": [
-        { "name": "Merge PDFs", "url": "/pages/mergepdf.html", "description": "Combine multiple PDFs into one" },
-        { "name": "PPTX to PDF", "url": "/pages/pptx2pdf.html", "description": "Convert PowerPoint slides to PDF" },
-        { "name": "DOCX to PDF", "url": "/pages/docx2pdf.html", "description": "Convert Word documents to PDF" },
-        { "name": "Compress PDF", "url": "/pages/compresspdf.html", "description": "Reduce PDF file size" },
-        { "name": "Sign PDF", "url": "/pages/signpdf.html", "description": "Add digital signatures to PDF" }
+        { "name": "Merge PDFs", "url": "/merge-pdf", "description": "Combine multiple PDFs into one" },
+        { "name": "PPTX to PDF", "url": "/pptx-to-pdf", "description": "Convert PowerPoint slides to PDF" },
+        { "name": "DOCX to PDF", "url": "/word-to-pdf", "description": "Convert Word documents to PDF" },
+        { "name": "Compress PDF", "url": "/compress-pdf", "description": "Reduce PDF file size" },
+        { "name": "Sign PDF", "url": "/sign-pdf", "description": "Add digital signatures to PDF" }
     ],
     "prefer_related_applications": false
 }

@@ -1,12 +1,13 @@
 /**
  * ConvertPDF Service Worker
  */
-const CACHE_NAME = 'convertpdf-v14';
+const CACHE_NAME = 'convertpdf-v15';
 
 const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/all-tools.html',
+    '/offline.html',
     '/styles.css',
     '/utils.js',
     '/script.js',
@@ -122,7 +123,7 @@ self.addEventListener('fetch', event => {
     // Skip font requests entirely
     if (isFontRequest(event.request.url)) return;
 
-    // Navigation: try network first, fall back to cached index
+    // Navigation: try network first, fall back to cached page or the offline shell.
     if (isNavigationRequest(event.request)) {
         event.respondWith(
             fetch(event.request)
@@ -135,7 +136,7 @@ self.addEventListener('fetch', event => {
                 })
                 .catch(() =>
                     caches.match(event.request).then(cached =>
-                        cached || caches.match('/index.html')
+                        cached || caches.match('/offline.html')
                     )
                 )
         );
@@ -177,7 +178,7 @@ self.addEventListener('fetch', event => {
                 }).catch(() => {
                     // Fallback to cached response or a simple offline HTML (never a 503)
                     if (cachedResponse) return cachedResponse;
-                    return new Response('<html><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
+                    return new Response('<!DOCTYPE html><html lang="en"><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
                         status: 200,
                         headers: { 'Content-Type': 'text/html' }
                     });

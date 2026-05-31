@@ -1,4 +1,6 @@
 /merge-pdf          /pages/mergepdf.html      200
+/blog               /blog/blog_index.html     200
+/blog/              /blog/blog_index.html     200
 /compress-pdf       /pages/compresspdf.html   200
 /split-pdf          /pages/splitpdf.html      200
 /rotate-pdf         /pages/rotatepdf.html     200
