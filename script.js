@@ -184,27 +184,27 @@ const TOOL_SVGS = {
 };
 
 const tools = [
-    { id: 'md2pdf',      name: 'Markdown to PDF',    desc: 'Convert .md files to formatted PDF',           url: 'pages/md2pdf.html' },
-    { id: 'docx2pdf',    name: 'Word to PDF',         desc: 'Convert Word documents to PDF',                url: 'pages/docx2pdf.html' },
-    { id: 'pdf2word',    name: 'PDF to Word',         desc: 'Extract PDF text into editable DOCX',          url: 'pages/pdf2word.html' },
-    { id: 'pptx2pdf',    name: 'PPTX to PDF',         desc: 'Convert PowerPoint slides to PDF',             url: 'pages/pptx2pdf.html' },
-    { id: 'img2pdf',     name: 'Images to PDF',       desc: 'Combine JPG and PNG into one PDF',             url: 'pages/img2pdf.html' },
-    { id: 'pdfencrypt',  name: 'PDF Password',        desc: 'Protect PDF files with encryption',            url: 'pages/pdfencrypt.html' },
-    { id: 'mergepdf',    name: 'Merge PDFs',          desc: 'Combine multiple PDF files',                   url: 'pages/mergepdf.html' },
-    { id: 'splitpdf',    name: 'Split PDF',           desc: 'Break a PDF into pages or ranges',             url: 'pages/splitpdf.html' },
-    { id: 'rotatepdf',   name: 'Rotate PDF',          desc: 'Rotate pages by 90, 180, or 270 degrees',     url: 'pages/rotatepdf.html' },
-    { id: 'watermarkpdf',name: 'Watermark PDF',       desc: 'Add text watermarks to pages',                 url: 'pages/watermarkpdf.html' },
-    { id: 'pagenumbers', name: 'Page Numbers',        desc: 'Add page numbers to PDF',                      url: 'pages/pagenumbers.html' },
-    { id: 'compresspdf', name: 'Compress PDF',        desc: 'Reduce PDF file size',                         url: 'pages/compresspdf.html' },
-    { id: 'signpdf',     name: 'Sign PDF',            desc: 'Add visible signatures',                       url: 'pages/signpdf.html' },
-    { id: 'txt2docx',    name: 'TXT to Word',         desc: 'Convert plain text to DOCX',                   url: 'pages/txt2docx.html' },
-    { id: 'pdf2jpg',     name: 'PDF to JPG',          desc: 'Extract pages as images',                      url: 'pages/pdf2jpg.html' },
-    { id: 'img2png',     name: 'Image Converter',     desc: 'Convert images to PNG, JPEG, or WebP',         url: 'pages/img2png.html' },
-    { id: 'web2pdf',     name: 'HTML to PDF',         desc: 'Paste HTML snippets to PDF',                   url: 'pages/web2pdf.html' },
-    { id: 'qrmaker',     name: 'QR Code',             desc: 'Create QR codes as PNG or SVG',               url: 'pages/qrmaker.html' },
-    { id: 'imgcompress', name: 'Image Compression',   desc: 'Reduce image size with quality controls',      url: 'pages/imgcompress.html' },
-    { id: 'organizepdf', name: 'Organize PDF',        desc: 'Reorder, rotate, and delete PDF pages',        url: 'pages/organizepdf.html' },
-    { id: 'ocrtool',     name: 'OCR Image to Text',   desc: 'Extract text from images and scanned PDFs',   url: 'pages/ocrtool.html' }
+    { id: 'md2pdf',      name: 'Markdown to PDF',    desc: 'Convert .md files to formatted PDF',           url: '/markdown-to-pdf' },
+    { id: 'docx2pdf',    name: 'Word to PDF',         desc: 'Convert Word documents to PDF',                url: '/word-to-pdf' },
+    { id: 'pdf2word',    name: 'PDF to Word',         desc: 'Extract PDF text into editable DOCX',          url: '/pdf-to-word' },
+    { id: 'pptx2pdf',    name: 'PPTX to PDF',         desc: 'Convert PowerPoint slides to PDF',             url: '/pptx-to-pdf' },
+    { id: 'img2pdf',     name: 'Images to PDF',       desc: 'Combine JPG and PNG into one PDF',             url: '/jpg-to-pdf' },
+    { id: 'pdfencrypt',  name: 'PDF Password',        desc: 'Protect PDF files with encryption',            url: '/pdf-password' },
+    { id: 'mergepdf',    name: 'Merge PDFs',          desc: 'Combine multiple PDF files',                   url: '/merge-pdf' },
+    { id: 'splitpdf',    name: 'Split PDF',           desc: 'Break a PDF into pages or ranges',             url: '/split-pdf' },
+    { id: 'rotatepdf',   name: 'Rotate PDF',          desc: 'Rotate pages by 90, 180, or 270 degrees',     url: '/rotate-pdf' },
+    { id: 'watermarkpdf',name: 'Watermark PDF',       desc: 'Add text watermarks to pages',                 url: '/watermark-pdf' },
+    { id: 'pagenumbers', name: 'Page Numbers',        desc: 'Add page numbers to PDF',                      url: '/page-numbers' },
+    { id: 'compresspdf', name: 'Compress PDF',        desc: 'Reduce PDF file size',                         url: '/compress-pdf' },
+    { id: 'signpdf',     name: 'Sign PDF',            desc: 'Add visible signatures',                       url: '/sign-pdf' },
+    { id: 'txt2docx',    name: 'TXT to Word',         desc: 'Convert plain text to DOCX',                   url: '/txt-to-word' },
+    { id: 'pdf2jpg',     name: 'PDF to JPG',          desc: 'Extract pages as images',                      url: '/pdf-to-jpg' },
+    { id: 'img2png',     name: 'Image Converter',     desc: 'Convert images to PNG, JPEG, or WebP',         url: '/image-converter' },
+    { id: 'web2pdf',     name: 'HTML to PDF',         desc: 'Paste HTML snippets to PDF',                   url: '/html-to-pdf' },
+    { id: 'qrmaker',     name: 'QR Code',             desc: 'Create QR codes as PNG or SVG',               url: '/qr-code-generator' },
+    { id: 'imgcompress', name: 'Image Compression',   desc: 'Reduce image size with quality controls',      url: '/compress-images' },
+    { id: 'organizepdf', name: 'Organize PDF',        desc: 'Reorder, rotate, and delete PDF pages',        url: '/organize-pdf' },
+    { id: 'ocrtool',     name: 'OCR Image to Text',   desc: 'Extract text from images and scanned PDFs',   url: '/ocr' }
 ];
 
 const grid = document.getElementById('toolGrid');

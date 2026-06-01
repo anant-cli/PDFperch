@@ -15,7 +15,7 @@ async function renderimgcompress(container) {
         <p class="tool-description">
             Reduce image file size with fine-grained quality and resize controls. Supports JPG, PNG, WebP, GIF, and AVIF.
             Everything happens in your browser — your images never leave your device.
-            You can also <a href="img2png.html" target="_self">convert image formats</a> after compressing.
+            You can also <a href="/image-converter" target="_self">convert image formats</a> after compressing.
         </p>
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>

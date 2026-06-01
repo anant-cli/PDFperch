@@ -19,7 +19,7 @@ async function rendermergepdf(container) {
         <h3>Select multiple PDFs</h3>
         <p class="tool-description">
             Combine multiple PDF files into one. Drag files into the order you need before merging.
-            After merging, you can also <a href="pdfencrypt.html" target="_self">password-protect</a> the result.
+            After merging, you can also <a href="/pdf-password" target="_self">password-protect</a> the result.
         </p>
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>

@@ -13,7 +13,7 @@ function renderimg2png(container) {
         <p class="tool-description">
             Convert any image to PNG, JPEG, or WebP. Control quality, background color for transparent images,
             and resize on the fly. Everything happens locally — no uploads, no servers.
-            After conversion, you can also <a href="img2pdf.html" target="_self">combine images into a PDF</a>.
+            After conversion, you can also <a href="/jpg-to-pdf" target="_self">combine images into a PDF</a>.
         </p>
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>

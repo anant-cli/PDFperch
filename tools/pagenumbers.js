@@ -16,7 +16,7 @@ async function renderpagenumbers(container) {
         <p class="tool-description">
             Add page numbers to your PDF documents. Customize position, format, color, font size, and skip cover pages.
             Perfect for professional documents, reports, and presentations.
-            After adding page numbers, you can also <a href="pdfencrypt.html" target="_self">password protect your PDF</a>.
+            After adding page numbers, you can also <a href="/pdf-password" target="_self">password protect your PDF</a>.
         </p>
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>

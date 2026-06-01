@@ -20,7 +20,7 @@ async function rendercompresspdf(container) {
         <h3>🗜️ Compress PDF</h3>
         <p class="tool-description">
             Reduces PDF size by re-rendering each page as a compressed image. Works on <strong>all PDFs</strong> including image-heavy ones.
-            After compression, you can also <a href="pdfencrypt.html" target="_self">password protect your PDF</a>.
+            After compression, you can also <a href="/pdf-password" target="_self">password protect your PDF</a>.
         </p>
         <div class="faq-section">
             <h4>Frequently Asked Questions</h4>

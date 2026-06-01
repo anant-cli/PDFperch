@@ -141,7 +141,7 @@
      */
     function setActiveNavLink() {
         const path = window.location.pathname;
-        const filename = path.split('/').pop() || 'index.html';
+        const filename = path.split('/').pop() || '/';
 
         document.querySelectorAll('.main-nav a').forEach(function (link) {
             link.classList.remove('active');
@@ -149,8 +149,8 @@
             const href = (link.getAttribute('href') || '').split('/').pop();
             const isActive = (
                 href === filename ||
-                (filename === '' && href === 'index.html') ||
-                (filename === 'index.html' && href === 'index.html')
+                (filename === '' && href === '/') ||
+                (filename === '/' && href === '/')
             );
             
             if (isActive) {
@@ -211,14 +211,14 @@
      */
     function normalizeGlobalLabels() {
         const navMap = {
-            'blog/blog_index.html': 'Blog',
+            '/blog/': 'Blog',
             'blog/': 'Blog',
-            'index.html': 'Home',
-            'all-tools.html': 'All Tools',
-            'about.html': 'About',
-            'contact.html': 'Contact',
-            'privacy.html': 'Privacy',
-            'terms.html': 'Terms'
+            '/': 'Home',
+            '/all-tools': 'All Tools',
+            '/about': 'About',
+            '/contact': 'Contact',
+            '/privacy': 'Privacy',
+            '/terms': 'Terms'
         };
 
         document.querySelectorAll('.main-nav a').forEach(function (a) {
@@ -636,27 +636,27 @@ const RELATED_TOOLS_MAP = {
 };
 
 const TOOL_META = {
-    'mergepdf':     { name:'Merge PDF',          icon:'JOIN', url:'mergepdf.html' },
-    'splitpdf':     { name:'Split PDF',          icon:'CUT',  url:'splitpdf.html' },
-    'compresspdf':  { name:'Compress PDF',       icon:'ZIP', url:'compresspdf.html' },
-    'pdfencrypt':   { name:'Password Protect',   icon:'LOCK', url:'pdfencrypt.html' },
-    'signpdf':      { name:'Sign PDF',           icon:'SIGN', url:'signpdf.html' },
-    'watermarkpdf': { name:'Watermark PDF',      icon:'MARK', url:'watermarkpdf.html' },
-    'rotatepdf':    { name:'Rotate PDF',         icon:'90', url:'rotatepdf.html' },
-    'organizepdf':  { name:'Organize PDF',       icon:'ORG', url:'organizepdf.html' },
-    'pagenumbers':  { name:'Page Numbers',       icon:'#', url:'pagenumbers.html' },
-    'pdf2jpg':      { name:'PDF to JPG',         icon:'JPG', url:'pdf2jpg.html' },
-    'img2pdf':      { name:'Images to PDF',      icon:'IMG', url:'img2pdf.html' },
-    'docx2pdf':     { name:'Word to PDF',        icon:'DOCX', url:'docx2pdf.html' },
-    'pdf2word':     { name:'PDF to Word',        icon:'DOC', url:'pdf2word.html' },
-    'pptx2pdf':     { name:'PPTX to PDF',        icon:'PPT', url:'pptx2pdf.html' },
-    'md2pdf':       { name:'Markdown to PDF',    icon:'MD', url:'md2pdf.html' },
-    'web2pdf':      { name:'HTML to PDF',        icon:'HTML', url:'web2pdf.html' },
-    'txt2docx':     { name:'TXT to Word',        icon:'TXT', url:'txt2docx.html' },
-    'ocrtool':      { name:'OCR Text Extract',   icon:'OCR', url:'ocrtool.html' },
-    'img2png':      { name:'Image Converter',    icon:'IMG', url:'img2png.html' },
-    'imgcompress':  { name:'Compress Images',    icon:'IMG', url:'imgcompress.html' },
-    'qrmaker':      { name:'QR Code Generator',  icon:'QR', url:'qrmaker.html' },
+    'mergepdf':     { name:'Merge PDF',          icon:'JOIN', url:'/merge-pdf' },
+    'splitpdf':     { name:'Split PDF',          icon:'CUT',  url:'/split-pdf' },
+    'compresspdf':  { name:'Compress PDF',       icon:'ZIP', url:'/compress-pdf' },
+    'pdfencrypt':   { name:'Password Protect',   icon:'LOCK', url:'/pdf-password' },
+    'signpdf':      { name:'Sign PDF',           icon:'SIGN', url:'/sign-pdf' },
+    'watermarkpdf': { name:'Watermark PDF',      icon:'MARK', url:'/watermark-pdf' },
+    'rotatepdf':    { name:'Rotate PDF',         icon:'90', url:'/rotate-pdf' },
+    'organizepdf':  { name:'Organize PDF',       icon:'ORG', url:'/organize-pdf' },
+    'pagenumbers':  { name:'Page Numbers',       icon:'#', url:'/page-numbers' },
+    'pdf2jpg':      { name:'PDF to JPG',         icon:'JPG', url:'/pdf-to-jpg' },
+    'img2pdf':      { name:'Images to PDF',      icon:'IMG', url:'/jpg-to-pdf' },
+    'docx2pdf':     { name:'Word to PDF',        icon:'DOCX', url:'/word-to-pdf' },
+    'pdf2word':     { name:'PDF to Word',        icon:'DOC', url:'/pdf-to-word' },
+    'pptx2pdf':     { name:'PPTX to PDF',        icon:'PPT', url:'/pptx-to-pdf' },
+    'md2pdf':       { name:'Markdown to PDF',    icon:'MD', url:'/markdown-to-pdf' },
+    'web2pdf':      { name:'HTML to PDF',        icon:'HTML', url:'/html-to-pdf' },
+    'txt2docx':     { name:'TXT to Word',        icon:'TXT', url:'/txt-to-word' },
+    'ocrtool':      { name:'OCR Text Extract',   icon:'OCR', url:'/ocr' },
+    'img2png':      { name:'Image Converter',    icon:'IMG', url:'/image-converter' },
+    'imgcompress':  { name:'Compress Images',    icon:'IMG', url:'/compress-images' },
+    'qrmaker':      { name:'QR Code Generator',  icon:'QR', url:'/qr-code-generator' },
 };
 
 function renderRelatedTools() {
