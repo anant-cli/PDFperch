@@ -108,9 +108,10 @@ async function renderocrtool(container) {
         let baseName    = '';
 
         // ── Drop zone ─────────────────────────────────────────────────────────
-        dropZone.addEventListener('click', () => inp.click());
         if (typeof setupDropZone === 'function') {
             setupDropZone('ocrDropZone', 'ocrInput', handleFile);
+        } else {
+            dropZone.addEventListener('click', () => inp.click());
         }
         inp.addEventListener('change', () => {
             if (inp.files[0]) handleFile(inp.files[0]);
@@ -129,8 +130,8 @@ async function renderocrtool(container) {
                 const tempImg = new Image();
                 const url = URL.createObjectURL(file);
                 tempImg.onload = () => {
-                    if (tempImg.naturalWidth > 5000) {
-                        if (window.showToast) showToast('Image is very large (>5000 px wide) — OCR may be slow.', 'warning');
+                    if (tempImg.naturalWidth > 5000 || tempImg.naturalHeight > 5000) {
+                        if (window.showToast) showToast('Image is very large (>5000 px) — OCR may be slow.', 'warning');
                     }
                     URL.revokeObjectURL(url);
                 };
@@ -164,11 +165,9 @@ async function renderocrtool(container) {
             const logger = (m) => {
                 if (m.status === 'loading tesseract core') {
                     progressLabel.textContent = 'Loading OCR engine…';
-                    if (window.showToast) showToast('Loading OCR engine…');
                 }
                 if (m.status === 'loading language traineddata') {
                     progressLabel.textContent = `Downloading ${langName} language data…`;
-                    if (window.showToast) showToast(`Downloading ${langName} language data…`);
                 }
                 if (m.status === 'initializing api') {
                     progressLabel.textContent = 'Initialising OCR…';
@@ -183,6 +182,7 @@ async function renderocrtool(container) {
             try {
                 const isPdf  = currentFile.name.toLowerCase().endsWith('.pdf');
                 let fullText = '';
+                let pageCount = 0;
 
                 if (isPdf) {
                     // Lazy-load pdf.js for PDF rendering
@@ -192,31 +192,35 @@ async function renderocrtool(container) {
                     const buf    = await currentFile.arrayBuffer();
                     const pdfjsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
                     const total  = pdfjsDoc.numPages;
+                    pageCount = total;
 
                     // Create one Tesseract worker for all pages
                     const worker = await Tesseract.createWorker(langCode, 1, { logger });
 
-                    for (let pageNum = 1; pageNum <= total; pageNum++) {
-                        progressLabel.textContent = `OCR: page ${pageNum} of ${total}…`;
-                        progressBar.style.width = `${Math.round(((pageNum - 1) / total) * 100)}%`;
+                    try {
+                        for (let pageNum = 1; pageNum <= total; pageNum++) {
+                            progressLabel.textContent = `OCR: page ${pageNum} of ${total}…`;
+                            progressBar.style.width = `${Math.round(((pageNum - 1) / total) * 100)}%`;
 
-                        const pdfPage  = await pdfjsDoc.getPage(pageNum);
-                        const viewport = pdfPage.getViewport({ scale: 2.0 }); // 2× for OCR accuracy
-                        const canvas   = document.createElement('canvas');
-                        canvas.width   = Math.round(viewport.width);
-                        canvas.height  = Math.round(viewport.height);
-                        const ctx      = canvas.getContext('2d');
-                        ctx.fillStyle  = '#ffffff';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-                        await pdfPage.render({ canvasContext: ctx, viewport }).promise;
+                            const pdfPage  = await pdfjsDoc.getPage(pageNum);
+                            const viewport = pdfPage.getViewport({ scale: 2.0 }); // 2× for OCR accuracy
+                            const canvas   = document.createElement('canvas');
+                            canvas.width   = Math.round(viewport.width);
+                            canvas.height  = Math.round(viewport.height);
+                            const ctx      = canvas.getContext('2d');
+                            ctx.fillStyle  = '#ffffff';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            await pdfPage.render({ canvasContext: ctx, viewport }).promise;
 
-                        const { data: { text } } = await worker.recognize(canvas);
-                        releaseCanvas(canvas);
-                        if (pageNum > 1) fullText += `\n\n--- Page ${pageNum} ---\n\n`;
-                        fullText += text;
+                            const { data: { text } } = await worker.recognize(canvas);
+                            releaseCanvas(canvas);
+                            if (pageNum === 1) fullText += `--- Page 1 ---\n\n`;
+                            else fullText += `\n\n--- Page ${pageNum} ---\n\n`;
+                            fullText += text;
+                        }
+                    } finally {
+                        await worker.terminate();
                     }
-
-                    await worker.terminate();
                     progressBar.style.width = '100%';
 
                 } else {
@@ -240,10 +244,9 @@ async function renderocrtool(container) {
                     ocrOutput.value = lastText;
                     const words  = lastText.split(/\s+/).filter(Boolean).length;
                     const chars  = lastText.length;
-                    const isPdf  = currentFile.name.toLowerCase().endsWith('.pdf');
                     wordCountEl.textContent = `${words.toLocaleString()} words, ${chars.toLocaleString()} characters`;
                     timeLabelEl.textContent = isPdf
-                        ? `OCR complete — ${currentFile && 'all pages'} in ${elapsed} s`
+                        ? `OCR complete — ${pageCount} page${pageCount !== 1 ? 's' : ''} in ${elapsed} s`
                         : `OCR complete in ${elapsed} s`;
                 }
 

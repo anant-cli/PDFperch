@@ -1,4 +1,4 @@
-const CACHE_NAME = 'convertpdf-v16';
+const CACHE_NAME = 'convertpdf-v17';
 
 const STATIC_ASSETS = [
     '/',
@@ -9,6 +9,7 @@ const STATIC_ASSETS = [
     '/utils.js',
     '/script.js',
     '/components.js',
+    '/consent.js',
     '/favicon.png',
     '/favicon.ico',
     '/icon-192.png',
