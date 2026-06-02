@@ -21,3 +21,8 @@
 /page-numbers       /pages/pagenumbers.html   200
 /txt-to-word        /pages/txt2docx.html      200
 /pptx-to-pdf        /pages/pptx2pdf.html      200
+/about              /about.html               200
+/contact            /contact.html             200
+/privacy            /privacy.html             200
+/terms              /terms.html               200
+/all-tools          /all-tools.html           200

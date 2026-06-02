@@ -1,4 +1,7 @@
 {
+  "name": "convertpdf",
+  "version": "1.1.0",
+  "description": "Free online PDF tools",
   "dependencies": {
     "browser-image-compression": "^2.0.2",
     "dompurify": "^3.2.5",
