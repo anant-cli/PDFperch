@@ -59,7 +59,7 @@
  div.setAttribute('aria-label', 'Cookie consent');
  div.innerHTML = '<div class="cpdf-cc">' +
  '<p class="cpdf-ct">We use cookies for analytics and personalised ads to keep ConvertPDF free. ' +
- '<a href="/privacy">Privacy Policy</a></p>' +
+ '<a href="/privacy.html">Privacy Policy</a></p>' +
  '<div class="cpdf-cb">' +
  '<button class="cpdf-btn cpdf-accept" id="cpdf-accept">Accept all</button>' +
  '<button class="cpdf-btn cpdf-reject" id="cpdf-reject">Reject non-essential</button>' +
@@ -108,6 +108,7 @@
  init();
  }
 })();
+
 
 
 
