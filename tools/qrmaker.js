@@ -86,6 +86,10 @@ async function renderqrmaker(container) {
  let batchDataUrls = [];
  let batchSvgStrings = [];
 
+ function svgToDataUrl(svg) {
+ return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+ }
+
  function updateTypeFields() {
  document.querySelectorAll('.qr-dynamic').forEach(el => {
  el.style.display = el.dataset.type === qrType.value ? 'block' : 'none';
@@ -220,8 +224,14 @@ async function renderqrmaker(container) {
  previewWrapper.style.gap = '0.5rem';
 
  const previewDiv = document.createElement('div');
- previewDiv.innerHTML = svg;
  previewDiv.style.width = isBatch ? '100px' : 'auto';
+ const previewImg = document.createElement('img');
+ previewImg.src = svgToDataUrl(svg);
+ previewImg.alt = 'QR code preview';
+ previewImg.style.maxWidth = isBatch ? '100px' : '300px';
+ previewImg.style.height = 'auto';
+ previewImg.style.display = 'block';
+ previewDiv.appendChild(previewImg);
 
  previewWrapper.appendChild(previewDiv);
 

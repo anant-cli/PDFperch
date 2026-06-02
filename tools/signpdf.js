@@ -507,17 +507,49 @@ async function rendersignpdf(container) {
  if (font === 'TimesRoman') family = 'Georgia, serif';
  else if (font === 'Courier') family = 'monospace';
 
- sigContent.innerHTML = `<span style="color:${color}; font-family:${family}; font-size:1.15rem; font-weight:700; white-space:nowrap; text-align:center; pointer-events:none;">${text}</span>`;
+ sigContent.innerHTML = '';
+ const textNode = document.createElement('span');
+ textNode.textContent = text;
+ textNode.style.color = color;
+ textNode.style.fontFamily = family;
+ textNode.style.fontSize = '1.15rem';
+ textNode.style.fontWeight = '700';
+ textNode.style.whiteSpace = 'nowrap';
+ textNode.style.textAlign = 'center';
+ textNode.style.pointerEvents = 'none';
+ sigContent.appendChild(textNode);
  sigAspectRatio = 2.5;
  } else if (type === 'draw') {
- sigContent.innerHTML = `<img src="${drawCanvas.toDataURL('image/png')}" style="max-width:100%; max-height:100%; object-fit:contain; pointer-events:none; filter:${sigColorSel.value === 'red' ? 'hue-rotate(140deg)' : sigColorSel.value === 'blue' ? 'hue-rotate(220deg)' : 'none'};">`;
+ sigContent.innerHTML = '';
+ const drawnImg = document.createElement('img');
+ drawnImg.src = drawCanvas.toDataURL('image/png');
+ drawnImg.style.maxWidth = '100%';
+ drawnImg.style.maxHeight = '100%';
+ drawnImg.style.objectFit = 'contain';
+ drawnImg.style.pointerEvents = 'none';
+ drawnImg.style.filter = sigColorSel.value === 'red' ? 'hue-rotate(140deg)' : sigColorSel.value === 'blue' ? 'hue-rotate(220deg)' : 'none';
+ sigContent.appendChild(drawnImg);
  sigAspectRatio = drawCanvas.width / drawCanvas.height;
  } else if (type === 'image') {
  if (uploadedSigImage) {
- sigContent.innerHTML = `<img src="${uploadedSigImage.src}" style="max-width:100%; max-height:100%; object-fit:contain; pointer-events:none;">`;
+ sigContent.innerHTML = '';
+ const uploadedImg = document.createElement('img');
+ uploadedImg.src = uploadedSigImage.src;
+ uploadedImg.style.maxWidth = '100%';
+ uploadedImg.style.maxHeight = '100%';
+ uploadedImg.style.objectFit = 'contain';
+ uploadedImg.style.pointerEvents = 'none';
+ sigContent.appendChild(uploadedImg);
  sigAspectRatio = uploadedSigImage.width / uploadedSigImage.height;
  } else {
- sigContent.innerHTML = `<span style="color:var(--accent); font-size:0.8rem; font-weight:500; text-align:center;"> Upload Signature</span>`;
+ sigContent.innerHTML = '';
+ const placeholder = document.createElement('span');
+ placeholder.textContent = 'Upload Signature';
+ placeholder.style.color = 'var(--accent)';
+ placeholder.style.fontSize = '0.8rem';
+ placeholder.style.fontWeight = '500';
+ placeholder.style.textAlign = 'center';
+ sigContent.appendChild(placeholder);
  sigAspectRatio = 2.5;
  }
  }

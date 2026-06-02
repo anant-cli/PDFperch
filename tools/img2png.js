@@ -311,7 +311,7 @@ function renderimg2png(container) {
  dZip.disabled = true;
  dZip.innerHTML = ' Creating ZIP...';
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js');
+ await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
  const zip = new JSZip();
  batchBlobs.forEach(({ name, blob }) => zip.file(name, blob));
  const zipBlob = await zip.generateAsync({ type: 'blob' });

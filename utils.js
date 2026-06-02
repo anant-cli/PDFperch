@@ -311,8 +311,13 @@ function loadScript(src, integrity, fallbackSrc) {
  _loadingScripts.delete(src);
  const fallback = fallbackSrc || CDN_FALLBACKS[src];
  if (fallback && fallback !== src) {
+ const fallbackIntegrity = CDN_INTEGRITY[fallback];
+ if (sri && !fallbackIntegrity) {
+ reject(new Error(`Failed to load script securely: ${src}`));
+ return;
+ }
  if (DEBUG) console.warn(`[loadScript] ${src} failed, trying fallback: ${fallback}`);
- loadScript(fallback, null, null).then(resolve).catch(reject);
+ loadScript(fallback, fallbackIntegrity, null).then(resolve).catch(reject);
  } else {
  reject(new Error(`Failed to load script: ${src}`));
  }
@@ -360,6 +365,43 @@ function loadStylesheet(href, integrity) {
  _loadingStyles.set(href, promise);
  return promise;
 }
+
+function sanitizeHtmlForTool(html) {
+ if (typeof html !== 'string') return '';
+
+ if (window.DOMPurify && typeof DOMPurify.sanitize === 'function') {
+ return DOMPurify.sanitize(html, {
+ FORBID_TAGS: ['script', 'iframe', 'object', 'embed', 'base', 'link', 'meta'],
+ FORBID_ATTR: ['srcdoc'],
+ ALLOW_DATA_ATTR: false
+ });
+ }
+
+ const doc = new DOMParser().parseFromString(html, 'text/html');
+ doc.querySelectorAll('script, iframe, object, embed, base, link, meta').forEach(node => node.remove());
+ doc.querySelectorAll('*').forEach(node => {
+ Array.from(node.attributes).forEach(attr => {
+ const name = attr.name.toLowerCase();
+ const value = attr.value.toLowerCase();
+ if (name.startsWith('on') || name === 'srcdoc' || value.includes('javascript:')) {
+ node.removeAttribute(attr.name);
+ }
+ });
+ });
+ return doc.body.innerHTML;
+}
+
+function sanitizeCssForTool(css) {
+ if (typeof css !== 'string') return '';
+ return css
+ .replace(/@import\b[^;]+;?/gi, '')
+ .replace(/javascript\s*:/gi, '')
+ .replace(/expression\s*\(/gi, '')
+ .replace(/url\s*\(\s*(['"]?)\s*(?!data:image\/|blob:|#)[^)]+\)/gi, 'url("")');
+}
+
+window.sanitizeHtmlForTool = sanitizeHtmlForTool;
+window.sanitizeCssForTool = sanitizeCssForTool;
 
 function releaseCanvas(canvas) {
  if (!canvas) return;

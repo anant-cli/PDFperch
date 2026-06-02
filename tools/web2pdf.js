@@ -1,4 +1,6 @@
 async function renderweb2pdf(container) {
+ await loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js');
+
  container.innerHTML = '';
  const area = document.createElement('div');
  area.className = 'area';
@@ -48,7 +50,7 @@ async function renderweb2pdf(container) {
  <div>
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Live Preview</div>
  <div class="preview-box" id="htmlPreviewBox" style="width: 100%; min-height: 600px; padding: 0; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; box-shadow: var(--shadow-sm); background: #fff;">
- <iframe id="htmlRenderPreview" sandbox="allow-scripts" style="width: 100%; height: 100%; min-height: 600px; border: none;"></iframe>
+ <iframe id="htmlRenderPreview" sandbox="" referrerpolicy="no-referrer" style="width: 100%; height: 100%; min-height: 600px; border: none;"></iframe>
  </div>
  </div>
 
@@ -78,6 +80,7 @@ async function renderweb2pdf(container) {
  const sizeSel = document.getElementById('htmlPageSize');
  const orientSel = document.getElementById('htmlOrientation');
  const printBtn = document.getElementById('printHtmlBtn');
+ let previewObjectUrl = null;
  toggleHtmlEditor.addEventListener('change', () => {
  htmlEditorSection.style.display = toggleHtmlEditor.checked ? 'block' : 'none';
  });
@@ -102,8 +105,8 @@ async function renderweb2pdf(container) {
  };
 
  function updatePreview() {
- const html = htmlSnippet.value;
- const css = cssSnippet.value;
+ const html = window.sanitizeHtmlForTool(htmlSnippet.value);
+ const css = window.sanitizeCssForTool(cssSnippet.value);
 
  const content = `
  <!DOCTYPE html>
@@ -121,7 +124,9 @@ async function renderweb2pdf(container) {
  `;
 
  const blob = new Blob([content], { type: 'text/html' });
- previewIframe.src = URL.createObjectURL(blob);
+ if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+ previewObjectUrl = URL.createObjectURL(blob);
+ previewIframe.src = previewObjectUrl;
  }
 
  htmlTemplate.addEventListener('change', () => {
@@ -140,8 +145,8 @@ async function renderweb2pdf(container) {
  updatePreview();
 
  printBtn.addEventListener('click', async () => {
- const html = htmlSnippet.value;
- const css = cssSnippet.value;
+ const html = window.sanitizeHtmlForTool(htmlSnippet.value);
+ const css = window.sanitizeCssForTool(cssSnippet.value);
 
  printBtn.disabled = true; printBtn.innerHTML = ' Preparing...';
  if (window.showSpinner) showSpinner('Preparing PDF...');
@@ -154,7 +159,12 @@ async function renderweb2pdf(container) {
  exportNode.style.color = '#111111';
  exportNode.style.padding = '0.75in';
  exportNode.style.width = sizeSel.value === 'letter' ? '8.5in' : '8.27in';
- exportNode.innerHTML = `<style>${css}</style>${html}`;
+ const styleNode = document.createElement('style');
+ styleNode.textContent = css;
+ exportNode.appendChild(styleNode);
+ const contentNode = document.createElement('div');
+ contentNode.innerHTML = html;
+ exportNode.appendChild(contentNode);
  document.body.appendChild(exportNode);
  await html2pdf().set({
  margin: 0,
@@ -177,6 +187,7 @@ async function renderweb2pdf(container) {
  }
 
  const fullHtml = `<!DOCTYPE html><html><head><title>ConvertPDF - HTML Document</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
 <style>
 @page { size: ${sizeSel.value} ${orientSel.value}; margin: 2.54cm; }
 @media print { body { margin: 2.54cm; } }
