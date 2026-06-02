@@ -1,6 +1,6 @@
 # ConvertPDF
 
-ConvertPDF is a free, privacy-first collection of browser-based document tools. All conversions occur in your browser, with no document uploads, no user accounts, and Cloudflare Analytics used only for aggregate traffic counts.
+ConvertPDF is a free, privacy-first collection of browser-based document tools. All conversions occur in your browser, with no document uploads, no user accounts, and Google Analytics used only for aggregate traffic counts.
 
 Live site: [https://convertpdf.pages.dev](https://convertpdf.pages.dev)
 
@@ -36,7 +36,7 @@ ConvertPDF includes a range of tools for everyday document workflows:
 
 - **Privacy-first:** Document processing happens locally in the browser. Files are not uploaded for conversion.
 - **No account needed:** Use the tools without registration or subscription.
-- **Traffic analytics only:** Cloudflare Analytics is used for aggregate site traffic measurement.
+- **Traffic analytics only:** Google Analytics and Google Tag Manager are used for aggregate site traffic measurement.
 - **Search monitoring only:** Google Search Console is used solely to monitor search traffic and indexing performance.
 - **Static architecture:** The site is delivered as static HTML, CSS, and JavaScript for speed and reliability.
 
@@ -46,11 +46,11 @@ ConvertPDF includes a range of tools for everyday document workflows:
 
 ConvertPDF is implemented using open web standards to stay fast, portable, and transparent:
 
-- **HTML5 / CSS3 / Vanilla JavaScript** — lightweight front-end code without heavy frameworks.
-- **pdf-lib** — for PDF creation, merging, and encryption.
-- **Mammoth.js** — for DOCX conversion.
-- **KaTeX** and **Prism.js** — for rendering Markdown, math, and code blocks.
-- **QRCode** and **JSZip** — for QR code generation and file packaging.
+- **HTML5 / CSS3 / Vanilla JavaScript** - lightweight front-end code without heavy frameworks.
+- **pdf-lib** - for PDF creation, merging, and encryption.
+- **Mammoth.js** - for DOCX conversion.
+- **KaTeX** and **Prism.js** - for rendering Markdown, math, and code blocks.
+- **QRCode** and **JSZip** - for QR code generation and file packaging.
 
 ---
 
@@ -60,10 +60,22 @@ This project is a static website. You can open it directly or serve it locally f
 
 ### Prerequisites
 - A modern web browser such as Chrome, Firefox, Edge, or Safari.
+- Node.js if you want to run the validation checks.
 
 ### Setup Instructions
 1. Open the project folder.
 2. Open `index.html` in your browser, or run a local web server such as VS Code Live Server.
+
+### Validation
+Run the static checks before deploying:
+
+```bash
+npm run check
+```
+
+The checker validates HTML head/body structure, route targets, tool page scripts, service-worker route coverage, JavaScript syntax, and required search/ad assets such as `ads.txt`, `sitemap.xml`, `robots.txt`, the Google Search Console verification file, Google Tag Manager, Google Analytics, AdSense, and consent script markers.
+
+Do not remove the existing Google AdSense, Google Analytics, Google Search Console, Google Tag Manager, or Bing Webmaster verification assets during cleanup. If Bing provides a verification meta tag or file, add the real token from Bing Webmaster Tools and keep it alongside the current Google verification assets.
 
 ---
 
