@@ -1,4 +1,28 @@
 User-agent: *
 Allow: /
+Disallow: /offline
+Disallow: /google6a140702be548477.html
+
+# Allow all major crawlers explicitly
+User-agent: Googlebot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
 
 Sitemap: https://convertpdf.pages.dev/sitemap.xml
+
+# LLM-readable content index
+# See /llms.txt for structured site content
