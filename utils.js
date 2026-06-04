@@ -81,6 +81,10 @@ function downloadBlob(blob, filename) {
 
  try {
  link.click();
+ const activeTool = getActiveToolFromPath();
+ if (activeTool && typeof showRelatedTools === 'function') {
+ showRelatedTools(activeTool);
+ }
  } catch (e) {
  console.error('Download failed:', e);
  showToast('Download failed. Please try again.', 'error');
@@ -140,6 +144,10 @@ function validateFile(file, options = {}) {
  valid: false,
  message: `${label} is too small. Minimum size is ${formatFileSize(minSize)}.`
  };
+ }
+
+ if (file.size > 20 * 1024 * 1024) {
+ showToast('Large file detected — processing may be slow on mobile devices.', 'warning');
  }
 
  return { valid: true };
@@ -773,6 +781,82 @@ function showPopupBlockedWarning(toolName) {
  container.appendChild(toast);
 }
 window.showPopupBlockedWarning = showPopupBlockedWarning;
+
+const RELATED_TOOLS = {
+  'mergepdf': [['Compress PDF', '/compress-pdf'], ['Sign PDF', '/sign-pdf'], ['Split PDF', '/split-pdf']],
+  'compresspdf': [['Merge PDF', '/merge-pdf'], ['PDF Password', '/pdf-password'], ['PDF to Word', '/pdf-to-word']],
+  'splitpdf': [['Merge PDF', '/merge-pdf'], ['Rotate PDF', '/rotate-pdf'], ['Page Numbers', '/page-numbers']],
+  'rotatepdf': [['Merge PDF', '/merge-pdf'], ['Split PDF', '/split-pdf']],
+  'pdf2jpg': [['Images to PDF', '/jpg-to-pdf'], ['PDF to Word', '/pdf-to-word']],
+  'img2pdf': [['PDF to JPG', '/pdf-to-jpg'], ['Merge PDF', '/merge-pdf'], ['Compress PDF', '/compress-pdf']],
+  'docx2pdf': [['PDF to Word', '/pdf-to-word'], ['Merge PDF', '/merge-pdf']],
+  'pdf2word': [['DOCX to PDF', '/word-to-pdf'], ['PDF Password', '/pdf-password']],
+  'pdfencrypt': [['Compress PDF', '/compress-pdf'], ['Sign PDF', '/sign-pdf']],
+  'signpdf': [['Compress PDF', '/compress-pdf'], ['PDF Password', '/pdf-password']],
+  'watermarkpdf': [['Page Numbers', '/page-numbers'], ['Merge PDF', '/merge-pdf']],
+  'ocrtool': [['PDF to Word', '/pdf-to-word'], ['TXT to Word', '/txt-to-word']],
+  'md2pdf': [['DOCX to PDF', '/word-to-pdf'], ['HTML to PDF', '/html-to-pdf']],
+  'web2pdf': [['Markdown to PDF', '/markdown-to-pdf'], ['DOCX to PDF', '/word-to-pdf']],
+  'qrmaker': [['Compress Images', '/compress-images'], ['Image Converter', '/image-converter']],
+  'imgcompress': [['Image Converter', '/image-converter'], ['Images to PDF', '/jpg-to-pdf']],
+  'organizepdf': [['Merge PDF', '/merge-pdf'], ['Split PDF', '/split-pdf'], ['Rotate PDF', '/rotate-pdf']],
+  'img2png': [['Compress Images', '/compress-images'], ['Images to PDF', '/jpg-to-pdf']],
+  'pagenumbers': [['Watermark PDF', '/watermark-pdf'], ['Merge PDF', '/merge-pdf']],
+  'txt2docx': [['DOCX to PDF', '/word-to-pdf'], ['OCR - Image to Text', '/ocr']],
+  'pptx2pdf': [['DOCX to PDF', '/word-to-pdf'], ['Merge PDF', '/merge-pdf']]
+};
+
+function getActiveToolFromPath() {
+  const path = window.location.pathname;
+  const rawTool = path.split('/').pop().replace('.html', '').toLowerCase();
+  const mapping = {
+    'merge-pdf': 'mergepdf',
+    'compress-pdf': 'compresspdf',
+    'split-pdf': 'splitpdf',
+    'rotate-pdf': 'rotatepdf',
+    'pdf-to-jpg': 'pdf2jpg',
+    'jpg-to-pdf': 'img2pdf',
+    'word-to-pdf': 'docx2pdf',
+    'pdf-to-word': 'pdf2word',
+    'pdf-password': 'pdfencrypt',
+    'sign-pdf': 'signpdf',
+    'watermark-pdf': 'watermarkpdf',
+    'ocr': 'ocrtool',
+    'markdown-to-pdf': 'md2pdf',
+    'html-to-pdf': 'web2pdf',
+    'qr-code-generator': 'qrmaker',
+    'compress-images': 'imgcompress',
+    'organize-pdf': 'organizepdf',
+    'image-converter': 'img2png',
+    'page-numbers': 'pagenumbers',
+    'txt-to-word': 'txt2docx',
+    'pptx-to-pdf': 'pptx2pdf'
+  };
+  return mapping[rawTool] || rawTool;
+}
+
+function showRelatedTools(toolId) {
+  if (document.querySelector('.related-tools')) return;
+  const cleanToolId = toolId.replace(/-/g, '');
+  const related = RELATED_TOOLS[cleanToolId];
+  if (!related) return;
+
+  const div = document.createElement('div');
+  div.className = 'related-tools';
+  div.innerHTML = '<h4>You might also need</h4>' +
+    '<div class="related-tools-links">' +
+    related.map(([name, url]) => `<a href="${url}" class="related-tool-link">${name}</a>`).join('') +
+    '</div>';
+
+  const area = document.querySelector('.area');
+  if (area) {
+    area.appendChild(div);
+  }
+}
+
+window.showRelatedTools = showRelatedTools;
+window.getActiveToolFromPath = getActiveToolFromPath;
+
 
 
 

@@ -61,12 +61,13 @@ async function rendermergepdf(container) {
 
  let filesArray = [];
  const fileMeta = new Map();
+ const isDataTransferSupported = typeof DataTransfer === 'function';
 
  mergeDropZone.addEventListener('click', () => mergeInp.click());
  if (typeof setupDropZone === 'function') setupDropZone('pdfMergeDropZone', 'pdfMergeInput');
 
  function syncFileInput() {
- if (typeof DataTransfer !== 'function') {
+ if (!isDataTransferSupported) {
  mergeInp.value = '';
  return;
  }
@@ -76,6 +77,7 @@ async function rendermergepdf(container) {
  }
 
  function moveFile(index, direction) {
+ if (!isDataTransferSupported) return;
  const target = direction === 'up' ? index - 1 : index + 1;
  if (target < 0 || target >= filesArray.length) return;
  [filesArray[index], filesArray[target]] = [filesArray[target], filesArray[index]];
@@ -119,94 +121,105 @@ async function rendermergepdf(container) {
  return meta;
  }
 
- function renderFileList() {
- fileList.innerHTML = '';
- filesArray.forEach((file, index) => {
- const meta = fileMeta.get(file) || {};
- const li = document.createElement('li');
- li.className = 'file-item';
- li.draggable = true;
- li.dataset.index = index;
- li.style.gap = '0.75rem';
+  function renderFileList() {
+  fileList.innerHTML = '';
+  filesArray.forEach((file, index) => {
+  const meta = fileMeta.get(file) || {};
+  const li = document.createElement('li');
+  li.className = 'file-item';
+  li.draggable = isDataTransferSupported;
+  li.dataset.index = index;
+  li.style.gap = '0.75rem';
 
- const fileSize = typeof formatFileSize === 'function' ? formatFileSize(file.size) : Math.round(file.size / 1024) + ' KB';
- li.innerHTML = `
- <img src="${meta.thumbUrl || ''}" alt="" style="width:48px;height:64px;object-fit:contain;background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:4px;${meta.thumbUrl ? '' : 'visibility:hidden;'}">
- <span class="file-name" style="flex:1;">${file.name} <sm style="color:var(--text-muted); font-size:0.8em;">(${fileSize}${meta.pages ? `, ${meta.pages} pages` : ''})</sm></span>
- <div class="file-actions">
- <button class="move-file" data-dir="up" title="Move up">Up</button>
- <button class="move-file" data-dir="down" title="Move down">Down</button>
- <button class="remove-file" style="color:#e74c3c; border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.08);" title="Remove">Remove</button>
- </div>
- `;
+  const fileSize = typeof formatFileSize === 'function' ? formatFileSize(file.size) : Math.round(file.size / 1024) + ' KB';
+  li.innerHTML = `
+  <img src="${meta.thumbUrl || ''}" alt="" style="width:48px;height:64px;object-fit:contain;background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:4px;${meta.thumbUrl ? '' : 'visibility:hidden;'}">
+  <span class="file-name" style="flex:1;">${file.name} <sm style="color:var(--text-muted); font-size:0.8em;">(${fileSize}${meta.pages ? `, ${meta.pages} pages` : ''})</sm></span>
+  <div class="file-actions">
+  ${isDataTransferSupported ? `
+  <button class="move-file" data-dir="up" title="Move up">Up</button>
+  <button class="move-file" data-dir="down" title="Move down">Down</button>
+  ` : ''}
+  <button class="remove-file" style="color:#e74c3c; border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.08);" title="Remove">Remove</button>
+  </div>
+  `;
 
- li.addEventListener('dragstart', e => {
- e.dataTransfer.setData('text/plain', String(index));
- li.style.opacity = '0.6';
- });
- li.addEventListener('dragend', () => {
- li.style.opacity = '';
- });
- li.addEventListener('dragover', e => {
- e.preventDefault();
- li.style.borderColor = 'var(--accent)';
- });
- li.addEventListener('dragleave', () => {
- li.style.borderColor = '';
- });
- li.addEventListener('drop', e => {
- e.preventDefault();
- li.style.borderColor = '';
- const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
- if (Number.isNaN(from) || from === index) return;
- const [moved] = filesArray.splice(from, 1);
- filesArray.splice(index, 0, moved);
- syncFileInput();
- renderFileList();
- });
- li.querySelector('.remove-file').addEventListener('click', e => {
- e.stopPropagation();
- filesArray.splice(index, 1);
- syncFileInput();
- renderFileList();
- });
+  if (isDataTransferSupported) {
+  li.addEventListener('dragstart', e => {
+  e.dataTransfer.setData('text/plain', String(index));
+  li.style.opacity = '0.6';
+  });
+  li.addEventListener('dragend', () => {
+  li.style.opacity = '';
+  });
+  li.addEventListener('dragover', e => {
+  e.preventDefault();
+  li.style.borderColor = 'var(--accent)';
+  });
+  li.addEventListener('dragleave', () => {
+  li.style.borderColor = '';
+  });
+  li.addEventListener('drop', e => {
+  e.preventDefault();
+  li.style.borderColor = '';
+  const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+  if (Number.isNaN(from) || from === index) return;
+  const [moved] = filesArray.splice(from, 1);
+  filesArray.splice(index, 0, moved);
+  syncFileInput();
+  renderFileList();
+  });
+  }
+  li.querySelector('.remove-file').addEventListener('click', e => {
+  e.stopPropagation();
+  filesArray.splice(index, 1);
+  syncFileInput();
+  renderFileList();
+  });
 
- li.querySelectorAll('.move-file').forEach(button => {
- button.addEventListener('click', e => {
- e.stopPropagation();
- const direction = button.dataset.dir;
- moveFile(index, direction);
- });
- });
+  if (isDataTransferSupported) {
+  li.querySelectorAll('.move-file').forEach(button => {
+  button.addEventListener('click', e => {
+  e.stopPropagation();
+  const direction = button.dataset.dir;
+  moveFile(index, direction);
+  });
+  });
+  }
 
- fileList.appendChild(li);
- });
- updateStats();
- }
+  fileList.appendChild(li);
+  });
+  updateStats();
+  }
 
- mergeInp.addEventListener('change', async () => {
- if (mergeInp.files.length === 0) return;
- filesArray = [...filesArray, ...Array.from(mergeInp.files)];
+  mergeInp.addEventListener('change', async () => {
+  if (mergeInp.files.length === 0) return;
+  
+  if (!isDataTransferSupported && filesArray.length === 0) {
+  if (window.showToast) showToast('File reordering is not supported in this browser — files will be merged in selection order.', 'info');
+  }
 
- const seen = new Set();
- filesArray = filesArray.filter(file => {
- const id = `${file.name}-${file.lastModified}-${file.size}`;
- if (seen.has(id)) return false;
- seen.add(id);
- return true;
- });
+  filesArray = [...filesArray, ...Array.from(mergeInp.files)];
 
- if (filesArray.length > 0) {
- const p = mergeDropZone.querySelector('p');
- if (p) p.innerHTML = `<strong>${filesArray.length} file${filesArray.length > 1 ? 's' : ''} selected</strong>`;
- mergeDropZone.style.borderColor = 'var(--accent)';
- mergeDropZone.style.background = 'rgba(99,102,241,0.07)';
- }
+  const seen = new Set();
+  filesArray = filesArray.filter(file => {
+  const id = `${file.name}-${file.lastModified}-${file.size}`;
+  if (seen.has(id)) return false;
+  seen.add(id);
+  return true;
+  });
 
- renderFileList();
- await Promise.all(filesArray.map(loadFileMeta));
- renderFileList();
- });
+  if (filesArray.length > 0) {
+  const p = mergeDropZone.querySelector('p');
+  if (p) p.innerHTML = `<strong>${filesArray.length} file${filesArray.length > 1 ? 's' : ''} selected</strong>`;
+  mergeDropZone.style.borderColor = 'var(--accent)';
+  mergeDropZone.style.background = 'rgba(99,102,241,0.07)';
+  }
+
+  renderFileList();
+  await Promise.all(filesArray.map(loadFileMeta));
+  renderFileList();
+  });
 
  mergeBtn.addEventListener('click', async () => {
  if (filesArray.length < 2) {

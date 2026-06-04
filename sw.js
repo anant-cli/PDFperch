@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'convertpdf-v18';
+const CACHE_NAME = 'convertpdf-v19';
 
 const STATIC_ASSETS = [
  '/',
@@ -12,51 +12,8 @@ const STATIC_ASSETS = [
  '/favicon.png',
  '/favicon.ico',
  '/icon-192.png',
- '/icon-512.png',
  '/manifest.json',
- '/tools/loader.js',
- '/compress-pdf',
- '/word-to-pdf',
- '/pdf-to-word',
- '/pptx-to-pdf',
- '/jpg-to-pdf',
- '/image-converter',
- '/markdown-to-pdf',
- '/merge-pdf',
- '/page-numbers',
- '/pdf-to-jpg',
- '/pdf-password',
- '/qr-code-generator',
- '/rotate-pdf',
- '/sign-pdf',
- '/split-pdf',
- '/txt-to-word',
- '/watermark-pdf',
- '/html-to-pdf',
- '/compress-images',
- '/organize-pdf',
- '/ocr',
- '/tools/compresspdf.js',
- '/tools/docx2pdf.js',
- '/tools/pdf2word.js',
- '/tools/pptx2pdf.js',
- '/tools/img2pdf.js',
- '/tools/img2png.js',
- '/tools/md2pdf.js',
- '/tools/mergepdf.js',
- '/tools/pagenumbers.js',
- '/tools/pdf2jpg.js',
- '/tools/pdfencrypt.js',
- '/tools/qrmaker.js',
- '/tools/rotatepdf.js',
- '/tools/signpdf.js',
- '/tools/splitpdf.js',
- '/tools/txt2docx.js',
- '/tools/watermarkpdf.js',
- '/tools/web2pdf.js',
- '/tools/imgcompress.js',
- '/tools/organizepdf.js',
- '/tools/ocrtool.js'
+ '/tools/loader.js'
 ];
 
 function isFontRequest(url) {

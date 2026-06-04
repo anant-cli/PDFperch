@@ -14,6 +14,30 @@
  const path = window.location.pathname;
  const filename = path.split('/').pop().replace('.html', '');
  const toolMap = {
+ // Clean URL slugs
+ 'merge-pdf': 'rendermergepdf',
+ 'compress-pdf': 'rendercompresspdf',
+ 'split-pdf': 'rendersplitpdf',
+ 'rotate-pdf': 'renderrotatepdf',
+ 'pdf-to-jpg': 'renderpdf2jpg',
+ 'jpg-to-pdf': 'renderimg2pdf',
+ 'word-to-pdf': 'renderdocx2pdf',
+ 'pdf-to-word': 'renderpdf2word',
+ 'pdf-password': 'renderpdfencrypt',
+ 'sign-pdf': 'rendersignpdf',
+ 'watermark-pdf': 'renderwatermarkpdf',
+ 'ocr': 'renderocrtool',
+ 'markdown-to-pdf': 'rendermd2pdf',
+ 'html-to-pdf': 'renderweb2pdf',
+ 'qr-code-generator': 'renderqrmaker',
+ 'compress-images': 'renderimgcompress',
+ 'organize-pdf': 'renderorganizepdf',
+ 'image-converter': 'renderimg2png',
+ 'page-numbers': 'renderpagenumbers',
+ 'txt-to-word': 'rendertxt2docx',
+ 'pptx-to-pdf': 'renderpptx2pdf',
+
+ // Raw filenames
  'md2pdf': 'rendermd2pdf',
  'docx2pdf': 'renderdocx2pdf',
  'pdf2word': 'renderpdf2word',

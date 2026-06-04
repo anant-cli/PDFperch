@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /offline
 Disallow: /google6a140702be548477.html
+Disallow: /pages/
+Disallow: /blog/blog_index.html
 
 # Allow all major crawlers explicitly
 User-agent: Googlebot

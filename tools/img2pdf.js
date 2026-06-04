@@ -64,6 +64,7 @@ async function renderimg2pdf(container) {
  const progressBar = document.getElementById('imgProgressBar');
  const clearAllBtn = document.getElementById('clearAllBtn');
  let filesArray = [];
+ const isDataTransferSupported = typeof DataTransfer === 'function';
 
  clearAllBtn.addEventListener('click', () => {
  filesArray.forEach(f => { if (f.thumbUrl) URL.revokeObjectURL(f.thumbUrl); });
@@ -84,7 +85,7 @@ async function renderimg2pdf(container) {
  const item = document.createElement('div');
  item.className = 'file-item';
  item.style.padding = '0.75rem';
- item.draggable = true;
+ item.draggable = isDataTransferSupported;
  item.dataset.index = index;
 
  if (!file.thumbUrl) {
@@ -99,14 +100,20 @@ async function renderimg2pdf(container) {
  </div>
  </div>
  <div class="file-actions" style="gap: 0.4rem;">
+ ${isDataTransferSupported ? `
  <button class="secondary ${index === 0 ? 'hidden' : ''}" style="min-width: unset; padding: 0.4rem; font-size: 0.8rem;">Up</button>
  <button class="secondary ${index === filesArray.length - 1 ? 'hidden' : ''}" style="min-width: unset; padding: 0.4rem; font-size: 0.8rem;">Down</button>
+ ` : ''}
  <button class="secondary" style="min-width: unset; padding: 0.4rem; font-size: 0.8rem; color: #f87171;">Remove</button>
  </div>
  `;
 
- const [upBtn, downBtn, delBtn] = item.querySelectorAll('button');
+ const buttons = item.querySelectorAll('button');
+ const upBtn = isDataTransferSupported ? buttons[0] : null;
+ const downBtn = isDataTransferSupported ? buttons[1] : null;
+ const delBtn = isDataTransferSupported ? buttons[2] : buttons[0];
 
+ if (isDataTransferSupported) {
  item.addEventListener('dragstart', e => {
  e.dataTransfer.setData('text/plain', String(index));
  item.style.opacity = '0.6';
@@ -140,6 +147,7 @@ async function renderimg2pdf(container) {
  [filesArray[index], filesArray[index + 1]] = [filesArray[index + 1], filesArray[index]];
  renderPreviewList();
  });
+ }
 
  delBtn.addEventListener('click', () => {
  if (filesArray[index].thumbUrl) {
@@ -147,7 +155,7 @@ async function renderimg2pdf(container) {
  }
  filesArray.splice(index, 1);
  renderPreviewList();
- if (typeof DataTransfer === 'function') {
+ if (isDataTransferSupported) {
  const dt = new DataTransfer();
  filesArray.forEach(f => dt.items.add(f));
  input.files = dt.files;
@@ -163,6 +171,9 @@ async function renderimg2pdf(container) {
 
  input.addEventListener('change', () => {
  if (input.files.length > 0) {
+ if (!isDataTransferSupported && filesArray.length === 0) {
+ if (window.showToast) showToast('File reordering is not supported in this browser — files will be merged in selection order.', 'info');
+ }
  const newFiles = Array.from(input.files);
  filesArray = [...filesArray, ...newFiles];
  renderPreviewList();
