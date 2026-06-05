@@ -131,7 +131,7 @@ function getCurrentPagePath() {
  if (window.location.protocol === 'file:') {
  const filename = window.location.pathname.split('/').pop().toLowerCase();
  if (!filename || filename === 'index.html') return '/';
- if (filename === 'blog_index.html') return '/blog';
+ if (filename === 'blog_index.html') return '/blog/blog_index';
  return '/' + filename.replace(/\.html$/, '');
  }
  const path = window.location.pathname;
@@ -144,7 +144,7 @@ function rewriteLocalFileLinks() {
  const localPathMap = {
  '/': 'index.html',
  '/all-tools': 'all-tools.html',
- '/blog': 'blog/blog_index.html',
+ '/blog/blog_index': 'blog/blog_index.html',
  '/about': 'about.html',
  '/contact': 'contact.html',
  '/privacy': 'privacy.html',
@@ -214,7 +214,7 @@ function setActiveNavLink() {
  function normalizeGlobalLabels() {
  const navMap = {
  '/': 'Home',
- '/blog': 'Blog',
+ '/blog/blog_index': 'Blog',
  '/all-tools': 'All Tools',
  '/about': 'About',
  '/contact': 'Contact',
