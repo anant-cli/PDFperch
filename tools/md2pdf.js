@@ -39,7 +39,7 @@ async function rendermd2pdf(container) {
  <div style="font-size: 1.25rem; margin-bottom: 0.25rem;">File</div>
  <p style="font-size: 1.05rem; font-weight: 500;">Drag & drop your Markdown file</p>
  <p class="note">or click to browse</p>
- <input type="file" id="mdFile" accept=".md,.markdown,.txt" aria-label="Markdown file" style="display: none;">
+ <input type="file" id="mdFile" accept=".md,.markdown" aria-label="Markdown file" style="display: none;">
  </div>
 
  <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; background: var(--bg-input); padding: 1rem; border-radius: var(--r-md);">
@@ -61,9 +61,9 @@ async function rendermd2pdf(container) {
  <div>
  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
  <div class="preview-title">Live preview</div>
- <label><input type="checkbox" id="mdDarkTheme"> Dark theme</label>
+ 
  </div>
- <div class="preview-box" id="mdPreviewBox" style="min-height: 600px; overflow-y: auto;">
+ <div class="preview-box" id="mdPreviewBox" style="min-height: 600px; overflow-y: auto; background: #ffffff; color: #1a1a1a;">
  <div id="mdRendered"></div>
  </div>
  </div>
@@ -77,7 +77,7 @@ async function rendermd2pdf(container) {
  const mdEditor = document.getElementById('mdEditor');
  const mdRendered = document.getElementById('mdRendered');
  const mdPreviewBox = document.getElementById('mdPreviewBox');
- const mdDarkTheme = document.getElementById('mdDarkTheme');
+ const mdDarkTheme = { checked: false }; // dark theme removed
  const toggleEditor = document.getElementById('toggleEditor');
  const editorSection = document.getElementById('editorSection');
  const loadSampleBtn = document.getElementById('loadSampleBtn');
@@ -163,8 +163,9 @@ async function rendermd2pdf(container) {
  }
  const processed = preprocessMarkdown(text);
  const rawHtml = DOMPurify.sanitize(marked.parse(processed));
- const theme = mdDarkTheme.checked ? 'dark' : 'light';
- mdPreviewBox.style.background = theme === 'dark' ? '#0d1117' : 'white';
+ const theme = 'light';
+ mdPreviewBox.style.background = '#ffffff';
+    mdPreviewBox.style.color = '#1a1a1a';
  mdRendered.innerHTML = `<div class="markdown-body" style="padding:1rem;">${rawHtml}</div>`;
  if (window.renderMathInElement) {
  renderMathInElement(mdRendered, {
@@ -191,7 +192,7 @@ async function rendermd2pdf(container) {
  const file = mdFile.files[0];
  if (!file) return;
  const validation = validateFile(file, {
- extensions: ['.md', '.markdown', '.txt'],
+ extensions: ['.md', '.markdown'],
  mimeTypes: ['text/markdown', 'text/plain'],
  maxSize: 10 * 1024 * 1024,
  label: 'Markdown file'
@@ -237,7 +238,7 @@ async function rendermd2pdf(container) {
  try {
  const processed = preprocessMarkdown(text);
  const rawHtml = DOMPurify.sanitize(marked.parse(processed));
- const theme = mdDarkTheme.checked ? 'dark' : 'light';
+ const theme = 'light';
  const pageSize = sizeSelect.value;
  const orientation = orientSelect.value;
 

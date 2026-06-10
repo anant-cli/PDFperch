@@ -18,7 +18,7 @@ async function renderweb2pdf(container) {
  </p>
  </div>
 
- <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; background: var(--bg-input); padding: 1.2rem; border-radius: var(--r-lg); border: 1px solid var(--border-subtle);">
+ <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; background: var(--bg-input); padding: 1.2rem; border-radius: var(--r-lg); border: 1px solid var(--border-subtle); flex-wrap: wrap;">
  <div class="orientation-selector" style="margin: 0; gap: 1rem;">
  <label style="font-weight: 600;"> Template:
  <select id="htmlTemplate" style="max-width: 150px;">
@@ -30,12 +30,23 @@ async function renderweb2pdf(container) {
  </label>
  </div>
  <label style="margin-left: auto; display: flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.95rem; font-weight: 500; color: var(--text-muted);">
- <input type="checkbox" id="toggleHtmlEditor" style="width: auto; height: auto;"> Advanced Mode (Editor)
+ <input type="checkbox" id="toggleHtmlEditor" style="width: auto; height: auto;" checked> HTML/CSS Editor
  </label>
  </div>
 
- <div id="htmlEditorSection" style="display: none; animation: slideDown 0.3s ease-out;">
- <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+ <div style="display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap;padding:0.85rem 1rem;background:var(--bg-input);border-radius:var(--r-md);border:1px solid var(--border-subtle);">
+   <span style="font-weight:600;font-size:0.9rem;color:var(--text-secondary);">Upload files:</span>
+   <label style="cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;padding:0.4rem 0.85rem;background:var(--bg-accent-softer);border:1px solid var(--border-subtle);border-radius:var(--r-full);font-size:0.875rem;color:var(--text-secondary);white-space:nowrap;">
+     Load .html <input type="file" id="htmlFileInput" accept=".html,.htm" style="position:absolute;left:-9999px;opacity:0;">
+   </label>
+   <label style="cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;padding:0.4rem 0.85rem;background:var(--bg-accent-softer);border:1px solid var(--border-subtle);border-radius:var(--r-full);font-size:0.875rem;color:var(--text-secondary);white-space:nowrap;">
+     Load .css <input type="file" id="cssFileInput" accept=".css" style="position:absolute;left:-9999px;opacity:0;">
+   </label>
+   <span id="htmlCssFileNames" style="font-size:0.8rem;color:var(--text-muted);"></span>
+ </div>
+
+ <div id="htmlEditorSection" style="display: block; animation: slideDown 0.3s ease-out;">
+ <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; --html-grid: 1fr 1fr;" class="html-editor-grid">
  <div>
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.85rem; text-transform: uppercase;">HTML</div>
  <textarea id="htmlSnippet" spellcheck="false" placeholder="<h1>Hello World</h1>" style="width: 100%; height: 350px; resize: vertical; padding: 1.2rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-md); background: var(--bg-input); line-height: 1.5;"></textarea>
@@ -55,11 +66,9 @@ async function renderweb2pdf(container) {
  </div>
 
  <div style="display: flex; gap: 1.5rem; align-items: center; background: var(--bg-input); padding: 1.2rem; border-radius: var(--r-lg); border: 1px solid var(--border-subtle);">
- <div class="orientation-selector" style="margin: 0; gap: 1rem;">
- <label style="font-weight: 600;"> <select id="htmlPageSize" style="max-width: 120px;"><option value="a4">A4</option><option value="letter">Letter</option></select></label>
- <label style="font-weight: 600;"> <select id="htmlOrientation" style="max-width: 130px;"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label>
- </div>
- <button id="printHtmlBtn" class="primary" style="flex: 1; height: 50px; font-size: 1.1rem; min-width: unset;"> Generate PDF</button>
+ <label style="font-weight:600;display:flex;align-items:center;gap:0.4rem;">Page: <select id="htmlPageSize" style="min-width:80px;"><option value="a4">A4</option><option value="letter">Letter</option></select></label>
+ <label style="font-weight:600;display:flex;align-items:center;gap:0.4rem;">Orientation: <select id="htmlOrientation" style="min-width:110px;"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label>
+ <button id="printHtmlBtn" class="primary" style="flex: 1; height: 50px; font-size: 1rem; min-width: 160px; white-space: nowrap; overflow: visible;"> Generate PDF</button>
  </div>
  </div>
 
@@ -83,6 +92,36 @@ async function renderweb2pdf(container) {
  let previewObjectUrl = null;
  toggleHtmlEditor.addEventListener('change', () => {
  htmlEditorSection.style.display = toggleHtmlEditor.checked ? 'block' : 'none';
+ });
+
+ // File upload handlers
+ const htmlFileInput = document.getElementById('htmlFileInput');
+ const cssFileInput = document.getElementById('cssFileInput');
+ const htmlCssFileNames = document.getElementById('htmlCssFileNames');
+ if (htmlFileInput) htmlFileInput.addEventListener('change', () => {
+   const file = htmlFileInput.files[0]; if (!file) return;
+   const reader = new FileReader();
+   reader.onload = e => {
+     let html = e.target.result;
+     const bodyMatch = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+     if (bodyMatch) html = bodyMatch[1].trim();
+     const styleMatch = e.target.result.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+     if (styleMatch && !cssFileInput.files[0]) cssSnippet.value = styleMatch[1].trim();
+     htmlSnippet.value = html;
+     if (!toggleHtmlEditor.checked) { toggleHtmlEditor.checked = true; htmlEditorSection.style.display = 'block'; }
+     if (htmlCssFileNames) htmlCssFileNames.textContent = 'Loaded: ' + file.name;
+     updatePreview();
+   }; reader.readAsText(file);
+ });
+ if (cssFileInput) cssFileInput.addEventListener('change', () => {
+   const file = cssFileInput.files[0]; if (!file) return;
+   const reader = new FileReader();
+   reader.onload = e => {
+     cssSnippet.value = e.target.result;
+     if (!toggleHtmlEditor.checked) { toggleHtmlEditor.checked = true; htmlEditorSection.style.display = 'block'; }
+     if (htmlCssFileNames) htmlCssFileNames.textContent = (htmlCssFileNames.textContent || '') + ' + ' + file.name;
+     updatePreview();
+   }; reader.readAsText(file);
  });
 
  const templates = {

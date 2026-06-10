@@ -1,6 +1,6 @@
 async function renderocrtool(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@4.1.4/dist/tesseract.min.js');
+ await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
  if (typeof Tesseract === 'undefined') {
  throw new Error('OCR engine failed to load. Check your internet connection and try again.');
  }
@@ -196,7 +196,7 @@ async function renderocrtool(container) {
  ctx.fillRect(0, 0, canvas.width, canvas.height);
  await pdfPage.render({ canvasContext: ctx, viewport }).promise;
 
- const { data: { text } } = await worker.recognize(canvas);
+ const { data: { text } } = await worker.recognize(canvas.toDataURL('image/png'));
  releaseCanvas(canvas);
  if (pageNum === 1) fullText += `--- Page 1 ---\n\n`;
  else fullText += `\n\n--- Page ${pageNum} ---\n\n`;
@@ -210,7 +210,7 @@ async function renderocrtool(container) {
  } else {
  progressLabel.textContent = 'Initialising OCR engine';
  const worker = await Tesseract.createWorker(langCode, 1, { logger });
- const { data: { text } } = await worker.recognize(currentFile);
+ const { data: { text } } = await worker.recognize(URL.createObjectURL(currentFile));
  await worker.terminate();
  fullText = text;
  progressBar.style.width = '100%';

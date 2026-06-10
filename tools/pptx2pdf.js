@@ -208,6 +208,18 @@ async function renderpptx2pdf(container) {
 
  setProgress(100);
  setStatus(`${slides.length} slide${slides.length !== 1 ? 's' : ''} ready. Choose layout and generate the PDF.`);
+        // Scale preview to fit on mobile screens
+        const hostEl = document.getElementById('pptxPreviewHost');
+        if (hostEl && hostEl.parentElement) {
+          const parentW = hostEl.parentElement.clientWidth - 32;
+          if (parentW > 0 && parentW < 960) {
+            const scale = parentW / 960;
+            hostEl.style.transform = `scale(${scale})`;
+            hostEl.style.transformOrigin = 'top left';
+            hostEl.parentElement.style.minHeight = Math.ceil(540 * scale + 20) + 'px';
+            hostEl.parentElement.style.overflow = 'hidden';
+          }
+        }
  convertBtn.disabled = false;
  } catch (error) {
  console.error('PPTX render error:', error);

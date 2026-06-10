@@ -3481,3 +3481,321 @@ a, button, [role="button"] {
   box-shadow: var(--shadow-md);
   text-decoration: none;
 }
+
+/* ============================================================
+   GLOBAL MOBILE FIXES & IMPROVEMENTS (June 2025 patch)
+   ============================================================ */
+
+/* --- Floating action button: correct fit on all screen sizes --- */
+@media (max-width: 480px) {
+  .floating-action {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    width: calc(100% - 1.5rem);
+    text-align: center;
+    border-radius: var(--r-lg);
+    font-size: 1rem;
+    padding: 0.9rem 1rem;
+  }
+}
+
+/* --- Footer social icons: visible labels --- */
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--r-full);
+  transition: background 0.2s;
+}
+.social-links a:hover { background: var(--bg-accent-softer); }
+.social-links .social-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* --- Blog: mobile responsive --- */
+@media (max-width: 700px) {
+  .blog-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .blog-card {
+    padding: 1.1rem !important;
+  }
+  .blog-article {
+    padding: 1rem 0.5rem !important;
+  }
+  .blog-article h1 { font-size: 1.5rem !important; }
+  .blog-article h2 { font-size: 1.2rem !important; }
+}
+
+/* Blog link visibility */
+.blog-article a,
+.blog-card a {
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.blog-article a:hover,
+.blog-card a:hover {
+  color: var(--accent);
+}
+
+/* --- PPTX preview: constrained on mobile --- */
+#pptxPreviewShell {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+@media (max-width: 700px) {
+  #pptxPreviewHost {
+    transform-origin: top left;
+  }
+}
+
+/* --- md2pdf / docx2pdf: preview readability --- */
+.preview-box {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+}
+.preview-box * {
+  color: inherit;
+}
+
+/* --- md2pdf: mobile two-column → single column --- */
+@media (max-width: 680px) {
+  .md-split-view,
+  [style*="grid-template-columns: 1fr 1fr"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .md-split-view > *,
+  [style*="grid-template-columns: 1fr 1fr"] > * {
+    width: 100% !important;
+  }
+}
+
+/* --- HTML-to-PDF: editor grid stacks on mobile --- */
+.html-editor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+@media (max-width: 680px) {
+  .html-editor-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --- Organize PDF: mobile layout --- */
+@media (max-width: 700px) {
+  .page-thumbnail-grid,
+  #pageGrid,
+  .pdf-pages-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+  .page-thumb {
+    min-height: 100px !important;
+  }
+}
+
+/* --- Steps grid for tool content sections --- */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin: 1.25rem 0;
+}
+.step-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  padding: 1.25rem 1rem;
+  position: relative;
+}
+.step-num {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+.step-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+.step-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+@media (max-width: 700px) {
+  .steps-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* --- SEO meta grid: responsive --- */
+.seo-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem;
+  margin: 1.25rem 0;
+}
+.seo-meta-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* --- Tool description padding on mobile --- */
+@media (max-width: 600px) {
+  .tool-description { font-size: 0.9rem; }
+  .content-section { padding: 1rem 0 !important; }
+  .seo-content { padding: 0 !important; }
+  .area { padding: 0 !important; }
+  .area > div[style*="gap: 1.5rem"] {
+    gap: 1rem !important;
+  }
+}
+
+/* --- General input + button alignment on mobile --- */
+@media (max-width: 600px) {
+  .input-group,
+  .tool-btn-row,
+  .orientation-selector {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .input-group label,
+  .tool-btn-row button {
+    width: 100% !important;
+  }
+  select, input[type="text"], input[type="email"], textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* --- QR logo option alignment fix --- */
+.qr-option {
+  align-items: flex-start !important;
+}
+.qr-option input[type="file"] {
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+/* --- Contact: mailto button --- */
+.contact-options .button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+/* --- Remove legacy hr from privacy / other pages --- */
+.privacy-content hr,
+.content-section hr {
+  display: none !important;
+}
+
+/* Ensure links inside tool content are visible */
+.seo-content a,
+.content-section a {
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --- Blog post pages (uses .blog-post class) --- */
+.blog-post {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  line-height: 1.75;
+  color: var(--text-primary);
+}
+.blog-post h1 {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  line-height: 1.25;
+}
+.blog-post h2 {
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-weight: 600;
+  margin: 2rem 0 0.75rem;
+  color: var(--text-primary);
+}
+.blog-post h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.5rem;
+}
+.blog-post p { margin: 0 0 1rem; }
+.blog-post a {
+  color: var(--accent-light);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-word;
+}
+.blog-post a:hover { color: var(--accent); }
+.blog-post code {
+  background: var(--bg-surface);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.875em;
+  word-break: break-all;
+}
+.blog-post pre {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-md);
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+.blog-post ul, .blog-post ol {
+  padding-left: 1.5rem;
+  margin: 0 0 1rem;
+}
+.blog-post li { margin-bottom: 0.4rem; }
+.blog-post table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
+}
+.blog-post th, .blog-post td {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+}
+.blog-post th { background: var(--bg-surface); font-weight: 600; }
+.blog-post img { max-width: 100%; height: auto; border-radius: var(--r-md); }
+.post-byline, .post-meta {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem;
+}
+@media (max-width: 600px) {
+  .blog-post { padding: 1rem 0.75rem 2rem; }
+  .blog-post pre { font-size: 0.8rem; }
+  .blog-post table { font-size: 0.8rem; }
+}

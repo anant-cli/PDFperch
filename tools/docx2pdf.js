@@ -62,7 +62,7 @@ async function renderdocx2pdf(container) {
  &#128206; File: <strong id="docxFileName"></strong> &nbsp;&middot;&nbsp; Size: <span id="docxSize">0 Bytes</span>
  </div>
 
- <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; background: var(--bg-input); padding: 1rem; border-radius: var(--r-md);">
+ <div style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap; background: var(--bg-input); padding: 1rem; border-radius: var(--r-md);">
  <div class="orientation-selector" style="margin:0; gap:1rem;">
  <label>&#128208; Page size: <select id="docxPageSize"><option value="a4">A4</option><option value="letter">Letter</option></select></label>
  <label>&#128260; Orientation: <select id="docxOrientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label>
@@ -74,7 +74,7 @@ async function renderdocx2pdf(container) {
 
  <div>
  <div class="preview-title" style="margin-bottom:0.5rem;">&#128203; Document Preview</div>
- <div class="preview-box" style="min-height: 300px; padding: 1.5rem;">
+ <div class="preview-box" style="min-height: 300px; padding: 1.5rem; background: #ffffff; color: #1a1a1a;">
  <div id="docxPreview" style="color: var(--text-muted); text-align: center; padding: 4rem 1rem;">
  Upload a <code>.docx</code> file to see a preview here
  </div>

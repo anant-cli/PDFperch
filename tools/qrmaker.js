@@ -39,7 +39,16 @@ async function renderqrmaker(container) {
  <div class="qr-option"><label>Margin/Padding:</label><select id="qrMargin"><option value="0">None</option><option value="1">Small</option><option value="2" selected>Medium</option><option value="4">Large</option></select></div>
  <div class="qr-option"><label>Foreground:</label><input type="color" id="qrDarkColor" value="#000000"></div>
  <div class="qr-option"><label>Background:</label><input type="color" id="qrLightColor" value="#ffffff"></div>
- <div class="qr-option"><label>Logo (optional):</label><input type="file" id="qrLogo" accept="image/*"></div>
+ <div class="qr-option" style="display:flex;flex-direction:column;gap:0.35rem;">
+   <label for="qrLogo" style="font-weight:500;color:var(--text-secondary);font-size:0.875rem;">Logo (optional)</label>
+   <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+     <label for="qrLogo" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;background:var(--bg-accent-softer);border:1px solid var(--border-subtle);border-radius:var(--r-full);cursor:pointer;font-size:0.875rem;color:var(--text-secondary);white-space:nowrap;min-height:36px;">
+       &#128247; Choose image
+     </label>
+     <span id="qrLogoName" style="font-size:0.8rem;color:var(--text-muted);">No file chosen</span>
+   </div>
+   <input type="file" id="qrLogo" accept="image/*" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;width:1px;height:1px;">
+ </div>
  <div class="qr-option"><label>Format:</label><select id="qrFormat"><option value="png">PNG</option><option value="svg">SVG</option></select></div>
  </div>
 
@@ -332,12 +341,19 @@ async function renderqrmaker(container) {
  el.addEventListener('change', debouncedGenerate);
  });
  qrText.addEventListener('input', debouncedGenerate);
+  // Wire up the custom logo button to trigger the hidden file input
+  const qrLogoLabel = document.querySelector('label[for="qrLogo"]');
+  if (qrLogoLabel) qrLogoLabel.addEventListener('click', (e) => { e.preventDefault(); qrLogo.click(); });
  qrSize.addEventListener('change', generateQRCodes);
  qrErrorLevel.addEventListener('change', generateQRCodes);
  qrMargin.addEventListener('change', generateQRCodes);
  qrDarkColor.addEventListener('input', debouncedGenerate);
  qrLightColor.addEventListener('input', debouncedGenerate);
- qrLogo.addEventListener('change', generateQRCodes);
+ qrLogo.addEventListener('change', function() {
+    const nameEl = document.getElementById('qrLogoName');
+    if (nameEl) nameEl.textContent = qrLogo.files[0] ? qrLogo.files[0].name : 'No file chosen';
+    generateQRCodes();
+  });
  qrFormat.addEventListener('change', generateQRCodes);
  qrBatchMode.addEventListener('change', generateQRCodes);
 
