@@ -77,7 +77,6 @@ async function rendermd2pdf(container) {
  const mdEditor = document.getElementById('mdEditor');
  const mdRendered = document.getElementById('mdRendered');
  const mdPreviewBox = document.getElementById('mdPreviewBox');
- const mdDarkTheme = { checked: false }; // dark theme removed
  const toggleEditor = document.getElementById('toggleEditor');
  const editorSection = document.getElementById('editorSection');
  const loadSampleBtn = document.getElementById('loadSampleBtn');
@@ -182,7 +181,6 @@ async function rendermd2pdf(container) {
  updateMdFloatingBtn();
  }
 
- mdDarkTheme.addEventListener('change', renderPreview);
  mdEditor.addEventListener('input', debounce(() => {
  window.currentMarkdown = mdEditor.value;
  renderPreview();
