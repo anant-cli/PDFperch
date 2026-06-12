@@ -20,7 +20,7 @@ async function renderwatermarkpdf(container) {
  <p class="tool-description">
  Add text or image watermarks to your PDF pages. Control position, opacity, color, and use tile mode
  for full-page coverage. Preview changes before applying.
- After watermarking, you can also <a href="/pdf-password" target="_self">password protect your PDF</a>.
+ After watermarking, you can also <a href="/pages/pdfencrypt.html" target="_self">password protect your PDF</a>.
  </p>
  <div class="faq-section">
  <h4>Frequently Asked Questions</h4>

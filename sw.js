@@ -2,7 +2,7 @@ const CACHE_NAME = 'convertpdf-v20';
 
 const STATIC_ASSETS = [
  '/',
- '/all-tools',
+ '/all-tools.html',
  '/offline.html',
  '/styles.css',
  '/utils.js',

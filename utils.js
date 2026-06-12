@@ -783,27 +783,27 @@ function showPopupBlockedWarning(toolName) {
 window.showPopupBlockedWarning = showPopupBlockedWarning;
 
 const RELATED_TOOLS = {
-  'mergepdf': [['Compress PDF', '/compress-pdf'], ['Sign PDF', '/sign-pdf'], ['Split PDF', '/split-pdf']],
-  'compresspdf': [['Merge PDF', '/merge-pdf'], ['PDF Password', '/pdf-password'], ['PDF to Word', '/pdf-to-word']],
-  'splitpdf': [['Merge PDF', '/merge-pdf'], ['Rotate PDF', '/rotate-pdf'], ['Page Numbers', '/page-numbers']],
-  'rotatepdf': [['Merge PDF', '/merge-pdf'], ['Split PDF', '/split-pdf']],
-  'pdf2jpg': [['Images to PDF', '/jpg-to-pdf'], ['PDF to Word', '/pdf-to-word']],
-  'img2pdf': [['PDF to JPG', '/pdf-to-jpg'], ['Merge PDF', '/merge-pdf'], ['Compress PDF', '/compress-pdf']],
-  'docx2pdf': [['PDF to Word', '/pdf-to-word'], ['Merge PDF', '/merge-pdf']],
-  'pdf2word': [['DOCX to PDF', '/word-to-pdf'], ['PDF Password', '/pdf-password']],
-  'pdfencrypt': [['Compress PDF', '/compress-pdf'], ['Sign PDF', '/sign-pdf']],
-  'signpdf': [['Compress PDF', '/compress-pdf'], ['PDF Password', '/pdf-password']],
-  'watermarkpdf': [['Page Numbers', '/page-numbers'], ['Merge PDF', '/merge-pdf']],
-  'ocrtool': [['PDF to Word', '/pdf-to-word'], ['TXT to Word', '/txt-to-word']],
-  'md2pdf': [['DOCX to PDF', '/word-to-pdf'], ['HTML to PDF', '/html-to-pdf']],
-  'web2pdf': [['Markdown to PDF', '/markdown-to-pdf'], ['DOCX to PDF', '/word-to-pdf']],
-  'qrmaker': [['Compress Images', '/compress-images'], ['Image Converter', '/image-converter']],
-  'imgcompress': [['Image Converter', '/image-converter'], ['Images to PDF', '/jpg-to-pdf']],
-  'organizepdf': [['Merge PDF', '/merge-pdf'], ['Split PDF', '/split-pdf'], ['Rotate PDF', '/rotate-pdf']],
-  'img2png': [['Compress Images', '/compress-images'], ['Images to PDF', '/jpg-to-pdf']],
-  'pagenumbers': [['Watermark PDF', '/watermark-pdf'], ['Merge PDF', '/merge-pdf']],
-  'txt2docx': [['DOCX to PDF', '/word-to-pdf'], ['OCR - Image to Text', '/ocr']],
-  'pptx2pdf': [['DOCX to PDF', '/word-to-pdf'], ['Merge PDF', '/merge-pdf']]
+  'mergepdf': [['Compress PDF', '/pages/compresspdf.html'], ['Sign PDF', '/pages/signpdf.html'], ['Split PDF', '/pages/splitpdf.html']],
+  'compresspdf': [['Merge PDF', '/pages/mergepdf.html'], ['PDF Password', '/pages/pdfencrypt.html'], ['PDF to Word', '/pages/pdf2word.html']],
+  'splitpdf': [['Merge PDF', '/pages/mergepdf.html'], ['Rotate PDF', '/pages/rotatepdf.html'], ['Page Numbers', '/pages/pagenumbers.html']],
+  'rotatepdf': [['Merge PDF', '/pages/mergepdf.html'], ['Split PDF', '/pages/splitpdf.html']],
+  'pdf2jpg': [['Images to PDF', '/pages/img2pdf.html'], ['PDF to Word', '/pages/pdf2word.html']],
+  'img2pdf': [['PDF to JPG', '/pages/pdf2jpg.html'], ['Merge PDF', '/pages/mergepdf.html'], ['Compress PDF', '/pages/compresspdf.html']],
+  'docx2pdf': [['PDF to Word', '/pages/pdf2word.html'], ['Merge PDF', '/pages/mergepdf.html']],
+  'pdf2word': [['DOCX to PDF', '/pages/docx2pdf.html'], ['PDF Password', '/pages/pdfencrypt.html']],
+  'pdfencrypt': [['Compress PDF', '/pages/compresspdf.html'], ['Sign PDF', '/pages/signpdf.html']],
+  'signpdf': [['Compress PDF', '/pages/compresspdf.html'], ['PDF Password', '/pages/pdfencrypt.html']],
+  'watermarkpdf': [['Page Numbers', '/pages/pagenumbers.html'], ['Merge PDF', '/pages/mergepdf.html']],
+  'ocrtool': [['PDF to Word', '/pages/pdf2word.html'], ['TXT to Word', '/pages/txt2docx.html']],
+  'md2pdf': [['DOCX to PDF', '/pages/docx2pdf.html'], ['HTML to PDF', '/pages/web2pdf.html']],
+  'web2pdf': [['Markdown to PDF', '/pages/md2pdf.html'], ['DOCX to PDF', '/pages/docx2pdf.html']],
+  'qrmaker': [['Compress Images', '/pages/imgcompress.html'], ['Image Converter', '/pages/img2png.html']],
+  'imgcompress': [['Image Converter', '/pages/img2png.html'], ['Images to PDF', '/pages/img2pdf.html']],
+  'organizepdf': [['Merge PDF', '/pages/mergepdf.html'], ['Split PDF', '/pages/splitpdf.html'], ['Rotate PDF', '/pages/rotatepdf.html']],
+  'img2png': [['Compress Images', '/pages/imgcompress.html'], ['Images to PDF', '/pages/img2pdf.html']],
+  'pagenumbers': [['Watermark PDF', '/pages/watermarkpdf.html'], ['Merge PDF', '/pages/mergepdf.html']],
+  'txt2docx': [['DOCX to PDF', '/pages/docx2pdf.html'], ['OCR - Image to Text', '/pages/ocrtool.html']],
+  'pptx2pdf': [['DOCX to PDF', '/pages/docx2pdf.html'], ['Merge PDF', '/pages/mergepdf.html']]
 };
 
 function getActiveToolFromPath() {

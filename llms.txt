@@ -5,30 +5,30 @@
 ConvertPDF is a browser-based productivity suite offering 21 free PDF and document tools. Files never leave the user's device.
 
 ## Core Tools
-- [Merge PDF](https://convertpdf.pages.dev/merge-pdf): Combine multiple PDFs into one file
-- [Compress PDF](https://convertpdf.pages.dev/compress-pdf): Reduce PDF file size by up to 70%
-- [Split PDF](https://convertpdf.pages.dev/split-pdf): Extract pages from a PDF
-- [Rotate PDF](https://convertpdf.pages.dev/rotate-pdf): Rotate pages 90°, 180°, 270°
-- [PDF to JPG](https://convertpdf.pages.dev/pdf-to-jpg): Convert PDF pages to images
-- [JPG to PDF](https://convertpdf.pages.dev/jpg-to-pdf): Convert images to PDF
-- [Word to PDF](https://convertpdf.pages.dev/word-to-pdf): Convert DOCX to PDF
-- [PDF to Word](https://convertpdf.pages.dev/pdf-to-word): Convert PDF to editable DOCX
-- [PowerPoint to PDF](https://convertpdf.pages.dev/pptx-to-pdf): Convert PPTX slides to PDF
-- [Sign PDF](https://convertpdf.pages.dev/sign-pdf): Add digital signatures to PDF
-- [Encrypt PDF](https://convertpdf.pages.dev/pdf-password): Password-protect a PDF
-- [Watermark PDF](https://convertpdf.pages.dev/watermark-pdf): Add text watermark to PDF
-- [Add Page Numbers](https://convertpdf.pages.dev/page-numbers): Stamp page numbers on PDF
-- [Organize PDF](https://convertpdf.pages.dev/organize-pdf): Reorder PDF pages
-- [OCR](https://convertpdf.pages.dev/ocr): Extract text from scanned images
-- [Markdown to PDF](https://convertpdf.pages.dev/markdown-to-pdf): Convert .md files to PDF
-- [HTML to PDF](https://convertpdf.pages.dev/html-to-pdf): Convert web pages to PDF
-- [Compress Images](https://convertpdf.pages.dev/compress-images): Reduce image file size
-- [Image Converter](https://convertpdf.pages.dev/image-converter): Convert between image formats
-- [QR Code Generator](https://convertpdf.pages.dev/qr-code-generator): Create custom QR codes
-- [TXT to Word](https://convertpdf.pages.dev/txt-to-word): Convert plain text to DOCX
+- [Merge PDF](https://convertpdf.pages.dev/pages/mergepdf.html): Combine multiple PDFs into one file
+- [Compress PDF](https://convertpdf.pages.dev/pages/compresspdf.html): Reduce PDF file size by up to 70%
+- [Split PDF](https://convertpdf.pages.dev/pages/splitpdf.html): Extract pages from a PDF
+- [Rotate PDF](https://convertpdf.pages.dev/pages/rotatepdf.html): Rotate pages 90°, 180°, 270°
+- [PDF to JPG](https://convertpdf.pages.dev/pages/pdf2jpg.html): Convert PDF pages to images
+- [JPG to PDF](https://convertpdf.pages.dev/pages/img2pdf.html): Convert images to PDF
+- [Word to PDF](https://convertpdf.pages.dev/pages/docx2pdf.html): Convert DOCX to PDF
+- [PDF to Word](https://convertpdf.pages.dev/pages/pdf2word.html): Convert PDF to editable DOCX
+- [PowerPoint to PDF](https://convertpdf.pages.dev/pages/pptx2pdf.html): Convert PPTX slides to PDF
+- [Sign PDF](https://convertpdf.pages.dev/pages/signpdf.html): Add digital signatures to PDF
+- [Encrypt PDF](https://convertpdf.pages.dev/pages/pdfencrypt.html): Password-protect a PDF
+- [Watermark PDF](https://convertpdf.pages.dev/pages/watermarkpdf.html): Add text watermark to PDF
+- [Add Page Numbers](https://convertpdf.pages.dev/pages/pagenumbers.html): Stamp page numbers on PDF
+- [Organize PDF](https://convertpdf.pages.dev/pages/organizepdf.html): Reorder PDF pages
+- [OCR](https://convertpdf.pages.dev/pages/ocrtool.html): Extract text from scanned images
+- [Markdown to PDF](https://convertpdf.pages.dev/pages/md2pdf.html): Convert .md files to PDF
+- [HTML to PDF](https://convertpdf.pages.dev/pages/web2pdf.html): Convert web pages to PDF
+- [Compress Images](https://convertpdf.pages.dev/pages/imgcompress.html): Reduce image file size
+- [Image Converter](https://convertpdf.pages.dev/pages/img2png.html): Convert between image formats
+- [QR Code Generator](https://convertpdf.pages.dev/pages/qrmaker.html): Create custom QR codes
+- [TXT to Word](https://convertpdf.pages.dev/pages/txt2docx.html): Convert plain text to DOCX
 
 ## Key Differentiator
 Everything runs in the browser using WebAssembly. No files are uploaded to servers.
 
 ## Blog
-https://convertpdf.pages.dev/blog/
+https://convertpdf.pages.dev/blog/blog_index.html

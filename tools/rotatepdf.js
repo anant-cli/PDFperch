@@ -19,7 +19,7 @@ async function renderrotatepdf(container) {
  <h3> PDF Rotate</h3>
  <p class="tool-description">
  Rotate individual pages in a PDF by 90, 180, or 270. Select which pages to rotate and preview the changes.
- Perfect for fixing scanned documents or adjusting page orientation. After rotating, you can also <a href="/merge-pdf" target="_self">merge PDFs</a>.
+ Perfect for fixing scanned documents or adjusting page orientation. After rotating, you can also <a href="/pages/mergepdf.html" target="_self">merge PDFs</a>.
  </p>
  <div class="faq-section">
  <h4>Frequently Asked Questions</h4>

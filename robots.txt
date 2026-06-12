@@ -1,11 +1,8 @@
 User-agent: *
 Allow: /
-Disallow: /offline
-Disallow: /google6a140702be548477.html
+Disallow: /offline.html
 Disallow: /pages/
-Disallow: /blog/blog_index.html
 
-# Allow all major crawlers explicitly
 User-agent: Googlebot
 Allow: /
 
@@ -25,6 +22,3 @@ User-agent: Bytespider
 Allow: /
 
 Sitemap: https://convertpdf.pages.dev/sitemap.xml
-
-# LLM-readable content index
-# See /llms.txt for structured site content
