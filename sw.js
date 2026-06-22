@@ -1,4 +1,4 @@
-const CACHE_NAME = 'convertpdf-v20';
+const CACHE_NAME = 'convertpdf-v21';
 
 const STATIC_ASSETS = [
  '/',
@@ -8,7 +8,6 @@ const STATIC_ASSETS = [
  '/utils.js',
  '/script.js',
  '/components.js',
- '/consent.js',
  '/favicon.png',
  '/favicon.ico',
  '/icon-192.png',
@@ -24,17 +23,11 @@ function isNavigationRequest(req) {
  return req.mode === 'navigate';
 }
 
-function isThirdPartyAdRequest(url) {
- return url.includes('doubleclick.net') ||
- url.includes('googlesyndication.com') ||
- url.includes('adtrafficquality.google') ||
- url.includes('googletagmanager.com') ||
- url.includes('googletagservices.com') ||
- url.includes('adservice.google') ||
- url.includes('partner.googleadservices.com') ||
+function isThirdPartyRequest(url) {
+ return url.includes('googletagmanager.com') ||
  url.includes('google-analytics.com') ||
  url.includes('analytics.google.com') ||
- url.includes('stats.g.doubleclick.net');
+ url.includes('region1.google-analytics.com');
 }
 
 self.addEventListener('install', event => {
@@ -71,7 +64,7 @@ self.addEventListener('fetch', event => {
 
  if (event.request.method !== 'GET') return;
 
- if (isThirdPartyAdRequest(event.request.url)) return;
+ if (isThirdPartyRequest(event.request.url)) return;
 
  if (isFontRequest(event.request.url)) return;
 

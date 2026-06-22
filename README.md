@@ -73,9 +73,9 @@ Run the static checks before deploying:
 npm run check
 ```
 
-The checker validates HTML head/body structure, route targets, tool page scripts, service-worker route coverage, JavaScript syntax, and required search/ad assets such as `ads.txt`, `sitemap.xml`, `robots.txt`, the Google Search Console verification file, Google Tag Manager, Google Analytics, AdSense, and consent script markers.
+The checker validates HTML head/body structure, route targets, tool page scripts, service-worker route coverage, JavaScript syntax, and required search assets such as `sitemap.xml`, `robots.txt`, the Google Search Console verification file, Google Tag Manager, and Google Analytics.
 
-Do not remove the existing Google AdSense, Google Analytics, Google Search Console, Google Tag Manager, or Bing Webmaster verification assets during cleanup. If Bing provides a verification meta tag or file, add the real token from Bing Webmaster Tools and keep it alongside the current Google verification assets.
+Do not remove the existing Google Analytics, Google Search Console, or Google Tag Manager assets during cleanup.
 
 ---
 
