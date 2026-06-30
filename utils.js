@@ -809,31 +809,9 @@ const RELATED_TOOLS = {
 function getActiveToolFromPath() {
   const path = window.location.pathname;
   const rawTool = path.split('/').pop().replace('.html', '').toLowerCase();
-  const mapping = {
-    'merge-pdf': 'mergepdf',
-    'compress-pdf': 'compresspdf',
-    'split-pdf': 'splitpdf',
-    'rotate-pdf': 'rotatepdf',
-    'pdf-to-jpg': 'pdf2jpg',
-    'jpg-to-pdf': 'img2pdf',
-    'word-to-pdf': 'docx2pdf',
-    'pdf-to-word': 'pdf2word',
-    'pdf-password': 'pdfencrypt',
-    'sign-pdf': 'signpdf',
-    'watermark-pdf': 'watermarkpdf',
-    'ocr': 'ocrtool',
-    'markdown-to-pdf': 'md2pdf',
-    'html-to-pdf': 'web2pdf',
-    'qr-code-generator': 'qrmaker',
-    'compress-images': 'imgcompress',
-    'organize-pdf': 'organizepdf',
-    'image-converter': 'img2png',
-    'page-numbers': 'pagenumbers',
-    'txt-to-word': 'txt2docx',
-    'pptx-to-pdf': 'pptx2pdf'
-  };
-  return mapping[rawTool] || rawTool;
+  return rawTool || null;
 }
+
 
 function showRelatedTools(toolId) {
   if (document.querySelector('.related-tools')) return;
