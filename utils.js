@@ -45,7 +45,11 @@ const CDN_INTEGRITY = {
  'https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js':
  'sha384-dHP9fwqd9BAiDh9uJ0p10khgbbcFMh34bVEiCnJ1Ah/AT2T2k4t572VEo3WXzxXp',
  'https://cdn.jsdelivr.net/npm/tesseract.js@4.1.4/dist/tesseract.min.js':
- 'sha384-+56qagDlzJ3YYkDcyAXRdhrP7/+ai8qJcS6HpjACl2idDoCyCqRf5VVi7E/XkGae'
+ 'sha384-+56qagDlzJ3YYkDcyAXRdhrP7/+ai8qJcS6HpjACl2idDoCyCqRf5VVi7E/XkGae',
+ 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js':
+ 'sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F',
+ 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js':
+ 'sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H'
 };
 
 const CDN_FALLBACKS = {
@@ -81,10 +85,6 @@ function downloadBlob(blob, filename) {
 
  try {
  link.click();
- const activeTool = getActiveToolFromPath();
- if (activeTool && typeof showRelatedTools === 'function') {
- showRelatedTools(activeTool);
- }
  } catch (e) {
  console.error('Download failed:', e);
  showToast('Download failed. Please try again.', 'error');
@@ -248,6 +248,7 @@ const rateLimiter = {
 window.rateLimiter = rateLimiter;
 
 function trackEvent(category, action, label, value = 0) {
+ // Intentional no-op: analytics is handled by the static GTM snippet, not by tool code.
 }
 
 function updateMetaDescription(desc) {
@@ -781,61 +782,4 @@ function showPopupBlockedWarning(toolName) {
  container.appendChild(toast);
 }
 window.showPopupBlockedWarning = showPopupBlockedWarning;
-
-const RELATED_TOOLS = {
-  'mergepdf': [['Compress PDF', '/pages/compresspdf.html'], ['Sign PDF', '/pages/signpdf.html'], ['Split PDF', '/pages/splitpdf.html']],
-  'compresspdf': [['Merge PDF', '/pages/mergepdf.html'], ['PDF Password', '/pages/pdfencrypt.html'], ['PDF to Word', '/pages/pdf2word.html']],
-  'splitpdf': [['Merge PDF', '/pages/mergepdf.html'], ['Rotate PDF', '/pages/rotatepdf.html'], ['Page Numbers', '/pages/pagenumbers.html']],
-  'rotatepdf': [['Merge PDF', '/pages/mergepdf.html'], ['Split PDF', '/pages/splitpdf.html']],
-  'pdf2jpg': [['Images to PDF', '/pages/img2pdf.html'], ['PDF to Word', '/pages/pdf2word.html']],
-  'img2pdf': [['PDF to JPG', '/pages/pdf2jpg.html'], ['Merge PDF', '/pages/mergepdf.html'], ['Compress PDF', '/pages/compresspdf.html']],
-  'docx2pdf': [['PDF to Word', '/pages/pdf2word.html'], ['Merge PDF', '/pages/mergepdf.html']],
-  'pdf2word': [['DOCX to PDF', '/pages/docx2pdf.html'], ['PDF Password', '/pages/pdfencrypt.html']],
-  'pdfencrypt': [['Compress PDF', '/pages/compresspdf.html'], ['Sign PDF', '/pages/signpdf.html']],
-  'signpdf': [['Compress PDF', '/pages/compresspdf.html'], ['PDF Password', '/pages/pdfencrypt.html']],
-  'watermarkpdf': [['Page Numbers', '/pages/pagenumbers.html'], ['Merge PDF', '/pages/mergepdf.html']],
-  'ocrtool': [['PDF to Word', '/pages/pdf2word.html'], ['TXT to Word', '/pages/txt2docx.html']],
-  'md2pdf': [['DOCX to PDF', '/pages/docx2pdf.html'], ['HTML to PDF', '/pages/web2pdf.html']],
-  'web2pdf': [['Markdown to PDF', '/pages/md2pdf.html'], ['DOCX to PDF', '/pages/docx2pdf.html']],
-  'qrmaker': [['Compress Images', '/pages/imgcompress.html'], ['Image Converter', '/pages/img2png.html']],
-  'imgcompress': [['Image Converter', '/pages/img2png.html'], ['Images to PDF', '/pages/img2pdf.html']],
-  'organizepdf': [['Merge PDF', '/pages/mergepdf.html'], ['Split PDF', '/pages/splitpdf.html'], ['Rotate PDF', '/pages/rotatepdf.html']],
-  'img2png': [['Compress Images', '/pages/imgcompress.html'], ['Images to PDF', '/pages/img2pdf.html']],
-  'pagenumbers': [['Watermark PDF', '/pages/watermarkpdf.html'], ['Merge PDF', '/pages/mergepdf.html']],
-  'txt2docx': [['DOCX to PDF', '/pages/docx2pdf.html'], ['OCR - Image to Text', '/pages/ocrtool.html']],
-  'pptx2pdf': [['DOCX to PDF', '/pages/docx2pdf.html'], ['Merge PDF', '/pages/mergepdf.html']]
-};
-
-function getActiveToolFromPath() {
-  const path = window.location.pathname;
-  const rawTool = path.split('/').pop().replace('.html', '').toLowerCase();
-  return rawTool || null;
-}
-
-
-function showRelatedTools(toolId) {
-  if (document.querySelector('.related-tools')) return;
-  const cleanToolId = toolId.replace(/-/g, '');
-  const related = RELATED_TOOLS[cleanToolId];
-  if (!related) return;
-
-  const div = document.createElement('div');
-  div.className = 'related-tools';
-  div.innerHTML = '<h4>You might also need</h4>' +
-    '<div class="related-tools-links">' +
-    related.map(([name, url]) => `<a href="${url}" class="related-tool-link">${name}</a>`).join('') +
-    '</div>';
-
-  const area = document.querySelector('.area');
-  if (area) {
-    area.appendChild(div);
-  }
-}
-
-window.showRelatedTools = showRelatedTools;
-window.getActiveToolFromPath = getActiveToolFromPath;
-
-
-
-
 

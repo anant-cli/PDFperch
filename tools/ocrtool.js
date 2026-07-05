@@ -210,9 +210,14 @@ async function renderocrtool(container) {
  } else {
  progressLabel.textContent = 'Initialising OCR engine';
  const worker = await Tesseract.createWorker(langCode, 1, { logger });
- const { data: { text } } = await worker.recognize(URL.createObjectURL(currentFile));
- await worker.terminate();
+ const ocrImageUrl = URL.createObjectURL(currentFile);
+ try {
+ const { data: { text } } = await worker.recognize(ocrImageUrl);
  fullText = text;
+ } finally {
+ URL.revokeObjectURL(ocrImageUrl);
+ await worker.terminate();
+ }
  progressBar.style.width = '100%';
  }
 

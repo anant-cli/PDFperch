@@ -64,11 +64,16 @@ async function renderimg2pdf(container) {
  const progressBar = document.getElementById('imgProgressBar');
  const clearAllBtn = document.getElementById('clearAllBtn');
  let filesArray = [];
+ let previewObjectUrl = null;
  const isDataTransferSupported = typeof DataTransfer === 'function';
 
  clearAllBtn.addEventListener('click', () => {
  filesArray.forEach(f => { if (f.thumbUrl) URL.revokeObjectURL(f.thumbUrl); });
  filesArray = [];
+ if (previewObjectUrl) {
+ URL.revokeObjectURL(previewObjectUrl);
+ previewObjectUrl = null;
+ }
  renderPreviewList();
  previewBox.style.display = 'none';
  down.disabled = true;
@@ -277,8 +282,9 @@ async function renderimg2pdf(container) {
  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
  window.currentPdfBlob = blob;
  down.disabled = false;
- const blobUrl = URL.createObjectURL(blob);
- previewPlaceholder.innerHTML = `<iframe src="${blobUrl}" style="width:100%; height:400px;" frameborder="0"></iframe>`;
+ if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+ previewObjectUrl = URL.createObjectURL(blob);
+ previewPlaceholder.innerHTML = `<iframe src="${previewObjectUrl}" style="width:100%; height:400px;" frameborder="0"></iframe>`;
 
  convertBtn.disabled = false;
  convertBtn.innerHTML = ' Generate PDF';

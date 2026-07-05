@@ -697,7 +697,6 @@ async function rendersignpdf(container) {
 
  const signedBytes = await pdfDoc.save();
  const blob = new Blob([signedBytes], { type: 'application/pdf' });
- if (window.MemoryManager) window.MemoryManager.registerObjectUrl(URL.createObjectURL(blob));
 
  progressBar.style.width = '100%';
  progressText.textContent = 'Signing completed successfully!';

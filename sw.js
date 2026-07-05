@@ -1,4 +1,4 @@
-const CACHE_NAME = 'convertpdf-v21';
+const CACHE_NAME = 'convertpdf-v22';
 
 const STATIC_ASSETS = [
  '/',
@@ -47,10 +47,7 @@ self.addEventListener('activate', event => {
  event.waitUntil(
  caches.keys()
  .then(keys => Promise.all(
- keys.filter(key => key !== CACHE_NAME).map(key => {
- console.log('[SW] Deleting old cache:', key);
- return caches.delete(key);
- })
+ keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
  ))
  .then(() => self.clients.claim())
  );
