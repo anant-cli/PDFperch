@@ -3,6 +3,23 @@
 <head>
 <meta charset="UTF-8">
 
+<script>
+// Google Consent Mode v2 - must run BEFORE the GTM loader below.
+// Defaults everything to "denied" until the visitor makes a choice in the
+// cookie banner (see /consent.js). GTM/GA4 tags configured with consent
+// checks in the GTM container will respect this signal.
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'analytics_storage': 'denied',
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'functionality_storage': 'granted',
+  'security_storage': 'granted',
+  'wait_for_update': 500
+});
+</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -318,8 +335,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <p>Free, private, client-side PDF tools. No uploads, no sign-up, no limits.</p>
  <div class="social-links">
   <a href="mailto:support.convertpdf@gmail.com" title="Email us" aria-label="Email ConvertPDF support">&#128231;</a>
-  <a href="https://www.reddit.com/u/ConvertPDF__/" title="ConvertPDF on Reddit" aria-label="ConvertPDF on Reddit">&#128172;</a>
-  <a href="https://www.instagram.com/convertpdf__/" title="ConvertPDF on Instagram" aria-label="ConvertPDF on Instagram">&#128173;</a>
+  <a href="https://www.reddit.com/u/ConvertPDF__/" rel="noopener noreferrer" target="_blank" title="ConvertPDF on Reddit" aria-label="ConvertPDF on Reddit">&#128172;</a>
+  <a href="https://www.instagram.com/convertpdf__/" rel="noopener noreferrer" target="_blank" title="ConvertPDF on Instagram" aria-label="ConvertPDF on Instagram">&#128173;</a>
 </div>
  </div>
  <div class="footer-col">

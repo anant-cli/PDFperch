@@ -1,11 +1,14 @@
 # Content Security Policy Directives
 # - script-src 'unsafe-inline': required for inline GTM snippet
+# - script-src blob:: required by loadModuleWithIntegrity() in utils.js, which
+#   verifies a module's hash before importing it from a same-origin Blob URL
+#   (used for the pptx-preview dependency that can't carry an SRI attribute)
 # - googletagmanager, google-analytics: tracks aggregate traffic metrics via GTM and GA4
 # - cdn.jsdelivr.net, cdnjs.cloudflare.com: loads critical WebAssembly and JavaScript libraries (e.g. pdf-lib, KaTeX, Mammoth)
 # - worker-src blob:: required for pdf.js and Tesseract.js web workers running client-side
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com; worker-src 'self' blob: cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://www.google.com https://www.gstatic.com; font-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.gstatic.com; connect-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-src https://www.googletagmanager.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' blob: cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com; worker-src 'self' blob: cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com; img-src 'self' data: blob: https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://www.google.com https://www.gstatic.com; font-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.gstatic.com; connect-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://region1.google-analytics.com; frame-src https://www.googletagmanager.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -26,6 +29,14 @@
 /llms.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public, max-age=86400
+
+# Defensive-only: this project deploys via Cloudflare's GitHub integration,
+# which never uploads .git in the first place. This rule just makes sure
+# nothing is ever served from that path even if the deploy method changes
+# in the future (e.g. a one-off direct/Wrangler upload of the working copy).
+/.git/*
+  X-Robots-Tag: noindex
+  Cache-Control: no-store
 
 /robots.txt
   Content-Type: text/plain; charset=utf-8

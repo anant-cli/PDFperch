@@ -283,7 +283,7 @@ async function renderdocx2pdf(container) {
 
  } catch (___err) {
  console.error('renderdocx2pdf error:', ___err);
- container.innerHTML = `<div class="warning">&#9888;&#65039; Tool failed to load: ${___err.message}</div>`;
+ container.innerHTML = `<div class="warning">&#9888;&#65039; Tool failed to load: ${escapeHtml(___err.message)}</div>`;
  }
 }
 

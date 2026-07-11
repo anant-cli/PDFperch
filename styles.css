@@ -3801,3 +3801,82 @@ a, button, [role="button"] {
   .blog-post pre { font-size: 0.8rem; }
   .blog-post table { font-size: 0.8rem; }
 }
+
+/* ---------------------------------------------------------------------
+ * Cookie consent banner
+ * ------------------------------------------------------------------- */
+#cookieConsentBanner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-header, #0b0f1a);
+  border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.06));
+  box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,0.5));
+  backdrop-filter: blur(6px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+#cookieConsentBanner.consent-hidden {
+  opacity: 0;
+  transform: translateY(100%);
+  pointer-events: none;
+}
+#cookieConsentBanner .consent-text {
+  flex: 1 1 320px;
+  margin: 0;
+  color: var(--text-secondary, #c3d3ee);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+#cookieConsentBanner .consent-text a {
+  color: var(--accent, #4f9eff);
+  text-decoration: underline;
+}
+#cookieConsentBanner .consent-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex: 0 0 auto;
+}
+#cookieConsentBanner .consent-btn {
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--r-md, 8px);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle, rgba(255,255,255,0.06));
+}
+#cookieConsentBanner .consent-reject {
+  background: transparent;
+  color: var(--text-secondary, #c3d3ee);
+}
+#cookieConsentBanner .consent-reject:hover {
+  background: var(--bg-card-hover, #1c2540);
+}
+#cookieConsentBanner .consent-accept {
+  background: var(--accent, #4f9eff);
+  color: var(--text-on-accent, #ffffff);
+  border-color: transparent;
+}
+#cookieConsentBanner .consent-accept:hover {
+  background: var(--accent-vivid, #2979ff);
+}
+@media (max-width: 560px) {
+  #cookieConsentBanner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  #cookieConsentBanner .consent-actions {
+    justify-content: stretch;
+  }
+  #cookieConsentBanner .consent-btn {
+    flex: 1;
+    text-align: center;
+  }
+}

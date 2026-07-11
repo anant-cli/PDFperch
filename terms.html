@@ -3,6 +3,23 @@
 <head>
 <meta charset="UTF-8">
 
+<script>
+// Google Consent Mode v2 - must run BEFORE the GTM loader below.
+// Defaults everything to "denied" until the visitor makes a choice in the
+// cookie banner (see /consent.js). GTM/GA4 tags configured with consent
+// checks in the GTM container will respect this signal.
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'analytics_storage': 'denied',
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'functionality_storage': 'granted',
+  'security_storage': 'granted',
+  'wait_for_update': 500
+});
+</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -127,7 +144,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <h2>4. User Content and Intellectual Property</h2>
 
  <h3>4.1 Ownership of Your Files</h3>
- <p>You retain all ownership rights in the files you process using the Service. Since your files are processed locally, we do not receive or store them, and threfore we do not claim any rights to your content.</p>
+ <p>You retain all ownership rights in the files you process using the Service. Since your files are processed locally, we do not receive or store them, and therefore we do not claim any rights to your content.</p>
 
  <h3>4.2 Your Responsibilities</h3>
  <p>You are responsible for ensuring you have the legal right to process any file with the Service. This includes compliance with copyright, licensing, confidentiality agreements, and other applicable obligations. ConvertPDF is not responsible for any legal consequences that arise from your use of the Service with files you are not authorised to process.</p>

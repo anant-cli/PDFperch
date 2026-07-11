@@ -3,6 +3,23 @@
 <head>
 <meta charset="UTF-8">
 
+<script>
+// Google Consent Mode v2 - must run BEFORE the GTM loader below.
+// Defaults everything to "denied" until the visitor makes a choice in the
+// cookie banner (see /consent.js). GTM/GA4 tags configured with consent
+// checks in the GTM container will respect this signal.
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'analytics_storage': 'denied',
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'functionality_storage': 'granted',
+  'security_storage': 'granted',
+  'wait_for_update': 500
+});
+</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -108,10 +125,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <p>ConvertPDF is hosted using standard web infrastructure. The hosting provider may record standard server logs (IP address, URL requested, HTTP status code, timestamp) for operational and security purposes. These logs are managed by the hosting provider and are not under our direct control. No document content is included in those logs.</p>
 <h2>5. Search Monitoring and Google Search Console</h2>
  <p>ConvertPDF uses Google Search Console to monitor organic search traffic and site indexing status, and Google Analytics to understand aggregate traffic such as page views, referrers, country-level location, device type, and browser family. These tools are not used to collect document contents or create advertising profiles.</p>
-<h2>6. Cookies and Local Storage</h2>
+<h2>6. Cookies, Consent, and Local Storage</h2>
  <p>ConvertPDF does not display advertisements and does not set any first-party or third-party cookies for advertising or cross-site tracking.</p>
- <p>The site may use browser local storage only to store transient tool preferences (such as last-used settings). This data remains on your device and is never transmitted to ConvertPDF or any third party.</p>
- <p>Google Analytics (loaded via Google Tag Manager) may set analytic cookies to measure aggregate traffic volume and basic site performance. We do not use Facebook Pixel or any other advertising trackers.</p>
+ <p>The site may use browser local storage only to store transient tool preferences and your cookie-consent choice. This data remains on your device and is never transmitted to ConvertPDF or any third party.</p>
+ <p>Google Analytics (loaded via Google Tag Manager) may set analytic cookies to measure aggregate traffic volume and basic site performance, but only after you accept the cookie banner shown on your first visit. Until you make a choice, analytics cookies default to "denied" using Google's Consent Mode, and no analytics cookies are set. You can withdraw consent at any time by clearing your browser's site data for convertpdf.pages.dev, which will show the banner again on your next visit. We do not use Facebook Pixel or any other advertising trackers.</p>
 <h2>7. Third-Party Services</h2>
  <p>The website may load resources from trusted third-party providers that deliver fonts and libraries. These providers may collect request metadata in accordance with their own privacy policies.</p>
  <ul>
@@ -155,8 +172,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <p>Free, private, client-side PDF tools. No uploads, no sign-up, no limits.</p>
  <div class="social-links">
   <a href="mailto:support.convertpdf@gmail.com" title="Email us" aria-label="Email ConvertPDF support">&#128231;</a>
-  <a href="https://www.reddit.com/u/ConvertPDF__/" title="ConvertPDF on Reddit" aria-label="ConvertPDF on Reddit">&#128172;</a>
-  <a href="https://www.instagram.com/convertpdf__/" title="ConvertPDF on Instagram" aria-label="ConvertPDF on Instagram">&#128173;</a>
+  <a href="https://www.reddit.com/u/ConvertPDF__/" rel="noopener noreferrer" target="_blank" title="ConvertPDF on Reddit" aria-label="ConvertPDF on Reddit">&#128172;</a>
+  <a href="https://www.instagram.com/convertpdf__/" rel="noopener noreferrer" target="_blank" title="ConvertPDF on Instagram" aria-label="ConvertPDF on Instagram">&#128173;</a>
 </div>
  </div>
  <div class="footer-col">

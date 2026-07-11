@@ -4,6 +4,23 @@
 <head>
 <meta charset="UTF-8">
 
+<script>
+// Google Consent Mode v2 - must run BEFORE the GTM loader below.
+// Defaults everything to "denied" until the visitor makes a choice in the
+// cookie banner (see /consent.js). GTM/GA4 tags configured with consent
+// checks in the GTM container will respect this signal.
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'analytics_storage': 'denied',
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'functionality_storage': 'granted',
+  'security_storage': 'granted',
+  'wait_for_update': 500
+});
+</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -80,7 +97,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
  "@type": "SearchAction",
  "target": {
  "@type": "EntryPoint",
- "urlTemplate": "https://convertpdf.pages.dev/all-tools.html.html?q={search_term_string}"
+ "urlTemplate": "https://convertpdf.pages.dev/all-tools.html?q={search_term_string}"
  },
  "query-input": "required name=search_term_string"
  }
@@ -101,7 +118,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
  "contactPoint": {
  "@type": "ContactPoint",
  "contactType": "customer support",
- "url": "https://convertpdf.pages.dev/contact.html.html"
+ "url": "https://convertpdf.pages.dev/contact.html"
  }
 }
 </script>

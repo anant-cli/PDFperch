@@ -3,6 +3,23 @@
 <head>
 <meta charset="UTF-8">
 
+<script>
+// Google Consent Mode v2 - must run BEFORE the GTM loader below.
+// Defaults everything to "denied" until the visitor makes a choice in the
+// cookie banner (see /consent.js). GTM/GA4 tags configured with consent
+// checks in the GTM container will respect this signal.
+window.dataLayer = window.dataLayer || [];
+function gtag(){window.dataLayer.push(arguments);}
+gtag('consent', 'default', {
+  'analytics_storage': 'denied',
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied',
+  'functionality_storage': 'granted',
+  'security_storage': 'granted',
+  'wait_for_update': 500
+});
+</script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
 j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -161,7 +178,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <h2>The Privacy Imperative: Why Local Processing Matters</h2>
  <p>The standard architecture of online utility websites involves uploading user data to a remote cloud server, processing the file, and initiating a return download. This model introduces severe vulnerabilities, particularly for enterprise professionals, legal practitioners, and healthcare providers handling sensitive information.</p>
  <p>When a PDF containing personally identifiable information (PII), financial records, or proprietary trade secrets is transmitted over a network, it becomes vulnerable to interception, server-side data breaches, and unauthorized retention policies. Furthermore, many free online services explicitly state in their terms of service that they reserve the right to scan, parse, or utilize uploaded documents to train machine learning models or extract telemetry data.</p>
- <p>ConvertPDF circumvents these risks entirely through a "Local-First" architecture. The JavaScript logic required to parse and compress the document is downloaded to your browser upon page load. Once loaded, the tool can execute the entire compression workflow even if you disconnect from the internet. The file never traverses a network boundary. It is read locally, processed locally in volatile memory, and saved locally to your hard drive. This architecture natively complies with strict data protection regulations, including the GDPR (General Data Protection Regulation) and HIPAA (Health Insurance Portability and Accountability Act), simply by ensuring the data never leaves the user's direct physical custody.</p>
+ <p>ConvertPDF circumvents these risks entirely through a "Local-First" architecture. The JavaScript logic required to parse and compress the document is downloaded to your browser upon page load. Once loaded, the tool can execute the entire compression workflow even if you disconnect from the internet. The file never traverses a network boundary. It is read locally, processed locally in volatile memory, and saved locally to your hard drive. This architecture supports data protection regulations like the GDPR (General Data Protection Regulation) and HIPAA (Health Insurance Portability and Accountability Act) by minimizing where personal data travels - though full compliance with those frameworks also depends on organizational measures (access controls, audit trails, and, for HIPAA, signed Business Associate Agreements) that go beyond what any single tool can provide.</p>
 
  <h2>Optimizing Your PDF Workflow</h2>
  <p>Compression is often just one step in document preparation. To maximize efficiency, we recommend evaluating the structure of your PDF before applying aggressive compression strategies.</p>

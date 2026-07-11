@@ -29,7 +29,7 @@
         { "name": "PPTX to PDF", "url": "/pages/pptx2pdf.html", "description": "Convert PowerPoint slides to PDF" },
         { "name": "DOCX to PDF", "url": "/pages/docx2pdf.html", "description": "Convert Word documents to PDF" },
         { "name": "Compress PDF", "url": "/pages/compresspdf.html", "description": "Reduce PDF file size" },
-        { "name": "Sign PDF", "url": "/pages/signpdf.html", "description": "Add digital signatures to PDF" }
+        { "name": "Sign PDF", "url": "/pages/signpdf.html", "description": "Add a visual signature to a PDF" }
     ],
 
     "prefer_related_applications": false

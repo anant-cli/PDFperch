@@ -310,7 +310,7 @@ async function rendermd2pdf(container) {
 
  } catch (err) {
  console.error('rendermd2pdf error:', err);
- container.innerHTML = `<div class="warning"> Tool failed to load: ${err.message}</div>`;
+ container.innerHTML = `<div class="warning"> Tool failed to load: ${escapeHtml(err.message)}</div>`;
  }
 }
 

@@ -100,7 +100,7 @@ async function renderimg2pdf(container) {
  <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
  <img src="${file.thumbUrl}" class="img-thumbnail" style="width: 50px; height: 50px; border-radius: 8px;">
  <div style="overflow: hidden;">
- <div style="font-weight: 600; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${file.name}</div>
+ <div style="font-weight: 600; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">${escapeHtml(file.name)}</div>
  <div style="font-size: 0.85rem; color: var(--text-muted);">${formatFileSize(file.size)}</div>
  </div>
  </div>

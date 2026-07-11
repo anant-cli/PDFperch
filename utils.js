@@ -96,6 +96,12 @@ function downloadBlob(blob, filename) {
  }
 }
 
+const _ESCAPE_HTML_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+function escapeHtml(str) {
+ if (typeof str !== 'string') return '';
+ return str.replace(/[&<>"']/g, ch => _ESCAPE_HTML_MAP[ch]);
+}
+
 function sanitizeFilename(filename) {
  if (typeof filename !== 'string') return 'download';
  return filename
@@ -373,6 +379,59 @@ function loadStylesheet(href, integrity) {
 
  _loadingStyles.set(href, promise);
  return promise;
+}
+
+/**
+ * Loads an ES module dynamically with a manual integrity check.
+ *
+ * Browsers do not support the `integrity` attribute on dynamic import(),
+ * so this fetches the module source as text, hashes it, and only then
+ * imports it via a same-origin Blob URL - giving ES-module imports the
+ * same tamper-detection guarantee that <script integrity="..."> gives
+ * classic scripts.
+ *
+ * Verification strategy:
+ *  - If `expectedHash` (SRI-format string, e.g. "sha384-...") is passed in,
+ *    it is enforced strictly: any mismatch throws and nothing executes.
+ *  - If `expectedHash` is omitted, the loader trusts the first successful
+ *    fetch (TOFU), pins that hash in localStorage, and enforces it on every
+ *    later load. The computed hash is also logged so a site owner can
+ *    promote it to a hard-coded `expectedHash` for stronger protection.
+ */
+async function loadModuleWithIntegrity(url, expectedHash) {
+ const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+ if (!res.ok) throw new Error(`Failed to fetch module: ${url} (${res.status})`);
+ const buf = await res.arrayBuffer();
+
+ const digest = await crypto.subtle.digest('SHA-384', buf);
+ const hashB64 = btoa(String.fromCharCode(...new Uint8Array(digest)));
+ const computedHash = `sha384-${hashB64}`;
+
+ const tofuKey = `cp_module_integrity:${url}`;
+ let pinned = expectedHash;
+ if (!pinned) {
+ try { pinned = localStorage.getItem(tofuKey) || undefined; } catch (e) { /* storage unavailable */ }
+ }
+
+ if (pinned) {
+ if (pinned !== computedHash) {
+ throw new Error(
+ `Integrity check failed for ${url}. Expected ${pinned} but got ${computedHash}. ` +
+ `Refusing to execute - the file may have changed or been tampered with.`
+ );
+ }
+ } else {
+ if (DEBUG) console.info(`[loadModuleWithIntegrity] First load of ${url}, pinning hash: ${computedHash}`);
+ try { localStorage.setItem(tofuKey, computedHash); } catch (e) { /* storage unavailable */ }
+ }
+
+ const blob = new Blob([buf], { type: 'application/javascript' });
+ const blobUrl = URL.createObjectURL(blob);
+ try {
+ return await import(/* webpackIgnore: true */ blobUrl);
+ } finally {
+ URL.revokeObjectURL(blobUrl);
+ }
 }
 
 function sanitizeHtmlForTool(html) {
@@ -782,4 +841,115 @@ function showPopupBlockedWarning(toolName) {
  container.appendChild(toast);
 }
 window.showPopupBlockedWarning = showPopupBlockedWarning;
+
+/* ---------------------------------------------------------------------
+ * Cookie / analytics consent banner (Google Consent Mode v2)
+ *
+ * The inline script in <head> already sets every consent signal to
+ * "denied" (except functionality/security, which aren't cookie-based)
+ * before GTM loads. This banner is what upgrades that to "granted" once
+ * a visitor actually agrees - GTM/GA4 tags in the container that have
+ * "consent checks" configured will then start firing.
+ *
+ * Preference is stored in localStorage only (never sent anywhere).
+ * ------------------------------------------------------------------- */
+const CONSENT_STORAGE_KEY = 'cp_consent_v1';
+
+function _gtagConsentUpdate(granted) {
+ if (typeof window.gtag !== 'function') {
+ window.dataLayer = window.dataLayer || [];
+ window.gtag = function () { window.dataLayer.push(arguments); };
+ }
+ window.gtag('consent', 'update', {
+ 'analytics_storage': granted ? 'granted' : 'denied',
+ // Ad-related signals stay denied until an ad network is actually
+ // integrated. Update this (and the Privacy Policy) when ads launch.
+ 'ad_storage': 'denied',
+ 'ad_user_data': 'denied',
+ 'ad_personalization': 'denied'
+ });
+}
+
+function applyStoredConsent() {
+ let stored = null;
+ try { stored = localStorage.getItem(CONSENT_STORAGE_KEY); } catch (e) { /* storage unavailable */ }
+ if (stored === 'granted') {
+ _gtagConsentUpdate(true);
+ return true;
+ }
+ if (stored === 'denied') {
+ _gtagConsentUpdate(false);
+ return true;
+ }
+ return false; // no choice recorded yet
+}
+
+function showConsentBanner() {
+ if (document.getElementById('cookieConsentBanner')) return;
+
+ const banner = document.createElement('div');
+ banner.id = 'cookieConsentBanner';
+ banner.setAttribute('role', 'dialog');
+ banner.setAttribute('aria-live', 'polite');
+ banner.setAttribute('aria-label', 'Cookie consent');
+
+ const text = document.createElement('p');
+ text.className = 'consent-text';
+ text.textContent = 'We use Google Analytics to understand aggregate site traffic. Your documents are never uploaded or seen by us. ';
+ const link = document.createElement('a');
+ link.href = '/privacy.html';
+ link.textContent = 'Privacy Policy';
+ text.appendChild(link);
+
+ const actions = document.createElement('div');
+ actions.className = 'consent-actions';
+
+ const rejectBtn = document.createElement('button');
+ rejectBtn.type = 'button';
+ rejectBtn.className = 'consent-btn consent-reject';
+ rejectBtn.textContent = 'Reject';
+
+ const acceptBtn = document.createElement('button');
+ acceptBtn.type = 'button';
+ acceptBtn.className = 'consent-btn consent-accept';
+ acceptBtn.textContent = 'Accept';
+
+ function hideBanner() {
+ banner.classList.add('consent-hidden');
+ setTimeout(() => banner.remove(), 300);
+ }
+
+ acceptBtn.addEventListener('click', () => {
+ try { localStorage.setItem(CONSENT_STORAGE_KEY, 'granted'); } catch (e) { /* ignore */ }
+ _gtagConsentUpdate(true);
+ hideBanner();
+ });
+
+ rejectBtn.addEventListener('click', () => {
+ try { localStorage.setItem(CONSENT_STORAGE_KEY, 'denied'); } catch (e) { /* ignore */ }
+ _gtagConsentUpdate(false);
+ hideBanner();
+ });
+
+ actions.appendChild(rejectBtn);
+ actions.appendChild(acceptBtn);
+ banner.appendChild(text);
+ banner.appendChild(actions);
+ document.body.appendChild(banner);
+}
+
+function initConsentBanner() {
+ const hasChoice = applyStoredConsent();
+ if (!hasChoice) showConsentBanner();
+}
+
+if (document.readyState === 'loading') {
+ document.addEventListener('DOMContentLoaded', initConsentBanner);
+} else {
+ initConsentBanner();
+}
+
+window.resetConsentChoice = function () {
+ try { localStorage.removeItem(CONSENT_STORAGE_KEY); } catch (e) { /* ignore */ }
+};
 

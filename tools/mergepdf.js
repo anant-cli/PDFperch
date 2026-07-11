@@ -134,7 +134,7 @@ async function rendermergepdf(container) {
   const fileSize = typeof formatFileSize === 'function' ? formatFileSize(file.size) : Math.round(file.size / 1024) + ' KB';
   li.innerHTML = `
   <img src="${meta.thumbUrl || ''}" alt="" style="width:48px;height:64px;object-fit:contain;background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:4px;${meta.thumbUrl ? '' : 'visibility:hidden;'}">
-  <span class="file-name" style="flex:1;">${file.name} <sm style="color:var(--text-muted); font-size:0.8em;">(${fileSize}${meta.pages ? `, ${meta.pages} pages` : ''})</sm></span>
+  <span class="file-name" style="flex:1;">${escapeHtml(file.name)} <sm style="color:var(--text-muted); font-size:0.8em;">(${fileSize}${meta.pages ? `, ${meta.pages} pages` : ''})</sm></span>
   <div class="file-actions">
   ${isDataTransferSupported ? `
   <button class="move-file" data-dir="up" title="Move up">Up</button>

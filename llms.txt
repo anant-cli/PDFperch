@@ -14,7 +14,7 @@ ConvertPDF is a browser-based productivity suite offering 21 free PDF and docume
 - [Word to PDF](https://convertpdf.pages.dev/pages/docx2pdf.html): Convert DOCX to PDF
 - [PDF to Word](https://convertpdf.pages.dev/pages/pdf2word.html): Convert PDF to editable DOCX
 - [PowerPoint to PDF](https://convertpdf.pages.dev/pages/pptx2pdf.html): Convert PPTX slides to PDF
-- [Sign PDF](https://convertpdf.pages.dev/pages/signpdf.html): Add digital signatures to PDF
+- [Sign PDF](https://convertpdf.pages.dev/pages/signpdf.html): Add a visual signature (typed, drawn, or uploaded image) to a PDF
 - [Encrypt PDF](https://convertpdf.pages.dev/pages/pdfencrypt.html): Password-protect a PDF
 - [Watermark PDF](https://convertpdf.pages.dev/pages/watermarkpdf.html): Add text watermark to PDF
 - [Add Page Numbers](https://convertpdf.pages.dev/pages/pagenumbers.html): Stamp page numbers on PDF
