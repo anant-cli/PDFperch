@@ -29,7 +29,7 @@ async function rendermergepdf(container) {
  </div>
 
  <div id="pdfMergeDropZone" class="drop-zone">
- <div style="font-size: 2rem; margin-bottom: 1rem;">PDF</div>
+ <div style="margin-bottom:1rem;"><svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="drop-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></div>
  <p>Drag and drop PDF files here</p>
  <p class="note">or click to browse files</p>
  <input type="file" id="pdfMergeInput" accept=".pdf" multiple style="display: none;">
@@ -134,13 +134,13 @@ async function rendermergepdf(container) {
   const fileSize = typeof formatFileSize === 'function' ? formatFileSize(file.size) : Math.round(file.size / 1024) + ' KB';
   li.innerHTML = `
   <img src="${meta.thumbUrl || ''}" alt="" style="width:48px;height:64px;object-fit:contain;background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:4px;${meta.thumbUrl ? '' : 'visibility:hidden;'}">
-  <span class="file-name" style="flex:1;">${escapeHtml(file.name)} <sm style="color:var(--text-muted); font-size:0.8em;">(${fileSize}${meta.pages ? `, ${meta.pages} pages` : ''})</sm></span>
+  <span class="file-name" style="flex:1;">${escapeHtml(file.name)} <small class="file-meta">(${fileSize}${meta.pages ? `, ${meta.pages} pages` : ''})</small></span>
   <div class="file-actions">
   ${isDataTransferSupported ? `
-  <button class="move-file" data-dir="up" title="Move up">Up</button>
-  <button class="move-file" data-dir="down" title="Move down">Down</button>
+  <button class="move-file" data-dir="up" title="Move up" aria-label="Move ${escapeHtml(file.name)} up">Up</button>
+  <button class="move-file" data-dir="down" title="Move down" aria-label="Move ${escapeHtml(file.name)} down">Down</button>
   ` : ''}
-  <button class="remove-file" style="color:#e74c3c; border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.08);" title="Remove">Remove</button>
+  <button class="remove-file" style="color:#e74c3c; border-color:rgba(248,113,113,0.25); background:rgba(248,113,113,0.08);" title="Remove" aria-label="Remove ${escapeHtml(file.name)}">Remove</button>
   </div>
   `;
 
@@ -245,6 +245,9 @@ async function rendermergepdf(container) {
 
  const buf = await file.arrayBuffer();
  const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
+ if (pdf.isEncrypted && window.showToast) {
+   showToast(`File "${file.name}" was encrypted. Encryption was removed during merge.`, 'info');
+ }
  const copied = await merged.copyPages(pdf, pdf.getPageIndices());
  copied.forEach(page => merged.addPage(page));
  totalPages += pdf.getPageCount();
@@ -259,7 +262,7 @@ async function rendermergepdf(container) {
  if (window.showToast) showToast(`Merged ${totalPages} pages (${resultSize}).`);
  } catch (e) {
  if (window.showToast) showToast('Merge failed: ' + e.message, 'error');
- console.error(e);
+ if (typeof DEBUG !== 'undefined' && DEBUG) console.error(e);
  } finally {
  mergeBtn.disabled = filesArray.length < 2;
  mergeBtn.textContent = 'Merge & download';

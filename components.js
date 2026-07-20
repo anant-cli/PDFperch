@@ -177,29 +177,15 @@
       '/terms': 'Terms'
     };
 
-    function normalizeNavPath(href) {
-      const cleanHref = (href || '').split('#')[0].split('?')[0].trim().toLowerCase();
-      if (!cleanHref) return '';
-      let path = cleanHref;
-      if (/^https?:\/\//.test(cleanHref)) {
-        try { path = new URL(cleanHref).pathname; } catch (e) { return ''; }
-      } else if (!cleanHref.startsWith('/')) {
-        path = '/' + cleanHref.replace(/^(\.\/)+/, '');
-      }
-      path = path.replace(/\/index(?:\.html)?$/, '/').replace(/\.html$/, '');
-      if (path.length > 1) path = path.replace(/\/+$/, '');
-      return path || '/';
-    }
-
     document.querySelectorAll('.main-nav a').forEach(function (a) {
       const href = a.getAttribute('href') || '';
-      const label = navMap[normalizeNavPath(href)];
+      const label = navMap[getNormalizedNavPath(href)];
       if (label) a.textContent = label;
     });
 
     const logo = document.querySelector('.logo a');
     if (logo) {
-      logo.textContent = 'ConvertPDF';
+      logo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1.2em;height:1.2em;vertical-align:text-bottom;margin-right:0.25rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></svg> ConvertPDF';
       if (!logo.getAttribute('title')) logo.setAttribute('title', 'ConvertPDF - Home');
       if (!logo.getAttribute('aria-label')) logo.setAttribute('aria-label', 'ConvertPDF Home');
     }
@@ -255,19 +241,47 @@
     document.body.appendChild(cursor);
 
     let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+    let lastMoved = Date.now();
+    let rafId = null;
+
     document.addEventListener('mousemove', function (e) {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      lastMoved = Date.now();
+      if (!rafId) {
+        animateCursor();
+      }
     }, { passive: true });
 
+    document.addEventListener('mouseleave', function () {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      } else if (!document.hidden && !rafId) {
+        lastMoved = Date.now();
+        animateCursor();
+      }
+    });
+
     function animateCursor() {
+      if (Date.now() - lastMoved > 500) {
+        rafId = null;
+        return;
+      }
       cursorX += (mouseX - cursorX) * 0.14;
       cursorY += (mouseY - cursorY) * 0.14;
       cursor.style.left = cursorX + 'px';
       cursor.style.top = cursorY + 'px';
-      requestAnimationFrame(animateCursor);
+      rafId = requestAnimationFrame(animateCursor);
     }
-    animateCursor();
+    rafId = requestAnimationFrame(animateCursor);
 
     const addHover = () => cursor.classList.add('hover');
     const removeHover = () => cursor.classList.remove('hover');
@@ -391,10 +405,13 @@
     const nextTheme = theme === 'light' ? 'dark' : 'light';
     btn.setAttribute('aria-label', `Switch to ${nextTheme} theme`);
     btn.setAttribute('title', `Switch to ${nextTheme} theme`);
+    const sunSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
+    const moonSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+    
     if (theme === 'light') {
-      btn.innerHTML = '<span aria-hidden="true">D</span><span class="sr-only">Switch to dark theme</span>';
+      btn.innerHTML = `${moonSvg}<span class="sr-only">Switch to dark theme</span>`;
     } else {
-      btn.innerHTML = '<span aria-hidden="true">L</span><span class="sr-only">Switch to light theme</span>';
+      btn.innerHTML = `${sunSvg}<span class="sr-only">Switch to light theme</span>`;
     }
   }
 
@@ -500,7 +517,17 @@ function renderRelatedTools() {
     const a = document.createElement('a');
     a.href = meta.url;
     a.className = 'related-tool-link';
-    a.innerHTML = `<span class="related-tool-icon">${meta.icon}</span><span>${meta.name}</span>`;
+    
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'related-tool-icon';
+    iconSpan.textContent = meta.icon;
+    
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = meta.name;
+    
+    a.appendChild(iconSpan);
+    a.appendChild(nameSpan);
+    
     grid.appendChild(a);
   });
 

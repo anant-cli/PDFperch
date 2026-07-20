@@ -3,7 +3,8 @@
   "version": "1.1.0",
   "description": "Free online PDF tools",
   "scripts": {
-    "check": "node scripts/check-static-site.js"
+    "check": "node scripts/check-static-site.js",
+    "build": "node scripts/bump-cache.js"
   },
   "dependencies": {
     "browser-image-compression": "^2.0.2",

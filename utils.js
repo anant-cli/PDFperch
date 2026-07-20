@@ -222,6 +222,9 @@ function throttle(func, limit = CONSTANTS.DEBOUNCE_DELAY) {
  };
 }
 
+const _loadingScripts = new Map();
+const _loadingStyles = new Map();
+
 function isMobileDevice() {
  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
  (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
@@ -252,54 +255,17 @@ const rateLimiter = {
 };
 
 window.rateLimiter = rateLimiter;
+window.isMobileDevice = isMobileDevice;
 
 function trackEvent(category, action, label, value = 0) {
- // Intentional no-op: analytics is handled by the static GTM snippet, not by tool code.
+ // Analytics is handled by the static GTM snippet, not by tool code.
 }
 
-function updateMetaDescription(desc) {
- if (typeof desc !== 'string') return;
-
- let meta = document.querySelector('meta[name="description"]');
- if (!meta) {
- meta = document.createElement('meta');
- meta.setAttribute('name', 'description');
- document.head.appendChild(meta);
- }
- meta.setAttribute('content', desc);
-}
-
-function updatePageTitle(title) {
- if (typeof title !== 'string') return;
- document.title = `${title} - ConvertPDF`;
-}
-
-function loadImage(file) {
- return new Promise((resolve, reject) => {
- if (!file || !(file instanceof File)) {
- reject(new Error('Invalid file provided'));
- return;
- }
-
- const reader = new FileReader();
-
- reader.onload = (e) => {
- const img = new Image();
-
- img.onload = () => resolve(img);
- img.onerror = () => reject(new Error('Failed to load image'));
-
- img.src = e.target.result;
- };
-
- reader.onerror = () => reject(new Error('Failed to read file'));
- reader.readAsDataURL(file);
- });
-}
-const _loadingScripts = new Map();
-const _loadingStyles = new Map();
+window.trackEvent = trackEvent;
 
 function loadScript(src, integrity, fallbackSrc) {
+ if (!src) return Promise.reject(new Error('Script URL is required.'));
+
  const existing = document.querySelector(`script[src="${src}"][data-loaded="1"]`);
  if (existing) return Promise.resolve();
  if (_loadingScripts.has(src)) return _loadingScripts.get(src);
@@ -345,7 +311,11 @@ function loadScript(src, integrity, fallbackSrc) {
  return promise;
 }
 
+window.loadScript = loadScript;
+
 function loadStylesheet(href, integrity) {
+ if (!href) return Promise.reject(new Error('Stylesheet URL is required.'));
+
  const existing = document.querySelector(`link[rel="stylesheet"][href="${href}"][data-loaded="1"]`);
  if (existing) return Promise.resolve();
 
@@ -380,6 +350,8 @@ function loadStylesheet(href, integrity) {
  _loadingStyles.set(href, promise);
  return promise;
 }
+
+window.loadStylesheet = loadStylesheet;
 
 /**
  * Loads an ES module dynamically with a manual integrity check.
@@ -433,6 +405,8 @@ async function loadModuleWithIntegrity(url, expectedHash) {
  URL.revokeObjectURL(blobUrl);
  }
 }
+
+window.loadModuleWithIntegrity = loadModuleWithIntegrity;
 
 function sanitizeHtmlForTool(html) {
  if (typeof html !== 'string') return '';

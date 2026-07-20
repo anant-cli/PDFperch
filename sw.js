@@ -115,17 +115,21 @@ self.addEventListener('fetch', event => {
  return networkResponse;
  }).catch(() => {
 
- if (cachedResponse) return cachedResponse;
- return new Response('<!DOCTYPE html><html lang="en"><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
- status: 200,
- headers: { 'Content-Type': 'text/html' }
- });
- });
+  if (cachedResponse) return cachedResponse;
+  if (event.request.mode === 'navigate') {
+    return cache.match('/offline.html').then(offlineRes => {
+      if (offlineRes) return offlineRes;
+      return new Response('<!DOCTYPE html><html lang="en"><body><h1>Offline</h1><p>Please check your network connection.</p></body></html>', {
+        status: 200,
+        headers: { 'Content-Type': 'text/html' }
+      });
+    });
+  }
+  return new Response('', { status: 408, statusText: 'Request timeout' });
+  });
 
  return cachedResponse || fetchPromise;
  });
  })
- );
+  );
 });
-
-

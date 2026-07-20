@@ -166,6 +166,7 @@
  text-align: center;
 }
 
+/* Future ad placement — reserved for potential monetization */
 .ad-slot {
  max-width: 970px;
  min-height: 90px;
@@ -3879,4 +3880,35 @@ a, button, [role="button"] {
     flex: 1;
     text-align: center;
   }
+}
+
+/* Appended fixes */
+.theme-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.file-meta {
+  color: var(--text-muted);
+  font-size: 0.8em;
+}
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 0.5rem 2rem 0;
+  max-width: 1380px;
+  margin: 0 auto;
+}
+.breadcrumb a {
+  color: var(--text-secondary);
+}
+.drop-zone svg.drop-icon {
+  transition: transform 0.25s ease;
+  color: var(--text-muted);
+}
+.drop-zone:hover svg.drop-icon,
+.drop-zone.drag-over svg.drop-icon {
+  transform: translateY(-4px);
+  color: var(--accent);
 }
