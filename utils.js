@@ -263,6 +263,26 @@ function trackEvent(category, action, label, value = 0) {
 
 window.trackEvent = trackEvent;
 
+function updatePageTitle(title) {
+ if (typeof title !== 'string' || !title.trim()) return;
+ document.title = title.trim() + ' | ConvertPDF';
+}
+
+window.updatePageTitle = updatePageTitle;
+
+function updateMetaDescription(description) {
+ if (typeof description !== 'string' || !description.trim()) return;
+ let meta = document.querySelector('meta[name="description"]');
+ if (!meta) {
+ meta = document.createElement('meta');
+ meta.setAttribute('name', 'description');
+ document.head.appendChild(meta);
+ }
+ meta.setAttribute('content', description.trim());
+}
+
+window.updateMetaDescription = updateMetaDescription;
+
 function loadScript(src, integrity, fallbackSrc) {
  if (!src) return Promise.reject(new Error('Script URL is required.'));
 
