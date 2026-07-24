@@ -369,11 +369,11 @@
     toggleBtn.className = 'theme-toggle-btn';
 
     const storedTheme = localStorage.getItem('cpdf_theme');
-    let currentTheme = 'dark';
+    let currentTheme = 'light';
     if (storedTheme) {
       currentTheme = storedTheme;
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-      currentTheme = 'light';
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      currentTheme = 'dark';
     }
     applyTheme(currentTheme, toggleBtn);
 

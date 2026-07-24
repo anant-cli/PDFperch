@@ -28,7 +28,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
- <meta name="theme-color" content="#0f172a">
+ <meta name="theme-color" content="#ffffff">
  <link rel="preload" href="../styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
  <noscript><link rel="stylesheet" href="../styles.css"></noscript>
  <link rel="apple-touch-icon" href="/icon-192.png">
@@ -98,11 +98,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
  <h2>WebP vs JPEG vs PNG: Which Should You Use?</h2>
  <table style="width:100%; border-collapse:collapse; margin:1rem 0;">
- <thead><tr style="background:var(--bg-input)"><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle)">Format</th><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle)">Best For</th><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle)">Transparency</th><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle)">Typical Size vs JPEG</th></tr></thead>
+ <thead><tr style="background:var(--bg-input)"><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle); background:var(--bg-card);">Format</th><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle); background:var(--bg-card);">Best For</th><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle); background:var(--bg-card);">Transparency</th><th style="padding:0.6rem; text-align:left; border:1px solid var(--border-subtle); background:var(--bg-card);">Typical Size vs JPEG</th></tr></thead>
  <tbody>
- <tr><td style="padding:0.6rem; border:1px solid var(--border-subtle)">JPEG</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">Photos, gradients</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">No</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">Baseline</td></tr>
- <tr><td style="padding:0.6rem; border:1px solid var(--border-subtle)">PNG</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">Logos, screenshots, text</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">Yes</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">2 - 5 larger</td></tr>
- <tr><td style="padding:0.6rem; border:1px solid var(--border-subtle)">WebP</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">Web images, all types</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">Yes</td><td style="padding:0.6rem; border:1px solid var(--border-subtle)">25 - 35% smaller</td></tr>
+ <tr><td style="padding:0.6rem; border:1px solid var(--border-subtle);">JPEG</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">Photos, gradients</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">No</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">Baseline</td></tr>
+ <tr><td style="padding:0.6rem; border:1px solid var(--border-subtle);">PNG</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">Logos, screenshots, text</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">Yes</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">2 - 5 larger</td></tr>
+ <tr><td style="padding:0.6rem; border:1px solid var(--border-subtle);">WebP</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">Web images, all types</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">Yes</td><td style="padding:0.6rem; border:1px solid var(--border-subtle);">25 - 35% smaller</td></tr>
  </tbody>
  </table>
  <p><strong>Rule of thumb:</strong> Use WebP for anything going on a website. Use PNG only for images with sharp edges, text, or transparency where you need pixel-perfect quality (logos, UI elements, screenshots of text). Use JPEG only when WebP isn't supported by the target platform - which in 2026 is rare for web contexts, though email clients still have patchy WebP support.</p>
@@ -144,7 +144,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <details><summary>Can I compress PNG files?</summary><p>Yes. However, PNG uses lossless compression, so recompressing a PNG as PNG doesn't reduce size much (10 - 30% typically). For larger reductions, convert the PNG to WebP or JPEG instead - unless it has transparency, in which case use WebP.</p></details>
  <details><summary>Why is my WebP output larger than the JPEG input?</summary><p>This can happen with images that are already heavily compressed JPEGs - the JPEG has discarded significant data, and recompressing as WebP at high quality settings may produce a larger file. Try lowering the quality slider, or accept that this particular image was already at near-optimal compression.</p></details>
 
- <div style="margin-top:2.5rem; padding:1.5rem; background:var(--bg-input); border-radius:12px; border:1px solid var(--border-subtle); text-align:center;">
+ <div style="margin-top:2.5rem; padding:1.5rem; background:var(--bg-card); border-radius:16px; border:none; box-shadow:var(--shadow-neu-flat); text-align:center;">
  <p style="margin-bottom:0.8rem; font-weight:600;">Ready to try it?</p>
  <a href="/pages/imgcompress.html" class="button primary" style="display:inline-block;">Open Image Compressor &rarr;</a>
  </div>
