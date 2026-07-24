@@ -1,5 +1,5 @@
 async function renderweb2pdf(container) {
- await loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js');
+ await loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');

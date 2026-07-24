@@ -5,7 +5,7 @@ async function rendermd2pdf(container) {
 
  await Promise.all([
  loadScript('https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js'),
+ loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js'),
  loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js'),
  loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js'),
  loadScript('https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js'),

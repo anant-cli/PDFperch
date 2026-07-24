@@ -2,8 +2,8 @@
 async function renderdocx2pdf(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js'),
+ loadScript('https://cdn.jsdelivr.net/npm/mammoth@1.12.0/mammoth.browser.min.js'),
+ loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js'),
  loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
  ]);
 

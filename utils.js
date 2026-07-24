@@ -10,8 +10,8 @@ const CONSTANTS = {
 };
 
 const CDN_INTEGRITY = {
- 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js':
- 'sha384-nFoSjZIoH3CCp8W639jJyQkuPHinJ2NHe7on1xvlUA7SuGfJAfvMldrsoAVm6ECz',
+ 'https://cdn.jsdelivr.net/npm/mammoth@1.12.0/mammoth.browser.min.js':
+ 'sha384-fWLn06AIo00H32MDcWUZTT+4Ru3OuoYn1DRH0o6JkhDl89YFSF4tJ4odze9bI+4r',
  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js':
  'sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI',
  'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js':
@@ -34,8 +34,10 @@ const CDN_INTEGRITY = {
  'sha384-HGmnkDZJy7mRkoARekrrj0VjEFSh9a0Z8qxGri/kTTAJkgR8hqD1lHsYSh3JdzRi',
  'https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.min.js':
  'sha384-WWGzNJbUWCKFUEexCVTZSZUJ64uYV7FqYVMG855l1ammDY4SH6oLEFuNF6exFtIl',
- 'https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js':
- 'sha384-qSFej5dZNviyoPgYJ5+Xk4bEbX8AYddxAHPuzs1aSgRiXxJ3qmyWNaPsRkpv/+x5',
+ 'https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js':
+ 'sha384-piCcpDdJ7qVeK4Tv8Z6Hpcr3ZBIgP16TxQTPVfsLFdZ5uDgwc3Y8Ho7oUnqf12qu',
+ 'https://unpkg.com/dompurify@3.4.12/dist/purify.min.js':
+ 'sha384-piCcpDdJ7qVeK4Tv8Z6Hpcr3ZBIgP16TxQTPVfsLFdZ5uDgwc3Y8Ho7oUnqf12qu',
  'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css':
  'sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww',
  'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css':
@@ -59,8 +61,8 @@ const CDN_FALLBACKS = {
  'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
  'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js':
  'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js',
- 'https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js':
- 'https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.5/purify.min.js',
+ 'https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js':
+ 'https://unpkg.com/dompurify@3.4.12/dist/purify.min.js',
  'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js':
  'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',
  'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js':
