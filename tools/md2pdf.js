@@ -4,8 +4,8 @@ async function rendermd2pdf(container) {
  container.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading Markdown converter...</p></div>`;
 
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js'),
+ loadScript('https://cdn.jsdelivr.net/npm/marked@16.3.0/lib/marked.umd.js'),
+ loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js'),
  loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js'),
  loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js'),
  loadScript('https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js'),

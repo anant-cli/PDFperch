@@ -14,8 +14,10 @@ const CDN_INTEGRITY = {
  'sha384-nFoSjZIoH3CCp8W639jJyQkuPHinJ2NHe7on1xvlUA7SuGfJAfvMldrsoAVm6ECz',
  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js':
  'sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI',
- 'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js':
- 'sha384-QsSpx6a0USazT7nK7w8qXDgpSAPhFsb2XtpoLFQ5+X2yFN6hvCKnwEzN8M5FWaJb',
+ 'https://cdn.jsdelivr.net/npm/marked@16.3.0/lib/marked.umd.js':
+ 'sha384-DHhF6577m3cgvS7zvVeBrLNSi6CZ1po5u0tWTVnCkodISlbu0GXr19X4fOHTV8S2',
+ 'https://unpkg.com/marked@16.3.0/lib/marked.umd.js':
+ 'sha384-DHhF6577m3cgvS7zvVeBrLNSi6CZ1po5u0tWTVnCkodISlbu0GXr19X4fOHTV8S2',
  'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js':
  'sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd',
  'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js':
@@ -34,8 +36,10 @@ const CDN_INTEGRITY = {
  'sha384-HGmnkDZJy7mRkoARekrrj0VjEFSh9a0Z8qxGri/kTTAJkgR8hqD1lHsYSh3JdzRi',
  'https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.min.js':
  'sha384-WWGzNJbUWCKFUEexCVTZSZUJ64uYV7FqYVMG855l1ammDY4SH6oLEFuNF6exFtIl',
- 'https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js':
- 'sha384-qSFej5dZNviyoPgYJ5+Xk4bEbX8AYddxAHPuzs1aSgRiXxJ3qmyWNaPsRkpv/+x5',
+ 'https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js':
+ 'sha384-o44XUELLEnv/iSlA1NWxBweqbD4TSR0qgq2VzVsxtkHS989JJjGKSE9vkfo5MN4K',
+ 'https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.11/purify.min.js':
+ 'sha384-o44XUELLEnv/iSlA1NWxBweqbD4TSR0qgq2VzVsxtkHS989JJjGKSE9vkfo5MN4K',
  'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css':
  'sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww',
  'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css':
@@ -44,8 +48,6 @@ const CDN_INTEGRITY = {
  'sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==',
  'https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js':
  'sha384-dHP9fwqd9BAiDh9uJ0p10khgbbcFMh34bVEiCnJ1Ah/AT2T2k4t572VEo3WXzxXp',
- 'https://cdn.jsdelivr.net/npm/tesseract.js@4.1.4/dist/tesseract.min.js':
- 'sha384-+56qagDlzJ3YYkDcyAXRdhrP7/+ai8qJcS6HpjACl2idDoCyCqRf5VVi7E/XkGae',
  'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js':
  'sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F',
  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js':
@@ -57,10 +59,10 @@ const CDN_FALLBACKS = {
  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js',
  'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js':
  'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js':
- 'https://cdn.jsdelivr.net/npm/marked@4.3.0/marked.min.js',
- 'https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js':
- 'https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.5/purify.min.js',
+ 'https://cdn.jsdelivr.net/npm/marked@16.3.0/lib/marked.umd.js':
+ 'https://unpkg.com/marked@16.3.0/lib/marked.umd.js',
+ 'https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js':
+ 'https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.11/purify.min.js',
  'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js':
  'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',
  'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js':
