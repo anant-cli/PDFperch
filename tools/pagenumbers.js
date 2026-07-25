@@ -33,7 +33,7 @@ async function renderpagenumbers(container) {
  </details>
  </div>
 
- <div id="pageNumbersPdfDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
+ <div id="pageNumbersPdfDropZone" class="drop-zone" style="border: 2px dashed var(--border-subtle); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
  <div style="font-size: 2rem; margin-bottom: 1rem;"></div>
  <p>Drag and drop a .pdf file here</p>
  <p class="note">or click to browse files</p>

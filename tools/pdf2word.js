@@ -19,7 +19,7 @@ async function renderpdf2word(container) {
  <h3>PDF to Word</h3>
  <p class="tool-description">Extract selectable PDF text into an editable DOCX file. Scanned PDFs need OCR first.</p>
 
- <div id="pdfWordDropZone" class="drop-zone" style="border:2px dashed rgba(255,255,255,0.1);padding:2rem;text-align:center;border-radius:var(--r-md);background:var(--bg-input);cursor:pointer;margin-bottom:1rem;">
+ <div id="pdfWordDropZone" class="drop-zone" style="border:2px dashed var(--border-subtle);padding:2rem;text-align:center;border-radius:var(--r-md);background:var(--bg-input);cursor:pointer;margin-bottom:1rem;">
  <div style="font-size:2rem;margin-bottom:1rem;">PDF -> DOCX</div>
  <p>Drag and drop a PDF file here</p>
  <p class="note">or click to browse files</p>

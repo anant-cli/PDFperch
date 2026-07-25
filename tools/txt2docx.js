@@ -24,7 +24,7 @@ async function rendertxt2docx(container) {
  <p>No! All processing happens locally in your browser. Your files never leave your device.</p>
  </details>
  </div>
- <div id="txtDocxDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
+ <div id="txtDocxDropZone" class="drop-zone" style="border: 2px dashed var(--border-subtle); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
  <div style="font-size: 2rem; margin-bottom: 1rem;"></div>
  <p>Drag and drop a .txt file here</p>
  <p class="note">or click to browse files</p>
@@ -38,7 +38,7 @@ async function rendertxt2docx(container) {
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
  <div style="display: flex; flex-direction: column;">
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Text Editor</div>
- <textarea id="txtEditor" spellcheck="false" placeholder="Type or paste plain text here..." style="flex: 1; min-height: 300px; resize: vertical; padding: 1rem; font-family: monospace; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-md); background: var(--bg-input);"></textarea>
+ <textarea id="txtEditor" spellcheck="false" placeholder="Type or paste plain text here..." style="flex: 1; min-height: 300px; resize: vertical; padding: 1rem; font-family: monospace; border: 1px solid var(--border-subtle); border-radius: var(--r-md); background: var(--bg-input);"></textarea>
  </div>
  <div style="display: flex; flex-direction: column;">
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);">Formatting Options</div>

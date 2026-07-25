@@ -30,7 +30,7 @@ function renderimg2png(container) {
  </details>
  </div>
 
- <div id="imgPngDropZone" class="drop-zone" style="border: 2px dashed rgba(255,255,255,0.1); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
+ <div id="imgPngDropZone" class="drop-zone" style="border: 2px dashed var(--border-subtle); padding: 2rem; text-align: center; border-radius: var(--r-md); background: var(--bg-input); cursor: pointer; transition: all 0.2s ease; margin-bottom: 1rem;">
  <div style="font-size: 2rem; margin-bottom: 1rem;"></div>
  <p>Drag and drop any image (JPG, PNG, WebP, GIF, BMP)</p>
  <p class="note">or click to browse - select multiple files for batch conversion</p>

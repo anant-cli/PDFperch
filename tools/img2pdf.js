@@ -42,7 +42,7 @@ async function renderimg2pdf(container) {
 
  <button id="convertImgBtn" class="primary" style="width: 100%;" disabled> Generate PDF</button>
 
- <div class="preview-box" id="imgPreviewBox" style="display:none; margin-top: 1.5rem; padding: 0; border: 1px solid rgba(255,255,255,0.1); overflow: hidden;">
+ <div class="preview-box" id="imgPreviewBox" style="display:none; margin-top: 1.5rem; padding: 0; border: 1px solid var(--border-subtle); overflow: hidden;">
  <div id="imgPreviewPlaceholder"></div>
  </div>
 

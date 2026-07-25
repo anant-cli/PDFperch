@@ -1,5 +1,5 @@
 async function renderweb2pdf(container) {
- await loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.12/dist/purify.min.js');
+ await loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.2.5/dist/purify.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -49,18 +49,18 @@ async function renderweb2pdf(container) {
  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; --html-grid: 1fr 1fr;" class="html-editor-grid">
  <div>
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.85rem; text-transform: uppercase;">HTML</div>
- <textarea id="htmlSnippet" spellcheck="false" placeholder="<h1>Hello World</h1>" style="width: 100%; height: 350px; resize: vertical; padding: 1.2rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-md); background: var(--bg-input); line-height: 1.5;"></textarea>
+ <textarea id="htmlSnippet" spellcheck="false" placeholder="<h1>Hello World</h1>" style="width: 100%; height: 350px; resize: vertical; padding: 1.2rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; border: 1px solid var(--border-subtle); border-radius: var(--r-md); background: var(--bg-input); line-height: 1.5;"></textarea>
  </div>
  <div>
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.85rem; text-transform: uppercase;">CSS</div>
- <textarea id="cssSnippet" spellcheck="false" placeholder="body { font-family: sans-serif; }" style="width: 100%; height: 350px; resize: vertical; padding: 1.2rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); border-radius: var(--r-md); background: var(--bg-input); line-height: 1.5;"></textarea>
+ <textarea id="cssSnippet" spellcheck="false" placeholder="body { font-family: sans-serif; }" style="width: 100%; height: 350px; resize: vertical; padding: 1.2rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; border: 1px solid var(--border-subtle); border-radius: var(--r-md); background: var(--bg-input); line-height: 1.5;"></textarea>
  </div>
  </div>
  </div>
 
  <div>
  <div class="preview-title" style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Live Preview</div>
- <div class="preview-box" id="htmlPreviewBox" style="width: 100%; min-height: 600px; padding: 0; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; box-shadow: var(--shadow-sm); background: #fff;">
+ <div class="preview-box" id="htmlPreviewBox" style="width: 100%; min-height: 600px; padding: 0; border: 1px solid var(--border-subtle); overflow: hidden; box-shadow: var(--shadow-sm); background: #fff;">
  <iframe id="htmlRenderPreview" sandbox="" referrerpolicy="no-referrer" style="width: 100%; height: 100%; min-height: 600px; border: none;"></iframe>
  </div>
  </div>
