@@ -1,6 +1,6 @@
 {
-    "name": "ConvertPDF - Free Private PDF Tools",
-    "short_name": "ConvertPDF",
+    "name": "PDFperch - Free Private PDF Tools",
+    "short_name": "PDFperch",
     "description": "Free, private, client-side PDF and document tools. No uploads, no account required. Works entirely in your browser.",
     "lang": "en",
     "start_url": "/",
@@ -8,7 +8,7 @@
     "display": "standalone",
     "orientation": "any",
     "background_color": "#0b0f1a",
-    "theme_color": "#4f9eff",
+    "theme_color": "#4553e8",
     "categories": ["utilities", "productivity"],
     "icons": [
         { "src": "/favicon.png", "sizes": "32x32", "type": "image/png" },
@@ -21,7 +21,7 @@
             "src": "/og-image.png",
             "sizes": "1200x630",
             "type": "image/png",
-            "label": "ConvertPDF home screen - 21 free PDF tools in your browser"
+            "label": "PDFperch home screen - 21 free PDF tools in your browser"
         }
     ],
     "shortcuts": [

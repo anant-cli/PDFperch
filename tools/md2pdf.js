@@ -244,7 +244,7 @@ async function rendermd2pdf(container) {
  <html>
  <head>
  <meta charset="UTF-8">
- <title>Markdown Document - ConvertPDF</title>
+ <title>Markdown Document - PDFperch</title>
  ${getPrintStyles(theme, pageSize, orientation)}
  <style>
  @page {

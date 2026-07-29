@@ -206,7 +206,7 @@ async function renderpptx2pdf(container) {
  }
 
  slides.forEach((slide, index) => {
- slide.setAttribute('data-convertpdf-slide', String(index + 1));
+ slide.setAttribute('data-pdfperch-slide', String(index + 1));
  slide.style.backgroundColor = slide.style.backgroundColor || '#ffffff';
  slide.style.margin = '0 0 18px 0';
  });
@@ -241,7 +241,7 @@ async function renderpptx2pdf(container) {
 
  function findSlideElements() {
  const selectors = [
- '[data-convertpdf-slide]',
+ '[data-pdfperch-slide]',
  '.pptx-slide',
  '.pptx-preview-slide',
  '.slide',

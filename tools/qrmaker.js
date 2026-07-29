@@ -31,7 +31,7 @@ async function renderqrmaker(container) {
  <div class="qr-option qr-dynamic" data-type="sms" style="display:none;"><label>SMS message:</label><input type="text" id="qrSmsBody" placeholder="Optional message"></div>
  <div class="qr-option qr-dynamic" data-type="wifi" style="display:none;"><label>Security:</label><select id="qrWifiSecurity"><option value="WPA">WPA/WPA2</option><option value="WEP">WEP</option><option value="nopass">No password</option></select></div>
  </div>
- <textarea id="qrText" placeholder="Enter text or URL (one per line for batch generation)" style="width: 100%; min-height: 80px; padding: 0.8rem; border-radius: var(--r-md); border: 1px solid var(--border-subtle); margin-bottom: 1rem; font-family: inherit;">https://convertpdf.pages.dev</textarea>
+ <textarea id="qrText" placeholder="Enter text or URL (one per line for batch generation)" style="width: 100%; min-height: 80px; padding: 0.8rem; border-radius: var(--r-md); border: 1px solid var(--border-subtle); margin-bottom: 1rem; font-family: inherit;">https://pdfperch.pages.dev</textarea>
 
  <div class="qr-options-grid">
  <div class="qr-option"><label>Size:</label><select id="qrSize"><option value="200">Small</option><option value="300" selected>Medium</option><option value="500">Large</option><option value="1024">Print</option></select></div>

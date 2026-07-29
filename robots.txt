@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /offline.html
 
-Sitemap: https://convertpdf.pages.dev/sitemap.xml
+Sitemap: https://pdfperch.pages.dev/sitemap.xml

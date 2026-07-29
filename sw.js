@@ -1,4 +1,4 @@
-const CACHE_NAME = 'convertpdf-v22';
+const CACHE_NAME = 'pdfperch-v1';
 
 const STATIC_ASSETS = [
  '/',

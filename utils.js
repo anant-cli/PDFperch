@@ -267,7 +267,7 @@ window.trackEvent = trackEvent;
 
 function updatePageTitle(title) {
  if (typeof title !== 'string' || !title.trim()) return;
- document.title = title.trim() + ' | ConvertPDF';
+ document.title = title.trim() + ' | PDFperch';
 }
 
 window.updatePageTitle = updatePageTitle;
@@ -705,7 +705,7 @@ function enhanceToolUX(root, options = {}) {
  clearBtn.setAttribute('aria-label', 'Clear selected files and reset this tool');
 
  clearBtn.addEventListener('click', () => {
- root.dispatchEvent(new CustomEvent('convertpdf:clear', { bubbles: true }));
+ root.dispatchEvent(new CustomEvent('pdfperch:clear', { bubbles: true }));
 
  if (typeof options.onClear === 'function') {
  options.onClear();

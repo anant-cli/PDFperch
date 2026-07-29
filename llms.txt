@@ -1,34 +1,34 @@
-# ConvertPDF
+# PDFperch
 > Free, private, client-side PDF tools. All processing runs in the browser — no file uploads, no account required.
 
 ## About
-ConvertPDF is a browser-based productivity suite offering 21 free PDF and document tools. Files never leave the user's device.
+PDFperch is a browser-based productivity suite offering 21 free PDF and document tools. Files never leave the user's device.
 
 ## Core Tools
-- [Merge PDF](https://convertpdf.pages.dev/pages/mergepdf.html): Combine multiple PDFs into one file
-- [Compress PDF](https://convertpdf.pages.dev/pages/compresspdf.html): Reduce PDF file size by up to 70%
-- [Split PDF](https://convertpdf.pages.dev/pages/splitpdf.html): Extract pages from a PDF
-- [Rotate PDF](https://convertpdf.pages.dev/pages/rotatepdf.html): Rotate pages 90°, 180°, 270°
-- [PDF to JPG](https://convertpdf.pages.dev/pages/pdf2jpg.html): Convert PDF pages to images
-- [JPG to PDF](https://convertpdf.pages.dev/pages/img2pdf.html): Convert images to PDF
-- [Word to PDF](https://convertpdf.pages.dev/pages/docx2pdf.html): Convert DOCX to PDF
-- [PDF to Word](https://convertpdf.pages.dev/pages/pdf2word.html): Convert PDF to editable DOCX
-- [PowerPoint to PDF](https://convertpdf.pages.dev/pages/pptx2pdf.html): Convert PPTX slides to PDF
-- [Sign PDF](https://convertpdf.pages.dev/pages/signpdf.html): Add a visual signature (typed, drawn, or uploaded image) to a PDF
-- [Encrypt PDF](https://convertpdf.pages.dev/pages/pdfencrypt.html): Password-protect a PDF
-- [Watermark PDF](https://convertpdf.pages.dev/pages/watermarkpdf.html): Add text watermark to PDF
-- [Add Page Numbers](https://convertpdf.pages.dev/pages/pagenumbers.html): Stamp page numbers on PDF
-- [Organize PDF](https://convertpdf.pages.dev/pages/organizepdf.html): Reorder PDF pages
-- [OCR](https://convertpdf.pages.dev/pages/ocrtool.html): Extract text from scanned images
-- [Markdown to PDF](https://convertpdf.pages.dev/pages/md2pdf.html): Convert .md files to PDF
-- [HTML to PDF](https://convertpdf.pages.dev/pages/web2pdf.html): Convert web pages to PDF
-- [Compress Images](https://convertpdf.pages.dev/pages/imgcompress.html): Reduce image file size
-- [Image Converter](https://convertpdf.pages.dev/pages/img2png.html): Convert between image formats
-- [QR Code Generator](https://convertpdf.pages.dev/pages/qrmaker.html): Create custom QR codes
-- [TXT to Word](https://convertpdf.pages.dev/pages/txt2docx.html): Convert plain text to DOCX
+- [Merge PDF](https://pdfperch.pages.dev/pages/mergepdf.html): Combine multiple PDFs into one file
+- [Compress PDF](https://pdfperch.pages.dev/pages/compresspdf.html): Reduce PDF file size by up to 70%
+- [Split PDF](https://pdfperch.pages.dev/pages/splitpdf.html): Extract pages from a PDF
+- [Rotate PDF](https://pdfperch.pages.dev/pages/rotatepdf.html): Rotate pages 90°, 180°, 270°
+- [PDF to JPG](https://pdfperch.pages.dev/pages/pdf2jpg.html): Convert PDF pages to images
+- [JPG to PDF](https://pdfperch.pages.dev/pages/img2pdf.html): Convert images to PDF
+- [Word to PDF](https://pdfperch.pages.dev/pages/docx2pdf.html): Convert DOCX to PDF
+- [PDF to Word](https://pdfperch.pages.dev/pages/pdf2word.html): Convert PDF to editable DOCX
+- [PowerPoint to PDF](https://pdfperch.pages.dev/pages/pptx2pdf.html): Convert PPTX slides to PDF
+- [Sign PDF](https://pdfperch.pages.dev/pages/signpdf.html): Add a visual signature (typed, drawn, or uploaded image) to a PDF
+- [Encrypt PDF](https://pdfperch.pages.dev/pages/pdfencrypt.html): Password-protect a PDF
+- [Watermark PDF](https://pdfperch.pages.dev/pages/watermarkpdf.html): Add text watermark to PDF
+- [Add Page Numbers](https://pdfperch.pages.dev/pages/pagenumbers.html): Stamp page numbers on PDF
+- [Organize PDF](https://pdfperch.pages.dev/pages/organizepdf.html): Reorder PDF pages
+- [OCR](https://pdfperch.pages.dev/pages/ocrtool.html): Extract text from scanned images
+- [Markdown to PDF](https://pdfperch.pages.dev/pages/md2pdf.html): Convert .md files to PDF
+- [HTML to PDF](https://pdfperch.pages.dev/pages/web2pdf.html): Convert web pages to PDF
+- [Compress Images](https://pdfperch.pages.dev/pages/imgcompress.html): Reduce image file size
+- [Image Converter](https://pdfperch.pages.dev/pages/img2png.html): Convert between image formats
+- [QR Code Generator](https://pdfperch.pages.dev/pages/qrmaker.html): Create custom QR codes
+- [TXT to Word](https://pdfperch.pages.dev/pages/txt2docx.html): Convert plain text to DOCX
 
 ## Key Differentiator
 Everything runs in the browser using WebAssembly. No files are uploaded to servers.
 
 ## Blog
-https://convertpdf.pages.dev/blog/blog_index.html
+https://pdfperch.pages.dev/blog/blog_index.html

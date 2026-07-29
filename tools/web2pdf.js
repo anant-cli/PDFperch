@@ -225,7 +225,7 @@ async function renderweb2pdf(container) {
  if (window.showToast) showToast('Direct PDF export failed. Opening print fallback.', 'warning');
  }
 
- const fullHtml = `<!DOCTYPE html><html><head><title>ConvertPDF - HTML Document</title>
+ const fullHtml = `<!DOCTYPE html><html><head><title>PDFperch - HTML Document</title>
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline';">
 <style>
 @page { size: ${sizeSel.value} ${orientSel.value}; margin: 2.54cm; }

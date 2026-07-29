@@ -185,9 +185,9 @@
 
     const logo = document.querySelector('.logo a');
     if (logo) {
-      logo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:1.2em;height:1.2em;vertical-align:text-bottom;margin-right:0.25rem;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M9 15l2 2 4-4"></path></svg> ConvertPDF';
-      if (!logo.getAttribute('title')) logo.setAttribute('title', 'ConvertPDF - Home');
-      if (!logo.getAttribute('aria-label')) logo.setAttribute('aria-label', 'ConvertPDF Home');
+      logo.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 64 64" style="vertical-align:text-bottom;margin-right:0.3rem" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="14" fill="#4553e8"/><path d="M18 12h18l10 10v28a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V14a2 2 0 0 1 2-2z" fill="#ffffff" opacity="0.14"/><path d="M36 12l10 10H36V12z" fill="#ffffff" opacity="0.26"/><rect x="14" y="40" width="36" height="3" rx="1.5" fill="#ffffff"/><g transform="translate(32,29)"><ellipse cx="0" cy="4" rx="8" ry="7" fill="#ffffff"/><circle cx="6" cy="-2" r="5.2" fill="#ffffff"/><path d="M10.8 -2.5l5 1.6-5 1.6z" fill="#ffffff"/><circle cx="7.6" cy="-3.2" r="0.9" fill="#4553e8"/><path d="M-8 4c-3.4 0.6-6 -0.4-8 -2.6 2.6 1.8 5.4 2 8.4 0.6z" fill="#ffffff"/></g></svg>PDFperch';
+      if (!logo.getAttribute('title')) logo.setAttribute('title', 'PDFperch - Home');
+      if (!logo.getAttribute('aria-label')) logo.setAttribute('aria-label', 'PDFperch Home');
     }
 
     document.querySelectorAll('.back-btn').forEach(function (btn) {
@@ -416,7 +416,7 @@
   }
 
   function clearLegacyStorage() {
-    try { localStorage.removeItem('convertpdf_consent_v1'); } catch (e) {}
+    try { localStorage.removeItem('pdfperch_consent_v1'); } catch (e) {}
   }
 
   function init() {

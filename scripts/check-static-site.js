@@ -2,7 +2,7 @@
 /**
  * check-static-site.js
  *
- * Lightweight, dependency-free validation for the ConvertPDF static site.
+ * Lightweight, dependency-free validation for the PDFperch static site.
  * Run with: npm run check
  *
  * Checks performed:

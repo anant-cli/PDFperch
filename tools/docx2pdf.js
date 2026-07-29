@@ -240,7 +240,7 @@ async function renderdocx2pdf(container) {
 <html lang="en">
 <head>
  <meta charset="UTF-8">
- <title>${docTitle} \u2013 ConvertPDF</title>
+ <title>${docTitle} \u2013 PDFperch</title>
  ${docxPrintStyles}
  <style>@page { size: ${pageSize} ${orientation}; margin: 2.5cm 3cm; }</style>
 </head>
