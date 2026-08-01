@@ -1715,56 +1715,7 @@ input[type="color"] {
 }
 .toast-close:hover { color: var(--text-primary); transform: none !important; background: none; }
 
-/* ─── 24. Cookie Banner ────────────────────────────────── */
-#cookieConsentBanner {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 9999;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  background: var(--bg-header);
-  box-shadow: 0 -6px 20px var(--neu-dark);
-  backdrop-filter: blur(6px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-#cookieConsentBanner.consent-hidden {
-  opacity: 0;
-  transform: translateY(100%);
-  pointer-events: none;
-}
-#cookieConsentBanner .consent-text {
-  flex: 1 1 320px;
-  margin: 0;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-#cookieConsentBanner .consent-text a { color: var(--accent); text-decoration: underline; }
-#cookieConsentBanner .consent-actions { display: flex; gap: 0.75rem; flex: 0 0 auto; }
-#cookieConsentBanner .consent-btn {
-  padding: 0.55rem 1.25rem;
-  border-radius: var(--r-md);
-  font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  box-shadow: var(--shadow-neu-sm);
-}
-#cookieConsentBanner .consent-reject {
-  background: var(--bg-surface);
-  color: var(--text-secondary);
-}
-#cookieConsentBanner .consent-accept {
-  background: var(--accent);
-  color: var(--text-on-accent);
-}
-#cookieConsentBanner .consent-accept:hover { background: var(--accent-vivid); }
-
-/* ─── 25. Blog ─────────────────────────────────────────── */
+/* ─── 24. Blog ─────────────────────────────────────────── */
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -2101,7 +2052,7 @@ canvas[aria-label] { display: block; }
   .hero-trust-item { font-size: 0.8rem; }
 
   .button, .download-btn, .back-btn { min-width: 100%; width: 100%; }
-  .file-actions button, .nav-toggle, .consent-btn,
+  .file-actions button, .nav-toggle,
   .orientation-selector button, .permissions-grid button { width: auto; min-width: auto; }
 
   .drop-zone { min-height: 140px; padding: 1.75rem 1rem; }
@@ -2119,10 +2070,6 @@ canvas[aria-label] { display: block; }
   .sign-options-grid { grid-template-columns: 1fr; }
 
   .floating-action { font-size: 0.88rem; padding: 0.75rem 1rem; right: 0.85rem; bottom: 0.85rem; }
-
-  #cookieConsentBanner { flex-direction: column; align-items: stretch; }
-  #cookieConsentBanner .consent-actions { justify-content: stretch; }
-  #cookieConsentBanner .consent-btn { flex: 1; text-align: center; }
 
   .social-links a { width: 40px; height: 40px; }
 }
@@ -2169,5 +2116,5 @@ canvas[aria-label] { display: block; }
 /* Print */
 @media print {
   body { margin: 0 !important; padding: 0 !important; }
-  .site-header, .site-footer, .hero-cta, .floating-action, #cookieConsentBanner { display: none !important; }
+  .site-header, .site-footer, .hero-cta, .floating-action { display: none !important; }
 }

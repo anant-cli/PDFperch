@@ -23,13 +23,6 @@ function isNavigationRequest(req) {
  return req.mode === 'navigate';
 }
 
-function isThirdPartyRequest(url) {
- return url.includes('googletagmanager.com') ||
- url.includes('google-analytics.com') ||
- url.includes('analytics.google.com') ||
- url.includes('region1.google-analytics.com');
-}
-
 self.addEventListener('install', event => {
  event.waitUntil(
  caches.open(CACHE_NAME).then(cache => {
@@ -60,8 +53,6 @@ function isCDNRequest(url) {
 self.addEventListener('fetch', event => {
 
  if (event.request.method !== 'GET') return;
-
- if (isThirdPartyRequest(event.request.url)) return;
 
  if (isFontRequest(event.request.url)) return;
 
