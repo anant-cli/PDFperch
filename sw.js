@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdfperch-v1';
+const CACHE_NAME = 'pdfperch-v2026-08-19T13-49-05';
 
 const STATIC_ASSETS = [
  '/',
