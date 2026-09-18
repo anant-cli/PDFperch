@@ -201,6 +201,8 @@ async function renderocrtool(container) {
  if (pageNum === 1) fullText += `--- Page 1 ---\n\n`;
  else fullText += `\n\n--- Page ${pageNum} ---\n\n`;
  fullText += text;
+
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
  } finally {
  await worker.terminate();

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdfperch-v2026-08-19T13-49-05';
+const CACHE_NAME = 'pdfperch-v2026-09-18T06-36-17';
 
 const STATIC_ASSETS = [
  '/',
@@ -57,19 +57,25 @@ self.addEventListener('fetch', event => {
  if (isFontRequest(event.request.url)) return;
 
  if (isNavigationRequest(event.request)) {
+ // Stale-while-revalidate: repeat visits to a tool page render instantly
+ // from cache instead of blocking on the network, while a background
+ // fetch refreshes the cache for the *next* visit. Each deploy still
+ // gets a clean slate because `activate` wipes any CACHE_NAME that
+ // doesn't match the one baked in by scripts/bump-cache.js.
  event.respondWith(
- fetch(event.request)
+ caches.open(CACHE_NAME).then(cache =>
+ cache.match(event.request).then(cachedResponse => {
+ const fetchPromise = fetch(event.request)
  .then(res => {
  if (res && res.status === 200) {
- const clone = res.clone();
- caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+ cache.put(event.request, res.clone());
  }
  return res;
  })
- .catch(() =>
- caches.match(event.request).then(cached =>
- cached || caches.match('/offline.html')
- )
+ .catch(() => cachedResponse || caches.match('/offline.html'));
+
+ return cachedResponse || fetchPromise;
+ })
  )
  );
  return;

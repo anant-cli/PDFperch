@@ -260,7 +260,10 @@ window.rateLimiter = rateLimiter;
 window.isMobileDevice = isMobileDevice;
 
 function trackEvent(category, action, label, value = 0) {
- // Analytics is handled by the static GTM snippet, not by tool code.
+ // Intentionally a no-op: PDFperch ships no analytics or tracking of any
+ // kind (see privacy.html). This function exists only so tool code can call
+ // trackEvent(...) without needing to feature-detect it, in case a future,
+ // explicitly opt-in, privacy-respecting analytics integration is added.
 }
 
 window.trackEvent = trackEvent;

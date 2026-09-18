@@ -223,6 +223,7 @@ async function renderpagenumbers(container) {
 
  counter++;
  progressBar.style.width = `${((i + 1) / pages.length) * 100}%`;
+ if (i % 10 === 0 && typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
 
  progressDiv.innerHTML = 'Saving PDF...';

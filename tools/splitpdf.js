@@ -296,6 +296,7 @@ async function rendersplitpdf(container) {
  const pageBytes = await pageDoc.save({ useObjectStreams: true });
  zip.file(`${baseName}-page-${i + 1}.pdf`, pageBytes);
  progressBar.style.width = `${Math.round(((i + 1) / totalPages) * 100)}%`;
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
  splitBtn.innerHTML = ' Creating ZIP...';
  const zipBlob = await zip.generateAsync({ type: 'blob' }, meta => {

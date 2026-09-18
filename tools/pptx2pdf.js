@@ -374,6 +374,7 @@ async function renderpptx2pdf(container) {
  });
 
  if (typeof releaseCanvas === 'function') releaseCanvas(canvas);
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
 
  setStatus('Saving PDF...');

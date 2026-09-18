@@ -211,6 +211,8 @@ async function rendercompresspdf(container) {
  const ptHeight = canvasHeight * 72 / safeDpi;
  const newPage = newDoc.addPage([ptWidth, ptHeight]);
  newPage.drawImage(jpegImage, { x: 0, y: 0, width: ptWidth, height: ptHeight });
+
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
 
  progressBar.style.width = '95%';
@@ -287,6 +289,8 @@ async function rendercompresspdf(container) {
 
  const newPage = newDoc.addPage([ptWidth, ptHeight]);
  newPage.drawImage(jpegImage, { x: 0, y: 0, width: ptWidth, height: ptHeight });
+
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
 
  progressBar.style.width = '95%';

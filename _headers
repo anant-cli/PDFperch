@@ -18,6 +18,29 @@
 /sw.js
   Cache-Control: no-cache
 
+# These are only ever referenced with a ?v=<build-id> query string, stamped
+# by scripts/bump-cache.js on every deploy (see package.json "build" script).
+# Because the URL changes on every deploy, it's safe to cache the response
+# for a full year: a stale cached copy can never be served under the new
+# deploy's HTML, since the HTML points at a different URL entirely.
+/styles.css
+  Cache-Control: public, max-age=31536000, immutable
+/utils.js
+  Cache-Control: public, max-age=31536000, immutable
+/components.js
+  Cache-Control: public, max-age=31536000, immutable
+/script.js
+  Cache-Control: public, max-age=31536000, immutable
+/tools/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Icons/screenshots change rarely and aren't versioned, so a shorter cache
+# with revalidation is the safer default for these.
+/*.png
+  Cache-Control: public, max-age=604800, must-revalidate
+/*.ico
+  Cache-Control: public, max-age=604800, must-revalidate
+
 /llms.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public, max-age=86400

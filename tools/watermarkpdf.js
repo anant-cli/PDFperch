@@ -318,6 +318,7 @@ async function renderwatermarkpdf(container) {
  opacity
  });
  progressBar.style.width = `${((i + 1) / pagesToProcess.length) * 100}%`;
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
  } else {
  const text = document.getElementById('watermarkText').value || 'CONFIDENTIAL';
@@ -357,6 +358,7 @@ async function renderwatermarkpdf(container) {
  });
  }
  }
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  } else {
  let x, y, rotate = PDFLib.degrees(0);
  const textWidth = font.widthOfTextAtSize(text, fontSize);
@@ -379,6 +381,7 @@ async function renderwatermarkpdf(container) {
  }
 
  progressBar.style.width = `${((i + 1) / pagesToProcess.length) * 100}%`;
+ if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
  }
 
