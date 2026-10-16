@@ -1,6 +1,6 @@
 async function rendersplitpdf(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js');
+ await loadScript('/vendor/pdf-lib/pdf-lib.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -87,26 +87,6 @@ async function rendersplitpdf(container) {
  let currentFile = null;
  let currentTotalPages = 0;
 
- function parsePageRange(str, totalPages) {
- if (!str) return [];
- const parts = str.split(',');
- const pages = new Set();
- for (let part of parts) {
- part = part.trim();
- if (part.includes('-')) {
- let [start, end] = part.split('-').map(Number);
- if (isNaN(start) || isNaN(end)) continue;
- start = Math.max(1, Math.min(start, totalPages));
- end = Math.max(1, Math.min(end, totalPages));
- for (let i = start; i <= end; i++) pages.add(i);
- } else {
- const p = Number(part);
- if (!isNaN(p) && p >= 1 && p <= totalPages) pages.add(p);
- }
- }
- return Array.from(pages).sort((a, b) => a - b);
- }
-
  function validateRangeInput() {
  if (!customRangeRadio.checked) {
  rangeValidation.textContent = 'Enter ranges like 1-3,5.';
@@ -114,14 +94,14 @@ async function rendersplitpdf(container) {
  return true;
  }
  const value = rangeInput.value.trim();
- const pages = parsePageRange(value, currentTotalPages);
  if (!value) {
  rangeValidation.textContent = 'Enter a page range before splitting.';
  rangeValidation.style.color = '#f59e0b';
  return false;
  }
- if (pages.length === 0) {
- rangeValidation.textContent = `No valid pages found. Use page numbers from 1 to ${currentTotalPages || '?'}.`;
+ const { pages, error } = parsePageRanges(value, currentTotalPages);
+ if (error) {
+ rangeValidation.textContent = error;
  rangeValidation.style.color = '#f87171';
  return false;
  }
@@ -166,6 +146,10 @@ async function rendersplitpdf(container) {
  try {
  const arrayBuf = await file.arrayBuffer();
  const pdfDoc = await PDFLib.PDFDocument.load(arrayBuf, { ignoreEncryption: true });
+ if (pdfDoc.isEncrypted) {
+ // Split output would contain still-encrypted (unreadable) page streams.
+ throw new Error('this PDF is password-protected. Unlock it first with the Remove Password tool');
+ }
  currentTotalPages = pdfDoc.getPageCount();
  updateStats(file, currentTotalPages);
  updateModeUI();
@@ -194,7 +178,7 @@ async function rendersplitpdf(container) {
  });
  chunkSizeInput.addEventListener('input', () => {
  splitSummary.style.display = 'none';
- splitBtn.disabled = !currentFile || Math.max(1, parseInt(chunkSizeInput.value) || 0) < 1;
+ splitBtn.disabled = !currentFile || !(parseInt(chunkSizeInput.value, 10) >= 1);
  });
  updateModeUI();
 
@@ -213,6 +197,9 @@ async function rendersplitpdf(container) {
  try {
  const arrayBuf = await currentFile.arrayBuffer();
  const srcPdf = await PDFLib.PDFDocument.load(arrayBuf, { ignoreEncryption: true });
+ if (srcPdf.isEncrypted) {
+ throw new Error('this PDF is password-protected. Unlock it first with the Remove Password tool');
+ }
  const totalPages = srcPdf.getPageCount();
  const baseName = currentFile.name.replace(/\.[^/.]+$/, '') || 'split-document';
 
@@ -227,7 +214,7 @@ async function rendersplitpdf(container) {
  splitSummary.innerHTML = `<strong>Split summary</strong><br>1 chunk created from ${totalPages} page${totalPages === 1 ? '' : 's'}.`;
  if (window.showToast) showToast('Only one chunk needed - downloaded as single file.');
  } else {
- if (typeof JSZip === 'undefined') await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+ if (typeof JSZip === 'undefined') await loadScript('/vendor/jszip/jszip.min.js');
  const zip = new JSZip();
  for (let chunk = 0; chunk < numChunks; chunk++) {
  const start = chunk * chunkSize;
@@ -252,9 +239,9 @@ async function rendersplitpdf(container) {
  }
  } else if (customRangeRadio.checked) {
  const rawRange = rangeInput.value.trim();
- const selectedPages = parsePageRange(rawRange, totalPages);
- if (selectedPages.length === 0) {
- if (window.showToast) showToast('Please enter a valid page range.', 'warning');
+ const { pages: selectedPages, error: rangeError } = parsePageRanges(rawRange, totalPages);
+ if (rangeError) {
+ if (window.showToast) showToast(rangeError, 'warning');
  else alert('Please enter a valid page range.');
  return;
  }
@@ -285,7 +272,7 @@ async function rendersplitpdf(container) {
  if (window.showToast) showToast('Successfully extracted the one page PDF.');
  } else {
  if (typeof JSZip === 'undefined') {
- await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+ await loadScript('/vendor/jszip/jszip.min.js');
  }
  const zip = new JSZip();
  for (let i = 0; i < totalPages; i++) {

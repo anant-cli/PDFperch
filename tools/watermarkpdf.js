@@ -1,11 +1,11 @@
 async function renderwatermarkpdf(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js')
+ loadScript('/vendor/pdfjs/pdf.min.js'),
+ loadScript('/vendor/pdf-lib/pdf-lib.min.js')
  ]);
 
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -139,6 +139,8 @@ async function renderwatermarkpdf(container) {
 
  let currentPdf = null;
  let currentPdfJs = null;
+ let originalBytes = null; // pristine copy; each Apply starts from this
+ let previewSeq = 0;
  let currentFileName = 'document';
  let watermarkImageBytes = null;
  modeSel.addEventListener('change', () => {
@@ -171,7 +173,11 @@ async function renderwatermarkpdf(container) {
  document.getElementById('watermarkColor').addEventListener('input', updatePreview);
  async function updatePreview() {
  if (!currentPdfJs) return;
- const canvas = previewCanvas;
+ // Each call renders into its own offscreen canvas and only the newest
+ // result is copied to the visible canvas. Rendering several times into the
+ // same canvas at once (fast slider moves) made pdf.js throw.
+ const seq = ++previewSeq;
+ const canvas = document.createElement('canvas');
  const ctx = canvas.getContext('2d');
 
  try {
@@ -180,6 +186,7 @@ async function renderwatermarkpdf(container) {
  canvas.width = viewport.width;
  canvas.height = viewport.height;
  await page.render({ canvasContext: ctx, viewport }).promise;
+ if (seq !== previewSeq) return;
 
  if (modeSel.value === 'image' && watermarkImageBytes) {
  const blob = new Blob([watermarkImageBytes], { type: 'image/png' });
@@ -245,6 +252,11 @@ async function renderwatermarkpdf(container) {
  ctx.restore();
  }
 
+ if (seq !== previewSeq) return;
+ previewCanvas.width = canvas.width;
+ previewCanvas.height = canvas.height;
+ previewCanvas.getContext('2d').drawImage(canvas, 0, 0);
+ releaseCanvas(canvas);
  previewDiv.style.display = 'block';
  } catch (e) {
  console.error('Preview error:', e);
@@ -269,8 +281,11 @@ async function renderwatermarkpdf(container) {
 
  try {
  const arrayBuf = await file.arrayBuffer();
+ originalBytes = arrayBuf;
  currentPdf = await PDFLib.PDFDocument.load(arrayBuf);
- currentPdfJs = await pdfjsLib.getDocument({ data: arrayBuf }).promise;
+ if (currentPdfJs) { try { currentPdfJs.destroy(); } catch (e) {} }
+ // pdf.js detaches the buffer it receives, so give it a copy.
+ currentPdfJs = await pdfjsLib.getDocument({ data: arrayBuf.slice(0) }).promise;
 
  controls.style.display = 'block';
  btn.disabled = false;
@@ -296,25 +311,30 @@ async function renderwatermarkpdf(container) {
 
  try {
  const allPagesChk = document.getElementById('watermarkAllPages').checked;
- const pages = currentPdf.getPages();
+ // Start from the original bytes on every Apply; drawing into the loaded
+ // document in place stacked a second watermark on each click.
+ const workPdf = await PDFLib.PDFDocument.load(originalBytes);
+ const pages = workPdf.getPages();
  const pagesToProcess = allPagesChk ? pages : [pages[0]];
 
  if (modeSel.value === 'image') {
  if (!watermarkImageBytes) throw new Error('Please upload a PNG image first.');
  const opacity = parseInt(document.getElementById('imageOpacity').value) / 100;
- const pngImage = await currentPdf.embedPng(watermarkImageBytes);
+ const pngImage = await workPdf.embedPng(watermarkImageBytes);
 
  for (let i = 0; i < pagesToProcess.length; i++) {
  const page = pagesToProcess[i];
- const { width, height } = page.getSize();
+ const { width, height } = getVisualPageBox(page);
  const scale = Math.min((width * 0.5) / pngImage.width, (height * 0.5) / pngImage.height);
  const imgW = pngImage.width * scale;
  const imgH = pngImage.height * scale;
+ const pos = toPdfCoords(page, (width - imgW) / 2, (height - imgH) / 2);
  page.drawImage(pngImage, {
- x: (width - imgW) / 2,
- y: (height - imgH) / 2,
+ x: pos.x,
+ y: pos.y,
  width: imgW,
  height: imgH,
+ rotate: PDFLib.degrees(pos.rotate),
  opacity
  });
  progressBar.style.width = `${((i + 1) / pagesToProcess.length) * 100}%`;
@@ -332,52 +352,55 @@ async function renderwatermarkpdf(container) {
  const b = parseInt(colorHex.slice(5, 7), 16) / 255;
  const color = PDFLib.rgb(r, g, b);
 
- const font = await currentPdf.embedFont(PDFLib.StandardFonts.Helvetica);
+ const font = await workPdf.embedFont(PDFLib.StandardFonts.Helvetica);
+ try {
+ font.encodeText(text);
+ } catch (encErr) {
+ // Standard PDF fonts only cover Latin (WinAnsi) characters.
+ throw new Error('The watermark text contains characters the built-in PDF font cannot show (for example Hindi, Chinese, emoji or the rupee sign). Please use Latin letters, or use an image watermark instead.');
+ }
+ const textH = fontSize * 0.7; // approx. cap height, used for centring
+
+ // Draw text whose visual centre is (cx, cy) at angle `deg` (CCW) in visual
+ // page coordinates. pdf-lib rotates around the text origin, so the origin is
+ // offset by the rotated half-size; otherwise rotated text drifts off-centre.
+ const drawCentered = (page, cx, cy, deg) => {
+ const tw = font.widthOfTextAtSize(text, fontSize);
+ const rad = deg * Math.PI / 180;
+ const ox = cx - ((tw / 2) * Math.cos(rad) - (textH / 2) * Math.sin(rad));
+ const oy = cy - ((tw / 2) * Math.sin(rad) + (textH / 2) * Math.cos(rad));
+ const pos = toPdfCoords(page, ox, oy);
+ page.drawText(text, { x: pos.x, y: pos.y, size: fontSize, font, color, opacity, rotate: PDFLib.degrees(pos.rotate + deg) });
+ };
 
  for (let i = 0; i < pagesToProcess.length; i++) {
  const page = pagesToProcess[i];
- const { width, height } = page.getSize();
+ const { width, height } = getVisualPageBox(page);
 
  if (position === 'tile') {
- const textWidth = font.widthOfTextAtSize(text, fontSize);
- const cols = Math.ceil(width / (textWidth + 40)) + 1;
- const rows = Math.ceil(height / (fontSize + 60)) + 1;
- const stepX = (width + 40) / cols;
- const stepY = (height + 60) / rows;
-
- for (let col = 0; col < cols; col++) {
- for (let row = 0; row < rows; row++) {
- page.drawText(text, {
- x: col * stepX,
- y: row * stepY,
- size: fontSize,
- font,
- color,
- opacity,
- rotate: PDFLib.degrees(-30)
- });
+ // Same layout and direction as the preview: a 3 x 4 grid of cells,
+ // text rising at 30 degrees (the old -30 slanted the opposite way).
+ const stepX = Math.max(width / 3, 80);
+ const stepY = Math.max(height / 4, 60);
+ for (let tx = stepX / 2; tx < width; tx += stepX) {
+ for (let ty = stepY / 2; ty < height; ty += stepY) {
+ drawCentered(page, tx, ty, 30);
  }
  }
- if (typeof yieldToMainThread === 'function') await yieldToMainThread();
+ } else if (position === 'center') {
+ drawCentered(page, width / 2, height / 2, 45);
  } else {
- let x, y, rotate = PDFLib.degrees(0);
  const textWidth = font.widthOfTextAtSize(text, fontSize);
  const pad = fontSize;
-
+ let x, y;
  switch (position) {
- case 'center':
- x = (width - textWidth) / 2;
- y = (height - fontSize) / 2;
- rotate = PDFLib.degrees(45);
- break;
  case 'top-left': x = pad; y = height - pad - fontSize; break;
  case 'top-right': x = width - textWidth - pad; y = height - pad - fontSize; break;
  case 'bottom-left': x = pad; y = pad; break;
- case 'bottom-right': x = width - textWidth - pad; y = pad; break;
- default: x = (width - textWidth) / 2; y = (height - fontSize) / 2;
+ default: x = width - textWidth - pad; y = pad; // bottom-right
  }
-
- page.drawText(text, { x, y, size: fontSize, font, color, opacity, rotate });
+ const pos = toPdfCoords(page, x, y);
+ page.drawText(text, { x: pos.x, y: pos.y, size: fontSize, font, color, opacity, rotate: PDFLib.degrees(pos.rotate) });
  }
 
  progressBar.style.width = `${((i + 1) / pagesToProcess.length) * 100}%`;
@@ -386,7 +409,7 @@ async function renderwatermarkpdf(container) {
  }
 
  progressDiv.innerHTML = 'Saving PDF...';
- const pdfBytes = await currentPdf.save();
+ const pdfBytes = await workPdf.save();
  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
  progressBar.style.width = '100%';

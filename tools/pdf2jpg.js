@@ -1,10 +1,10 @@
 async function renderpdf2jpg(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js')
+ loadScript('/vendor/pdfjs/pdf.min.js'),
+ loadScript('/vendor/jszip/jszip.min.js')
  ]);
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -135,26 +135,6 @@ async function renderpdf2jpg(container) {
  updateFormatLabels();
  });
 
- function parsePageRange(str, totalPages) {
- if (!str) return [];
- const parts = str.split(',');
- const pages = new Set();
- for (let part of parts) {
- part = part.trim();
- if (part.includes('-')) {
- let [start, end] = part.split('-').map(Number);
- if (isNaN(start) || isNaN(end)) continue;
- start = Math.max(1, Math.min(start, totalPages));
- end = Math.max(1, Math.min(end, totalPages));
- for (let i = start; i <= end; i++) pages.add(i);
- } else {
- let p = Number(part);
- if (!isNaN(p) && p >= 1 && p <= totalPages) pages.add(p);
- }
- }
- return Array.from(pages).sort((a, b) => a - b);
- }
-
  btn.addEventListener('click', async () => {
  const file = inp.files[0];
  if (!file) return;
@@ -183,11 +163,12 @@ async function renderpdf2jpg(container) {
  } else if (allRadio.checked) {
  pagesToExtract = Array.from({ length: totalPages }, (_, i) => i + 1);
  } else if (customRadio.checked) {
- pagesToExtract = parsePageRange(customInput.value, totalPages);
- if (pagesToExtract.length === 0) {
- if (window.showToast) showToast('Invalid range. Defaulting to first page.', 'warning');
- pagesToExtract = [1];
+ const parsed = parsePageRanges(customInput.value, totalPages);
+ if (parsed.error) {
+ // Previously fell back to page 1 silently; stop and explain instead.
+ throw new Error(parsed.error);
  }
+ pagesToExtract = parsed.pages;
  }
 
  progressDiv.innerHTML = `Extracting ${pagesToExtract.length} pages`;
@@ -217,8 +198,12 @@ async function renderpdf2jpg(container) {
 
  const mimeType = fmt === 'png' ? 'image/png' : 'image/jpeg';
  const blob = await new Promise(r => canvas.toBlob(r, mimeType, fmt === 'jpeg' ? jpegQuality : undefined));
+ if (!blob) {
+ releaseCanvas(canvas);
+ throw new Error(`Page ${pageNum} is too large to export at this quality. Choose a lower quality setting.`);
+ }
 
- const pixelDims = `${canvas.width}${canvas.height}px`;
+ const pixelDims = `${canvas.width}\u00d7${canvas.height}px`;
  releaseCanvas(canvas);
 
  generatedBlobs.push({ blob, pageNum, pixelDims, fmt });
@@ -292,7 +277,9 @@ async function renderpdf2jpg(container) {
  if (generatedBlobs.length === 0) return;
 
  const file = inp.files[0];
- const fmt2 = formatSel.value;
+ // Use the format the images were actually generated in, not the
+ // dropdown's current value (which may have changed since converting).
+ const fmt2 = generatedBlobs[0].fmt;
  const ext = fmt2 === 'png' ? 'png' : 'jpg';
  const pdfBase = file ? file.name.replace(/\.pdf$/i, '') : 'document';
 
@@ -302,9 +289,14 @@ async function renderpdf2jpg(container) {
  if (window.showSpinner) showSpinner('Bundling ZIP archive');
  const zip = new JSZip();
  generatedBlobs.forEach(({ blob, pageNum }) => zip.file(`page-${pageNum}.${ext}`, blob));
+ try {
  const content = await zip.generateAsync({ type: 'blob' });
  downloadBlob(content, `${pdfBase}-extracted-images.zip`);
+ } catch (zipErr) {
+ if (window.showToast) showToast('Could not create ZIP: ' + zipErr.message, 'error');
+ } finally {
  if (window.hideSpinner) hideSpinner();
+ }
  }
  });
 

@@ -50,6 +50,13 @@ PDFperch is implemented using open web standards to stay fast, portable, and tra
 - **Mammoth.js** — for DOCX conversion.
 - **KaTeX** and **Prism.js** — for rendering Markdown, math, and code blocks.
 - **QRCode** and **JSZip** — for QR code generation and file packaging.
+- **PDF.js**, **Tesseract.js**, **docx**, **marked**, **DOMPurify**, **html2pdf.js**, **pptx-preview** — rendering, OCR and format conversion.
+
+**Fully client-side, zero third-party requests.** Files are processed in the
+visitor's browser and never uploaded anywhere. Every library and the Inter font
+are self-hosted in `vendor/` (versions, licenses and update steps in
+[`vendor/README.md`](vendor/README.md)), and the Content Security Policy in
+`_headers` allows only the site's own origin.
 
 ---
 
@@ -68,6 +75,7 @@ PDFperch/
 ├── utils.js               Shared helpers used across tool pages
 ├── script.js              Homepage-specific behavior
 ├── styles.css             Site-wide styles
+├── vendor/                Self-hosted libraries and fonts (see vendor/README.md)
 ├── sw.js                  Service worker (offline caching)
 ├── manifest.json          PWA manifest
 ├── robots.txt, _headers, _redirects   Deployment/config files

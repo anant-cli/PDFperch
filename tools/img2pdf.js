@@ -1,6 +1,6 @@
 async function renderimg2pdf(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js');
+ await loadScript('/vendor/pdf-lib/pdf-lib.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -186,22 +186,58 @@ async function renderimg2pdf(container) {
  down.disabled = true;
  }
  });
- function convertToPngBytes(file) {
+ // Returns the EXIF orientation (1-8) of a JPEG, or 1 if absent/unreadable.
+ function getJpegOrientation(buffer) {
+ try {
+ const view = new DataView(buffer);
+ if (view.getUint16(0) !== 0xFFD8) return 1;
+ let offset = 2;
+ while (offset + 4 <= view.byteLength) {
+ const marker = view.getUint16(offset);
+ const size = view.getUint16(offset + 2);
+ if (marker === 0xFFE1 && view.getUint32(offset + 4) === 0x45786966) { // "Exif"
+ const tiff = offset + 10;
+ const little = view.getUint16(tiff) === 0x4949;
+ const ifd0 = tiff + view.getUint32(tiff + 4, little);
+ const entries = view.getUint16(ifd0, little);
+ for (let i = 0; i < entries; i++) {
+ const entry = ifd0 + 2 + i * 12;
+ if (view.getUint16(entry, little) === 0x0112) {
+ const value = view.getUint16(entry + 8, little);
+ return value >= 1 && value <= 8 ? value : 1;
+ }
+ }
+ return 1;
+ }
+ if ((marker & 0xFF00) !== 0xFF00 || marker === 0xFFDA) break; // start of scan
+ offset += 2 + size;
+ }
+ } catch (e) { /* malformed EXIF: treat as upright */ }
+ return 1;
+ }
+
+ // Draws the image through a canvas. Browsers apply EXIF orientation when
+ // drawing an <img>, so the result is upright. Used for formats pdf-lib can't
+ // embed and for rotated phone photos (raw JPEG bytes would come out sideways).
+ function reencodeViaCanvas(file, mime, quality) {
  return new Promise((resolve, reject) => {
  const img = new Image();
  const url = URL.createObjectURL(file);
  img.onload = () => {
  const canvas = document.createElement('canvas');
- canvas.width = img.width;
- canvas.height = img.height;
+ canvas.width = img.naturalWidth;
+ canvas.height = img.naturalHeight;
  const ctx = canvas.getContext('2d');
+ if (mime === 'image/jpeg') { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
  ctx.drawImage(img, 0, 0);
  canvas.toBlob(blob => {
- blob.arrayBuffer().then(resolve).catch(reject);
  URL.revokeObjectURL(url);
- }, 'image/png');
+ releaseCanvas(canvas);
+ if (!blob) { reject(new Error(`"${file.name}" is too large to process in this browser.`)); return; }
+ blob.arrayBuffer().then(resolve).catch(reject);
+ }, mime, quality);
  };
- img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image load failed')); };
+ img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(`Could not read "${file.name}".`)); };
  img.src = url;
  });
  }
@@ -232,16 +268,20 @@ async function renderimg2pdf(container) {
 
  let imgBytes;
  let image;
- if (file.type === 'image/webp' || (!file.type.includes('png') && !file.type.includes('jpeg') && !file.type.includes('jpg'))) {
- imgBytes = await convertToPngBytes(file);
- image = await pdfDoc.embedPng(imgBytes);
- } else {
- imgBytes = await file.arrayBuffer();
  if (file.type === 'image/png') {
+ imgBytes = await file.arrayBuffer();
  image = await pdfDoc.embedPng(imgBytes);
- } else {
- image = await pdfDoc.embedJpg(imgBytes);
+ } else if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+ imgBytes = await file.arrayBuffer();
+ if (getJpegOrientation(imgBytes) !== 1) {
+ // Rotated phone photo: bake the orientation into the pixels.
+ imgBytes = await reencodeViaCanvas(file, 'image/jpeg', 0.92);
  }
+ image = await pdfDoc.embedJpg(imgBytes);
+ } else {
+ // WebP, GIF, BMP, unknown type: convert to PNG first.
+ imgBytes = await reencodeViaCanvas(file, 'image/png');
+ image = await pdfDoc.embedPng(imgBytes);
  }
  const dims = image.scale(1);
  let orientation = orientSel.value;

@@ -2,9 +2,9 @@
 async function renderdocx2pdf(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js'),
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
+ loadScript('/vendor/mammoth/mammoth.browser.min.js'),
+ loadScript('/vendor/dompurify/purify.min.js')
+ // html2pdf (~900 KB) was loaded here but never used; PDFs come from the print dialog.
  ]);
 
  container.innerHTML = '';
@@ -139,14 +139,9 @@ async function renderdocx2pdf(container) {
  if (!detectHeadings.checked) return html;
  return html.replace(/<p>(#{1,6})\s+(.*?)<\/p>/g, (m, h, c) => `<h${h.length}>${c}</h${h.length}>`);
  }
- function escapeHtml(str) {
- return String(str)
- .replace(/&/g, '&amp;')
- .replace(/</g, '&lt;')
- .replace(/>/g, '&gt;')
- .replace(/"/g, '&quot;')
- .replace(/'/g, '&#039;');
- }
+ // (Removed a local escapeHtml: as a function declaration inside this try
+ // block it was hoisted as `undefined`, so the outer catch's escapeHtml(...)
+ // threw a TypeError whenever a library failed to load. utils.js provides it.)
 
  function updateDocxFloatingBtn() {
  if (!docxFloatingBtn) return;
@@ -248,10 +243,13 @@ async function renderdocx2pdf(container) {
  <div class="docx-body">${window.currentDocxHtml}</div>
  <script>
  window.onload = function () {
- setTimeout(function () {
- window.print();
- setTimeout(function () { window.close(); }, 1500);
- }, 600);
+ var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+ ready.then(function () {
+ // Close only after the print dialog is done. A fixed 1.5 s timer closed
+ // the window on mobile browsers, where print() does not block.
+ window.onafterprint = function () { window.close(); };
+ setTimeout(function () { window.print(); }, 150);
+ });
  };
  <\/script>
 </body>
@@ -265,7 +263,7 @@ async function renderdocx2pdf(container) {
  printWindow.document.close();
 
  if (window.trackEvent) trackEvent('Tool', 'convert', 'docx2pdf');
- if (window.showToast) showToast('&#128424; Print dialog opened \u2013 choose \u201cSave as PDF\u201d to download.', 'info');
+ if (window.showToast) showToast('Print dialog opened \u2013 choose \u201cSave as PDF\u201d to download.', 'info');
  } catch (err) {
  console.error(err);
  if (window.showToast) showToast('Failed to open print dialog: ' + err.message, 'error');

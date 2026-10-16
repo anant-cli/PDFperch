@@ -1,0 +1,3 @@
+Tesseract trained data (tessdata_best, integerized "4.0.0_best_int" builds) from the
+@tesseract.js-data/* npm packages. The tessdata models are released by the Tesseract
+OCR project under the Apache License 2.0: https://github.com/tesseract-ocr/tessdata_best

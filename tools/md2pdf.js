@@ -4,19 +4,22 @@ async function rendermd2pdf(container) {
  container.innerHTML = `<div class="loading-state"><div class="spinner"></div><p>Loading Markdown converter...</p></div>`;
 
  await Promise.all([
- loadScript('https://cdn.jsdelivr.net/npm/marked@16.3.0/lib/marked.umd.js'),
- loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js'),
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js'),
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js')
+ loadScript('/vendor/marked/marked.umd.js'),
+ loadScript('/vendor/dompurify/purify.min.js'),
+ // auto-render captures the global `katex` when it executes, so it must run
+ // AFTER katex.min.js. Loaded in parallel, whichever arrived first won; if
+ // auto-render won, every formula failed ("reading 'ParseError'").
+ loadScript('/vendor/katex/katex.min.js')
+ .then(() => loadScript('/vendor/katex/contrib/auto-render.min.js')),
+ loadScript('/vendor/prism/prism.js')
+ // html2pdf (~900 KB) was loaded here but never used; PDFs come from the print dialog.
  ]);
- await loadScript('https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js');
+ await loadScript('/vendor/prism/plugins/autoloader/prism-autoloader.min.js');
  if (window.Prism && Prism.plugins?.autoloader) {
- Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+ Prism.plugins.autoloader.languages_path = '/vendor/prism/components/';
  }
- await loadStylesheet('https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css');
- await loadStylesheet('https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css');
+ await loadStylesheet('/vendor/katex/katex.min.css');
+ await loadStylesheet('/vendor/prism/themes/prism-tomorrow.min.css');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -141,9 +144,35 @@ async function rendermd2pdf(container) {
  code, pre { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
  }
  </style>
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+ <link rel="stylesheet" href="${location.origin}/vendor/katex/katex.min.css">
+ <link rel="stylesheet" href="${location.origin}/vendor/prism/themes/prism-tomorrow.min.css">
  `;
+ }
+
+ // Pull math out before Markdown parsing: marked otherwise turns x_1 ... y_2
+ // into <em>, and eats backslashes (\\ line breaks, \[ \] delimiters), so
+ // formulas reached KaTeX already broken. Placeholders are plain letters and
+ // digits so marked leaves them alone; the original TeX is restored after.
+ function protectMath(text) {
+ const store = [];
+ const re = /\$\$[\s\S]+?\$\$|\\\[[\s\S]+?\\\]|\\\([\s\S]+?\\\)|\$(?!\s)[^$\n]+?(?<!\s)\$/g;
+ const out = text.replace(re, m => {
+ store.push(m);
+ return `PDFPERCHMATH${store.length - 1}END`;
+ });
+ return { text: out, store };
+ }
+
+ function restoreMath(html, store) {
+ return html.replace(/PDFPERCHMATH(\d+)END/g, (m, i) => {
+ const tex = store[Number(i)];
+ return tex === undefined ? m : escapeHtml(tex);
+ });
+ }
+
+ function markdownToSafeHtml(text) {
+ const { text: protectedText, store } = protectMath(preprocessMarkdown(text));
+ return restoreMath(DOMPurify.sanitize(marked.parse(protectedText)), store);
  }
 
  function preprocessMarkdown(text) {
@@ -160,9 +189,7 @@ async function rendermd2pdf(container) {
  mdRendered.innerHTML = `<div style="color:var(--text-muted); padding:4rem; text-align:center;">Upload a Markdown file or click "Load Sample"</div>`;
  return;
  }
- const processed = preprocessMarkdown(text);
- const rawHtml = DOMPurify.sanitize(marked.parse(processed));
- const theme = 'light';
+ const rawHtml = markdownToSafeHtml(text);
  mdPreviewBox.style.background = '#ffffff';
     mdPreviewBox.style.color = '#1a1a1a';
  mdRendered.innerHTML = `<div class="markdown-body" style="padding:1rem;">${rawHtml}</div>`;
@@ -234,9 +261,13 @@ async function rendermd2pdf(container) {
  if (window.showSpinner) showSpinner('Rendering Markdown with math and syntax highlighting...');
 
  try {
- const processed = preprocessMarkdown(text);
- const rawHtml = DOMPurify.sanitize(marked.parse(processed));
- const theme = 'light';
+ // Print the already-rendered preview (KaTeX + Prism applied in this page)
+ // instead of re-running those libraries in the popup. The popup used to
+ // print 500 ms after load, often before highlighting/fonts were ready, and
+ // its \\[ \\] delimiters were escaped wrongly so display math never rendered.
+ renderPreview();
+ const renderedBody = mdRendered.querySelector('.markdown-body');
+ const bodyHtml = renderedBody ? renderedBody.innerHTML : markdownToSafeHtml(text);
  const pageSize = sizeSelect.value;
  const orientation = orientSelect.value;
 
@@ -245,38 +276,23 @@ async function rendermd2pdf(container) {
  <head>
  <meta charset="UTF-8">
  <title>Markdown Document - PDFperch</title>
- ${getPrintStyles(theme, pageSize, orientation)}
+ ${getPrintStyles('light', pageSize, orientation)}
  <style>
  @page {
  size: ${pageSize} ${orientation};
  margin: 2.5cm 3cm;
  }
  </style>
- <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"><\/script>
- <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"><\/script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"><\/script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"><\/script>
  </head>
  <body>
- <div class="markdown-body">${rawHtml}</div>
+ <div class="markdown-body">${bodyHtml}</div>
  <script>
- window.addEventListener('load', function() {
- if (window.renderMathInElement) {
- renderMathInElement(document.body, {
- delimiters: [
- {left:'$$',right:'$$',display:true},
- {left:'$',right:'$',display:false},
- {left:'\\\\[',right:'\\\\]',display:true},
- {left:'\\\\(',right:'\\\\)',display:false}
- ],
- throwOnError: false
+ window.addEventListener('load', function () {
+ var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+ ready.then(function () {
+ window.onafterprint = function () { window.close(); };
+ setTimeout(function () { window.print(); }, 150);
  });
- }
- if (window.Prism) Prism.highlightAll();
- setTimeout(() => {
- window.print();
- setTimeout(() => window.close(), 1000);
- }, 500);
  });
  <\/script>
  </body>

@@ -1,0 +1,3 @@
+pptx-preview 1.0.7 is published on npm under the ISC license (per its package.json;
+the package ships no separate license file). This bundle was built with esbuild and
+also contains: jszip (MIT or GPLv3, used under MIT), lodash (MIT), uuid (MIT), tslib (0BSD).

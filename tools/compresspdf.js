@@ -1,11 +1,11 @@
 async function rendercompresspdf(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js')
+ loadScript('/vendor/pdfjs/pdf.min.js'),
+ loadScript('/vendor/pdf-lib/pdf-lib.min.js')
  ]);
 
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -180,7 +180,10 @@ async function rendercompresspdf(container) {
  const totalPages = pdfJs.numPages;
  const newDoc = await PDFLib.PDFDocument.create();
  const safeDpi = 144;
- const safeScale = safeDpi / 96;
+ // pdf.js viewport scale 1.0 = 72 DPI (1 px per PDF point), not 96.
+ // Using /96 rendered at 75% of the target DPI and, combined with the
+ // px*72/dpi conversion below, shrank every output page to 75% size.
+ const safeScale = safeDpi / 72;
 
  for (let i = 1; i <= totalPages; i++) {
  progressDiv.innerHTML = `Re-encoding page ${i} of ${totalPages}`;
@@ -215,6 +218,7 @@ async function rendercompresspdf(container) {
  if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
 
+ pdfJs.destroy();
  progressBar.style.width = '95%';
  progressDiv.innerHTML = 'Saving compressed PDF';
  const compressedBytes = await newDoc.save({ useObjectStreams: true, addDefaultPage: false });
@@ -253,7 +257,7 @@ async function rendercompresspdf(container) {
  print: { dpi: 180, quality: 0.88 }
  };
  const { dpi, quality } = modeConfig[mode] || modeConfig.web;
- const scale = dpi / 96;
+ const scale = dpi / 72; // pdf.js scale 1.0 = 72 DPI (see Safe mode note)
 
  const arrayBuf = await currentFile.arrayBuffer();
  const pdfJs = await pdfjsLib.getDocument({ data: arrayBuf }).promise;
@@ -293,6 +297,7 @@ async function rendercompresspdf(container) {
  if (typeof yieldToMainThread === 'function') await yieldToMainThread();
  }
 
+ pdfJs.destroy();
  progressBar.style.width = '95%';
  progressDiv.innerHTML = 'Saving compressed PDF...';
 

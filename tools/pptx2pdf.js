@@ -1,21 +1,19 @@
 async function renderpptx2pdf(container) {
- const PPTX_PREVIEW_URL = 'https://esm.sh/pptx-preview@1.0.7/es2022/pptx-preview.bundle.mjs';
- // No hard-coded SRI hash yet - see loadModuleWithIntegrity() in utils.js.
- // The first successful load in production will pin its hash automatically
- // (and log it to the console); paste that value here once verified for
- // stronger protection than trust-on-first-use alone.
- const PPTX_PREVIEW_INTEGRITY = undefined;
- const HTML2CANVAS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
- const PDFLIB_URL = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+ // Self-hosted esbuild bundle of pptx-preview@1.0.7 (see /vendor/README.md).
+ // Replaces the esm.sh module, which needed a third-party request plus a
+ // trust-on-first-use hash that broke whenever esm.sh rebuilt the file.
+ const PPTX_PREVIEW_URL = '/vendor/pptx-preview/pptx-preview.bundle.js';
+ const HTML2CANVAS_URL = '/vendor/html2canvas/html2canvas.min.js';
+ const PDFLIB_URL = '/vendor/pdf-lib/pdf-lib.min.js';
 
  try {
  await Promise.all([
  loadScript(HTML2CANVAS_URL),
- loadScript(PDFLIB_URL)
+ loadScript(PDFLIB_URL),
+ loadScript(PPTX_PREVIEW_URL)
  ]);
 
- const pptxPreviewModule = await loadModuleWithIntegrity(PPTX_PREVIEW_URL, PPTX_PREVIEW_INTEGRITY);
- const initPreviewer = pptxPreviewModule.init || (pptxPreviewModule.default && pptxPreviewModule.default.init);
+ const initPreviewer = window.pptxPreview && window.pptxPreview.init;
  if (typeof initPreviewer !== 'function') {
  throw new Error('PPTX renderer did not expose an init method.');
  }

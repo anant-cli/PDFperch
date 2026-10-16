@@ -1,10 +1,10 @@
 async function rendermergepdf(container) {
  try {
  await Promise.all([
- loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js'),
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js')
+ loadScript('/vendor/pdf-lib/pdf-lib.min.js'),
+ loadScript('/vendor/pdfjs/pdf.min.js')
  ]);
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -115,6 +115,7 @@ async function rendermergepdf(container) {
  await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
  meta.thumbUrl = canvas.toDataURL('image/png');
  releaseCanvas(canvas);
+ pdf.destroy(); // only needed for the thumbnail; free the worker's copy
  } catch (err) {
  console.warn('Unable to render merge thumbnail:', err);
  }
@@ -245,8 +246,10 @@ async function rendermergepdf(container) {
 
  const buf = await file.arrayBuffer();
  const pdf = await PDFDocument.load(buf, { ignoreEncryption: true });
- if (pdf.isEncrypted && window.showToast) {
-   showToast(`File "${file.name}" was encrypted. Encryption was removed during merge.`, 'info');
+ // pdf-lib cannot decrypt: with ignoreEncryption the pages would be copied
+ // with still-encrypted streams, producing blank/garbled pages.
+ if (pdf.isEncrypted) {
+ throw new Error(`"${file.name}" is password-protected. Unlock it first with the Remove Password tool, then merge again.`);
  }
  const copied = await merged.copyPages(pdf, pdf.getPageIndices());
  copied.forEach(page => merged.addPage(page));

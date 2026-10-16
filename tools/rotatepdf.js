@@ -1,11 +1,11 @@
 async function renderrotatepdf(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js')
+ loadScript('/vendor/pdfjs/pdf.min.js'),
+ loadScript('/vendor/pdf-lib/pdf-lib.min.js')
  ]);
 
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -44,7 +44,7 @@ async function renderrotatepdf(container) {
  <select id="rotationAngle" style="padding: 0.5rem; border-radius: 4px; background: var(--bg-input); color: var(--text); border: 1px solid var(--border); margin-left: auto;">
  <option value="90">90 Clockwise</option>
  <option value="180">180 (Upside Down)</option>
- <option value="270">270 Counter-Clockwise</option>
+ <option value="270">270 (= 90 Counter-Clockwise)</option>
  </select>
  </div>
  <p class="note" style="margin-bottom:0.5rem;">Click a page to toggle selection. Rotation preview updates instantly.</p>
@@ -77,7 +77,7 @@ async function renderrotatepdf(container) {
  const deselectAllBtn = document.getElementById('deselectAllRotate');
  const angleSelect = document.getElementById('rotationAngle');
 
- let currentPdf = null;
+ let currentPdfJs = null;
  let selectedPages = new Set();
  const pageAngles = new Map();
  function getPageAngle(pageNum) {
@@ -130,7 +130,9 @@ async function renderrotatepdf(container) {
  checkbox.addEventListener('change', () => {
  if (checkbox.checked) {
  selectedPages.add(i);
- pageAngles.set(i, parseInt(angleSelect.value));
+ // Only take the dropdown angle if this page has no angle yet; the
+ // Rotate All buttons set angles before checking the box.
+ if (!pageAngles.has(i)) pageAngles.set(i, parseInt(angleSelect.value, 10));
  applyThumbTransform(i);
  pageDiv.style.borderColor = 'var(--accent)';
  } else {
@@ -166,6 +168,13 @@ async function renderrotatepdf(container) {
  }
  }
 
+ function markSelected(card, pn) {
+ const cb = card.querySelector('input[type="checkbox"]');
+ if (cb) cb.checked = true;
+ selectedPages.add(pn);
+ card.style.borderColor = 'var(--accent)';
+ }
+
  function updateButtonState() {
  btn.disabled = selectedPages.size === 0;
  }
@@ -189,9 +198,9 @@ async function renderrotatepdf(container) {
  const pn = parseInt(card.dataset.pageNum);
  pageAngles.set(pn, (getPageAngle(pn) + 90) % 360);
  applyThumbTransform(pn);
- const cb = card.querySelector('input[type="checkbox"]');
- if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event('change')); }
+ markSelected(card, pn);
  });
+ updateButtonState();
  });
 
  document.getElementById('rotateCCWAll').addEventListener('click', () => {
@@ -200,9 +209,11 @@ async function renderrotatepdf(container) {
  const pn = parseInt(card.dataset.pageNum);
  pageAngles.set(pn, (getPageAngle(pn) + 270) % 360);
  applyThumbTransform(pn);
- const cb = card.querySelector('input[type="checkbox"]');
- if (cb && !cb.checked) { cb.checked = true; cb.dispatchEvent(new Event('change')); }
+ // Previously the dispatched 'change' event overwrote this 270 with the
+ // dropdown value (90), so "Rotate All CCW" rotated clockwise.
+ markSelected(card, pn);
  });
+ updateButtonState();
  });
  angleSelect.addEventListener('change', () => {
  selectedPages.forEach(pn => {
@@ -216,18 +227,16 @@ async function renderrotatepdf(container) {
  if (!file) return;
 
  if (window.showFileOnDropZone) showFileOnDropZone('rotatePdfDropZone', file);
- currentPdf = null;
  controls.style.display = 'none';
  btn.disabled = true;
  downloadBtn.disabled = true;
 
  try {
  const arrayBuf = await file.arrayBuffer();
+ if (currentPdfJs) { try { currentPdfJs.destroy(); } catch (e) {} }
  const pdf = await pdfjsLib.getDocument({ data: arrayBuf }).promise;
+ currentPdfJs = pdf;
  const totalPages = pdf.numPages;
-
- const arrayBuf2 = await file.arrayBuffer();
- currentPdf = await PDFLib.PDFDocument.load(arrayBuf2);
 
  renderThumbnails(pdf, totalPages);
  controls.style.display = 'block';

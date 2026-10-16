@@ -1,11 +1,11 @@
 async function renderpdf2word(container) {
  try {
  await Promise.all([
- loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'),
- loadScript('https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.min.js')
+ loadScript('/vendor/pdfjs/pdf.min.js'),
+ loadScript('/vendor/docx/index.js')
  ]);
 
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -115,6 +115,7 @@ async function renderpdf2word(container) {
  await new Promise(resolve => setTimeout(resolve, 0));
  }
 
+ pdf.destroy();
  progressLabel.textContent = 'Building DOCX...';
  progressBar.style.width = '90%';
  docxBlob = await buildDocx(pages, mode.value, pageHeadings.checked);

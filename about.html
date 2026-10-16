@@ -2,14 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>/* Apply saved/system theme before first paint (avoids a light-theme flash) */try{var t=localStorage.getItem('cpdf_theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
  <meta name="theme-color" content="#ffffff">
- <link rel="preconnect" href="https://cdnjs.cloudflare.com">
- <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
- <link rel="preload" href="/styles.css?v=2026-09-18T06-36-17" as="style" onload="this.onload=null;this.rel='stylesheet'">
- <noscript><link rel="stylesheet" href="/styles.css?v=2026-09-18T06-36-17"></noscript>
+ <link rel="preload" href="/styles.css?v=2026-10-16T15-15-38" as="style" onload="this.onload=null;this.rel='stylesheet'">
+ <noscript><link rel="stylesheet" href="/styles.css?v=2026-10-16T15-15-38"></noscript>
  <title>About PDFperch - Private, Browser-Based PDF Tools</title>
  <meta name="description"
  content="Learn about PDFperch: a free, private, client-side PDF tool built by a student developer. No uploads, no account, privacy first.">
@@ -32,8 +31,6 @@
  <meta name="twitter:image" content="https://pdfperch-7xd.pages.dev/og-image.png">
  <link rel="apple-touch-icon" href="/icon-192.png">
 
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
  <link rel="icon" href="/favicon.png">
  <link rel="shortcut icon" href="/favicon.ico">
  <link rel="manifest" href="/manifest.json">
@@ -41,8 +38,6 @@
  <meta name="mobile-web-app-capable" content="yes">
  <meta name="apple-mobile-web-app-capable" content="yes">
  <meta name="apple-mobile-web-app-title" content="PDFperch">
- <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
- <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"></noscript>
 <script type="application/ld+json">
  {
  "@context": "https://schema.org",
@@ -108,7 +103,7 @@
  tools. This feedback drove the expansion of the platform from a single utility into a comprehensive
  suite of document management tools.</p>
  <p>The journey wasn't without its challenges. Implementing complex features like DOCX to PDF conversion
- and AES-256 encryption entirely in the browser required deep dives into the inner workings of file
+ and AES-128 encryption entirely in the browser required deep dives into the inner workings of file
  formats and cryptographic standards. I spent countless nights debugging memory issues and ensuring
  that the tools remained performant even on older hardware. Each new tool added to the platform represents
  a commitment to solving a specific user problem without compromising on our core principle of total
@@ -201,7 +196,7 @@
  <p>PDFperch has grown from a single Markdown-to-PDF converter into a suite of 16 browser-based tools.
  Here's the current state of the platform and what's powering each tool:</p>
  <ul>
- <li><strong>PDF generation &amp; manipulation:</strong> pdf-lib 1.17 &mdash; merge, split, rotate, watermark, add page numbers, encrypt with AES-256</li>
+ <li><strong>PDF generation &amp; manipulation:</strong> pdf-lib 1.17 &mdash; merge, split, rotate, watermark, add page numbers, encrypt with AES-128</li>
  <li><strong>Document conversion:</strong> Mammoth.js for DOCX rendering, jsPDF for structured output</li>
  <li><strong>Markdown rendering:</strong> marked.js with KaTeX for LaTeX math and Prism.js for syntax highlighting</li>
  <li><strong>Image handling:</strong> Native Canvas API for JPG/PNG/WebP conversion and PDF-to-image extraction via pdf.js</li>
@@ -257,8 +252,8 @@
  </div>
  </footer>
 
-<script defer src="/utils.js?v=2026-09-18T06-36-17"></script>
-<script defer src="/components.js?v=2026-09-18T06-36-17"></script>
+<script defer src="/utils.js?v=2026-10-16T15-15-38"></script>
+<script defer src="/components.js?v=2026-10-16T15-15-38"></script>
 </body>
 
 </html>

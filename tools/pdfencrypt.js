@@ -1,6 +1,6 @@
 async function renderpdfencrypt(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/pdf-lib-with-encrypt@1.2.1/dist/pdf-lib.min.js');
+ await loadScript('/vendor/pdf-lib-with-encrypt/pdf-lib.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -55,7 +55,7 @@ async function renderpdfencrypt(container) {
  <div style="padding:0.5rem; display:flex; flex-direction:column; gap:0.5rem;">
  <label for="pdfOwnerPassword">Owner Password (optional)</label>
  <div style="display:flex; gap:0.5rem;">
- <input type="password" id="pdfOwnerPassword" placeholder="Defaults to user password" style="max-width:100%; font-size:0.85rem;">
+ <input type="password" id="pdfOwnerPassword" placeholder="Leave blank for a random owner password" style="max-width:100%; font-size:0.85rem;">
  <button id="toggleOwner" class="secondary" type="button" aria-label="Show or hide owner password">Show</button>
  </div>
  <div class="permissions-grid" style="font-size:0.85rem;">
@@ -105,6 +105,12 @@ async function renderpdfencrypt(container) {
  const permSummary = document.getElementById('permSummary');
  const pdfDecryptDropZone = document.getElementById('pdfDecryptDropZone');
  const pdfToDecrypt = document.getElementById('pdfToDecrypt');
+
+ function generateRandomPassword() {
+ const bytes = new Uint8Array(24);
+ crypto.getRandomValues(bytes);
+ return btoa(String.fromCharCode(...bytes));
+ }
 
  function setMode(mode) {
  const encrypting = mode === 'encrypt';
@@ -186,7 +192,9 @@ async function renderpdfencrypt(container) {
  const file = pdfFile.files[0];
  const pwd = pdfPassword.value;
  const confirm = pdfConfirm.value;
- const ownerPwd = pdfOwnerPassword.value || pwd;
+ // Owner password must differ from the user password, otherwise anyone who
+ // can open the file also gets owner rights and the permissions are void.
+ const ownerPwd = pdfOwnerPassword.value || generateRandomPassword();
 
  if (!file) { showToast('Please select a PDF file.', 'warning'); return; }
  const validation = validateFile(file, {
@@ -228,6 +236,12 @@ async function renderpdfencrypt(container) {
  }
  throw new Error('Unable to read PDF file. Please ensure it is valid.');
  }
+ // ignoreEncryption lets encrypted files load without error, so the
+ // password check above never fires for them. Check explicitly: copying
+ // pages from an encrypted file produces corrupted output.
+ if (pdfDoc.isEncrypted) {
+ throw new Error('This PDF is already encrypted. Use Remove Password first.');
+ }
 
  const newPdf = await PDFDocument.create();
  const copiedPages = await newPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
@@ -238,6 +252,10 @@ async function renderpdfencrypt(container) {
  }
 
  await newPdf.encrypt({
+ // Note: pdf-lib-with-encrypt ignores any pdfVersion passed here and uses
+ // the document header (1.7), which gives AES-128 (V4/R4). Forcing AES-256
+ // is possible but only yields R5, whose single-pass SHA-256 password check
+ // is easier to brute-force than R4, so AES-128 is kept deliberately.
  userPassword: pwd,
  ownerPassword: ownerPwd,
  permissions: {

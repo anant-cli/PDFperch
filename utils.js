@@ -9,67 +9,13 @@ const CONSTANTS = {
  MEMORY_CLEANUP_DELAY: 100,
 };
 
-const CDN_INTEGRITY = {
- 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js':
- 'sha384-nFoSjZIoH3CCp8W639jJyQkuPHinJ2NHe7on1xvlUA7SuGfJAfvMldrsoAVm6ECz',
- 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js':
- 'sha384-weMABwrltA6jWR8DDe9Jp5blk+tZQh7ugpCsF3JwSA53WZM9/14PjS5LAJNHNjAI',
- 'https://cdn.jsdelivr.net/npm/marked@16.3.0/lib/marked.umd.js':
- 'sha384-DHhF6577m3cgvS7zvVeBrLNSi6CZ1po5u0tWTVnCkodISlbu0GXr19X4fOHTV8S2',
- 'https://unpkg.com/marked@16.3.0/lib/marked.umd.js':
- 'sha384-DHhF6577m3cgvS7zvVeBrLNSi6CZ1po5u0tWTVnCkodISlbu0GXr19X4fOHTV8S2',
- 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js':
- 'sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd',
- 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js':
- 'sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk',
- 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js':
- 'sha384-06z5D//U/xpvxZHuUz92xBvq3DqBBFi7Up53HRrbV7Jlv7Yvh/MZ7oenfUe9iCEt',
- 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js':
- 'sha384-Uq05+JLko69eOiPr39ta9bh7kld5PKZoU+fF7g0EXTAriEollhZ+DrN8Q/Oi8J2Q',
- 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js':
- 'sha384-/1qUCSGwTur9vjf/z9lmu/eCUYbpOTgSjmpbMQZ1/CtX2v/WcAIKqRv+U1DUCG6e',
- 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js':
- 'sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG',
- 'https://cdn.jsdelivr.net/npm/pdf-lib-with-encrypt@1.2.1/dist/pdf-lib.min.js':
- 'sha384-kLfN3L+t+5ynoVlyBQoP7H06PdFmJ8uhHL/EmxEwqVyjkRHhqbHhufd16fN9Wm81',
- 'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js':
- 'sha384-HGmnkDZJy7mRkoARekrrj0VjEFSh9a0Z8qxGri/kTTAJkgR8hqD1lHsYSh3JdzRi',
- 'https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.min.js':
- 'sha384-WWGzNJbUWCKFUEexCVTZSZUJ64uYV7FqYVMG855l1ammDY4SH6oLEFuNF6exFtIl',
- 'https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js':
- 'sha384-o44XUELLEnv/iSlA1NWxBweqbD4TSR0qgq2VzVsxtkHS989JJjGKSE9vkfo5MN4K',
- 'https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.11/purify.min.js':
- 'sha384-o44XUELLEnv/iSlA1NWxBweqbD4TSR0qgq2VzVsxtkHS989JJjGKSE9vkfo5MN4K',
- 'https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css':
- 'sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww',
- 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css':
- 'sha384-wFjoQjtV1y5jVHbt0p35Ui8aV8GVpEZkyF99OXWqP/eNJDU93D3Ugxkoyh6Y2I4A',
- 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js':
- 'sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==',
- 'https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js':
- 'sha384-dHP9fwqd9BAiDh9uJ0p10khgbbcFMh34bVEiCnJ1Ah/AT2T2k4t572VEo3WXzxXp',
- 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js':
- 'sha384-GJqSu7vueQ9qN0E9yLPb3Wtpd7OrgK8KmYzC8T1IysG1bcvxvIO4qtYR/D3A991F',
- 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js':
- 'sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H'
-};
-
-const CDN_FALLBACKS = {
- 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js':
- 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js',
- 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js':
- 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
- 'https://cdn.jsdelivr.net/npm/marked@16.3.0/lib/marked.umd.js':
- 'https://unpkg.com/marked@16.3.0/lib/marked.umd.js',
- 'https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js':
- 'https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.4.11/purify.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js':
- 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js',
- 'https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js':
- 'https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.1/qrcode.min.js',
- 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js':
- 'https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js'
-};
+// All libraries are self-hosted under /vendor (see /vendor/README.md), so
+// PDFperch makes no third-party requests. Same-origin scripts need no SRI
+// hashes or CDN mirrors; these maps stay (empty) so callers can still pass an
+// integrity value or fallback explicitly if a library is ever loaded from
+// elsewhere.
+const CDN_INTEGRITY = {};
+const CDN_FALLBACKS = {};
 
 function downloadBlob(blob, filename) {
  if (!blob || !(blob instanceof Blob)) {
@@ -91,10 +37,10 @@ function downloadBlob(blob, filename) {
  console.error('Download failed:', e);
  showToast('Download failed. Please try again.', 'error');
  } finally {
- setTimeout(() => {
- URL.revokeObjectURL(objectUrl);
- link.remove();
- }, CONSTANTS.MEMORY_CLEANUP_DELAY);
+ // Revoking after 100 ms could cancel large downloads in Safari/Firefox
+ // before the browser had read the blob; a minute is safely long enough.
+ setTimeout(() => link.remove(), CONSTANTS.MEMORY_CLEANUP_DELAY);
+ setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
  }
 }
 
@@ -317,11 +263,8 @@ function loadScript(src, integrity, fallbackSrc) {
  _loadingScripts.delete(src);
  const fallback = fallbackSrc || CDN_FALLBACKS[src];
  if (fallback && fallback !== src) {
- const fallbackIntegrity = CDN_INTEGRITY[fallback];
- if (sri && !fallbackIntegrity) {
- reject(new Error(`Failed to load script securely: ${src}`));
- return;
- }
+ // Same file, same bytes: the primary's hash still guarantees integrity.
+ const fallbackIntegrity = CDN_INTEGRITY[fallback] || sri;
  if (DEBUG) console.warn(`[loadScript] ${src} failed, trying fallback: ${fallback}`);
  loadScript(fallback, fallbackIntegrity, null).then(resolve).catch(reject);
  } else {
@@ -378,60 +321,8 @@ function loadStylesheet(href, integrity) {
 
 window.loadStylesheet = loadStylesheet;
 
-/**
- * Loads an ES module dynamically with a manual integrity check.
- *
- * Browsers do not support the `integrity` attribute on dynamic import(),
- * so this fetches the module source as text, hashes it, and only then
- * imports it via a same-origin Blob URL - giving ES-module imports the
- * same tamper-detection guarantee that <script integrity="..."> gives
- * classic scripts.
- *
- * Verification strategy:
- *  - If `expectedHash` (SRI-format string, e.g. "sha384-...") is passed in,
- *    it is enforced strictly: any mismatch throws and nothing executes.
- *  - If `expectedHash` is omitted, the loader trusts the first successful
- *    fetch (TOFU), pins that hash in localStorage, and enforces it on every
- *    later load. The computed hash is also logged so a site owner can
- *    promote it to a hard-coded `expectedHash` for stronger protection.
- */
-async function loadModuleWithIntegrity(url, expectedHash) {
- const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
- if (!res.ok) throw new Error(`Failed to fetch module: ${url} (${res.status})`);
- const buf = await res.arrayBuffer();
-
- const digest = await crypto.subtle.digest('SHA-384', buf);
- const hashB64 = btoa(String.fromCharCode(...new Uint8Array(digest)));
- const computedHash = `sha384-${hashB64}`;
-
- const tofuKey = `cp_module_integrity:${url}`;
- let pinned = expectedHash;
- if (!pinned) {
- try { pinned = localStorage.getItem(tofuKey) || undefined; } catch (e) { /* storage unavailable */ }
- }
-
- if (pinned) {
- if (pinned !== computedHash) {
- throw new Error(
- `Integrity check failed for ${url}. Expected ${pinned} but got ${computedHash}. ` +
- `Refusing to execute - the file may have changed or been tampered with.`
- );
- }
- } else {
- if (DEBUG) console.info(`[loadModuleWithIntegrity] First load of ${url}, pinning hash: ${computedHash}`);
- try { localStorage.setItem(tofuKey, computedHash); } catch (e) { /* storage unavailable */ }
- }
-
- const blob = new Blob([buf], { type: 'application/javascript' });
- const blobUrl = URL.createObjectURL(blob);
- try {
- return await import(/* webpackIgnore: true */ blobUrl);
- } finally {
- URL.revokeObjectURL(blobUrl);
- }
-}
-
-window.loadModuleWithIntegrity = loadModuleWithIntegrity;
+// (loadModuleWithIntegrity removed: it only served the esm.sh PPTX module,
+// which is now a self-hosted bundle loaded with loadScript.)
 
 function sanitizeHtmlForTool(html) {
  if (typeof html !== 'string') return '';
@@ -807,9 +698,16 @@ function yieldToMainThread() {
 window.yieldToMainThread = yieldToMainThread;
 
 function showPopupBlockedWarning(toolName) {
- const container = document.getElementById('toast-container')
+ let container = document.getElementById('toast-container')
  || document.querySelector('.toast-container');
- if (!container) return;
+ if (!container) {
+ // Previously returned silently, so the warning never appeared.
+ container = document.createElement('div');
+ container.id = 'toast-container';
+ container.className = 'toast-container';
+ container.setAttribute('aria-live', 'polite');
+ document.body.appendChild(container);
+ }
 
  const toast = document.createElement('div');
  toast.className = 'toast warning popup-blocked-toast';
@@ -831,7 +729,7 @@ function showPopupBlockedWarning(toolName) {
  const closeBtn = document.createElement('button');
  closeBtn.className = 'toast-close';
  closeBtn.setAttribute('aria-label', 'Dismiss');
- closeBtn.textContent = '';
+ closeBtn.textContent = '\u00d7';
  closeBtn.onclick = () => toast.remove();
 
  toast.appendChild(icon);
@@ -841,3 +739,77 @@ function showPopupBlockedWarning(toolName) {
 }
 window.showPopupBlockedWarning = showPopupBlockedWarning;
 
+
+/**
+ * Helpers for drawing on a PDF page in *visual* coordinates, i.e. as the page
+ * appears on screen after its /Rotate and CropBox are applied. pdf-lib's
+ * getSize() returns the unrotated MediaBox, so stamping at (x, y) from it puts
+ * text on the wrong edge (and sideways) of rotated pages, and ignores CropBox
+ * offsets.
+ *
+ * getVisualPageBox(page) -> { width, height } as displayed.
+ * toPdfCoords(page, vx, vy) -> { x, y, rotate } where (vx, vy) is measured from
+ * the visual bottom-left corner and `rotate` (degrees, CCW) keeps text upright.
+ */
+function _pageGeometry(page) {
+ const box = typeof page.getCropBox === 'function' ? page.getCropBox() : { x: 0, y: 0, ...page.getSize() };
+ const r = (((page.getRotation().angle || 0) % 360) + 360) % 360;
+ return { cx: box.x, cy: box.y, W: box.width, H: box.height, r };
+}
+
+function getVisualPageBox(page) {
+ const { W, H, r } = _pageGeometry(page);
+ return (r === 90 || r === 270) ? { width: H, height: W } : { width: W, height: H };
+}
+
+function toPdfCoords(page, vx, vy) {
+ const { cx, cy, W, H, r } = _pageGeometry(page);
+ switch (r) {
+ case 90: return { x: cx + W - vy, y: cy + vx, rotate: 90 };
+ case 180: return { x: cx + W - vx, y: cy + H - vy, rotate: 180 };
+ case 270: return { x: cx + vy, y: cy + H - vx, rotate: 270 };
+ default: return { x: cx + vx, y: cy + vy, rotate: 0 };
+ }
+}
+window.getVisualPageBox = getVisualPageBox;
+window.toPdfCoords = toPdfCoords;
+
+/**
+ * Strict page-range parser shared by Split PDF and PDF to JPG.
+ * Accepts "1-3, 5, 8-" (open end = last page). Returns
+ * { pages: number[] (sorted, unique, 1-based), error: string|null }.
+ * Out-of-range, reversed, decimal or malformed parts are reported instead of
+ * being silently clamped (previously "10-20" on a 5-page file returned page 5
+ * and "2.5" crashed pdf-lib).
+ */
+function parsePageRanges(input, totalPages) {
+ const text = String(input || '').trim();
+ if (!text) return { pages: [], error: 'Enter a page range, e.g. 1-3, 5.' };
+ const pages = new Set();
+ for (const rawPart of text.split(',')) {
+ const part = rawPart.trim();
+ if (!part) continue;
+ const m = part.match(/^(\d+)\s*(?:-\s*(\d*))?$/);
+ if (!m) return { pages: [], error: `"${part}" is not a valid page or range.` };
+ const start = parseInt(m[1], 10);
+ const end = m[2] === undefined ? start : (m[2] === '' ? totalPages : parseInt(m[2], 10));
+ if (start < 1 || end < 1) return { pages: [], error: 'Page numbers start at 1.' };
+ if (start > end) return { pages: [], error: `"${part}" is reversed. Write it as ${end}-${start}.` };
+ if (end > totalPages) return { pages: [], error: `"${part}" goes past the last page (${totalPages}).` };
+ for (let i = start; i <= end; i++) pages.add(i);
+ }
+ if (pages.size === 0) return { pages: [], error: 'Enter a page range, e.g. 1-3, 5.' };
+ return { pages: Array.from(pages).sort((a, b) => a - b), error: null };
+}
+window.parsePageRanges = parsePageRanges;
+
+/**
+ * canvas.toBlob() silently falls back to PNG for formats the browser cannot
+ * encode (e.g. WebP in Safari). Returns the extension matching the blob that
+ * was actually produced, so files are never mislabelled.
+ */
+function extensionForBlob(blob, fallbackMime) {
+ const map = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+ return map[(blob && blob.type) || fallbackMime] || 'png';
+}
+window.extensionForBlob = extensionForBlob;

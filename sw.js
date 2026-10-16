@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pdfperch-v2026-09-18T06-36-17';
+const CACHE_NAME = 'pdfperch-v2026-10-16T15-15-38';
 
 const STATIC_ASSETS = [
  '/',
@@ -14,10 +14,6 @@ const STATIC_ASSETS = [
  '/manifest.json',
  '/tools/loader.js'
 ];
-
-function isFontRequest(url) {
- return url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com');
-}
 
 function isNavigationRequest(req) {
  return req.mode === 'navigate';
@@ -46,15 +42,13 @@ self.addEventListener('activate', event => {
  );
 });
 
-function isCDNRequest(url) {
- return url.includes('cdn.jsdelivr.net') || url.includes('cdnjs.cloudflare.com') || url.includes('esm.sh') || url.includes('unpkg.com');
-}
-
 self.addEventListener('fetch', event => {
 
  if (event.request.method !== 'GET') return;
 
- if (isFontRequest(event.request.url)) return;
+ // Everything (pages, scripts, fonts, /vendor libraries) is same-origin.
+ // Leave any other request to the browser untouched.
+ if (new URL(event.request.url).origin !== self.location.origin) return;
 
  if (isNavigationRequest(event.request)) {
  // Stale-while-revalidate: repeat visits to a tool page render instantly
@@ -74,6 +68,8 @@ self.addEventListener('fetch', event => {
  })
  .catch(() => cachedResponse || caches.match('/offline.html'));
 
+ // Keep the worker alive until the background refresh is stored.
+ if (cachedResponse) event.waitUntil(fetchPromise.catch(() => {}));
  return cachedResponse || fetchPromise;
  })
  )
@@ -81,26 +77,6 @@ self.addEventListener('fetch', event => {
  return;
  }
 
- if (isCDNRequest(event.request.url)) {
- event.respondWith(
- caches.open(CACHE_NAME).then(cache =>
- cache.match(event.request).then(cached => {
- if (cached) return cached;
- const corsRequest = new Request(event.request.url, {
- mode: 'cors',
- credentials: 'omit',
- });
- return fetch(corsRequest).then(res => {
- if (res && res.status === 200 && res.type === 'cors') {
- cache.put(event.request, res.clone());
- }
- return res;
- });
- })
- )
- );
- return;
- }
 
  event.respondWith(
  caches.open(CACHE_NAME).then(cache => {
@@ -113,6 +89,13 @@ self.addEventListener('fetch', event => {
  }).catch(() => {
 
   if (cachedResponse) return cachedResponse;
+  // Pages request /styles.css?v=<build> but STATIC_ASSETS precaches the bare
+  // path, so an exact match never hit and offline pages had no CSS/JS. Fall
+  // back to a query-insensitive match for same-origin files.
+  if (new URL(event.request.url).origin === self.location.origin && event.request.mode !== 'navigate') {
+    return cache.match(event.request, { ignoreSearch: true })
+      .then(match => match || new Response('', { status: 408, statusText: 'Request timeout' }));
+  }
   if (event.request.mode === 'navigate') {
     return cache.match('/offline.html').then(offlineRes => {
       if (offlineRes) return offlineRes;

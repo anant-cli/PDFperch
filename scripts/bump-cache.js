@@ -43,9 +43,11 @@ for (const file of htmlFiles) {
   let changed = false;
 
   for (const { attr, file: assetFile } of VERSIONED_ASSETS) {
-    // Matches href="/styles.css" or href="/styles.css?v=OLDID", tool pages
-    // and root pages alike (asset is always referenced from site root).
-    const re = new RegExp(`${attr}="(/${assetFile})(?:\\?v=[^"]*)?"`, 'g');
+    // Matches href="/styles.css", href="/styles.css?v=OLDID" and the relative
+    // form href="../styles.css" used by blog/ and author/ pages. Relative refs
+    // are normalised to root-absolute; previously they were never stamped, so
+    // the year-long immutable cache in _headers served them stale after deploys.
+    const re = new RegExp(`${attr}="(?:\\.\\.)?(/${assetFile})(?:\\?v=[^"]*)?"`, 'g');
     const next = html.replace(re, `${attr}="$1?v=${BUILD_ID}"`);
     if (next !== html) changed = true;
     html = next;

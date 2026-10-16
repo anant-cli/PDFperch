@@ -1,6 +1,6 @@
 async function renderpagenumbers(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js');
+ await loadScript('/vendor/pdf-lib/pdf-lib.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -121,6 +121,7 @@ async function renderpagenumbers(container) {
  const downloadBtn = document.getElementById('downloadPageNumbersBtn');
 
  let currentPdf = null;
+ let originalBytes = null; // pristine copy; each Apply starts from this
  let currentFileName = 'document';
  dropZone.addEventListener('click', () => inp.click());
  if (typeof setupDropZone === 'function') {
@@ -141,6 +142,7 @@ async function renderpagenumbers(container) {
 
  try {
  const arrayBuf = await file.arrayBuffer();
+ originalBytes = arrayBuf;
  currentPdf = await PDFLib.PDFDocument.load(arrayBuf);
 
  controls.style.display = 'block';
@@ -182,12 +184,22 @@ async function renderpagenumbers(container) {
  red: PDFLib.rgb(0.8, 0, 0)
  };
  const color = colorMap[colorKey] || colorMap.grey;
- const font = await currentPdf.embedFont(PDFLib.StandardFonts.Helvetica);
+ // Reload from the original bytes every time. Mutating the loaded document
+ // in place stamped numbers twice when the user clicked Apply again.
+ const workPdf = await PDFLib.PDFDocument.load(originalBytes);
+ const font = await workPdf.embedFont(PDFLib.StandardFonts.Helvetica);
  progressBar.style.width = '10%';
  progressDiv.innerHTML = 'Adding page numbers...';
 
- const pages = currentPdf.getPages();
+ const pages = workPdf.getPages();
  const total = pages.length;
+ const numberedCount = Math.max(0, total - skipN);
+ if (numberedCount === 0) {
+ throw new Error(`"Skip first N pages" (${skipN}) covers the whole document (${total} pages).`);
+ }
+ // The last label must read "N of N": with a custom start number the
+ // total is the last printed number, not the count of numbered pages.
+ const lastNumber = startNum + numberedCount - 1;
  let counter = startNum;
 
  for (let i = 0; i < pages.length; i++) {
@@ -197,13 +209,15 @@ async function renderpagenumbers(container) {
  }
 
  const page = pages[i];
- const { width, height } = page.getSize();
+ // Visual size (after /Rotate and CropBox) so numbers land on the edge
+ // the reader sees, upright, on rotated or cropped pages too.
+ const { width, height } = getVisualPageBox(page);
 
  let label;
  switch (format) {
  case 'page': label = `Page ${counter}`; break;
- case 'total': label = `${counter} of ${total - skipN}`; break;
- case 'pageTotal': label = `Page ${counter} of ${total - skipN}`; break;
+ case 'total': label = `${counter} of ${lastNumber}`; break;
+ case 'pageTotal': label = `Page ${counter} of ${lastNumber}`; break;
  default: label = `${counter}`;
  }
  const textWidth = font.widthOfTextAtSize(label, fontSize);
@@ -213,13 +227,14 @@ async function renderpagenumbers(container) {
  case 'bottom-center': x = (width - textWidth) / 2; y = margin; break;
  case 'bottom-right': x = width - textWidth - margin; y = margin; break;
  case 'bottom-left': x = margin; y = margin; break;
- case 'top-center': x = (width - textWidth) / 2; y = height - margin; break;
- case 'top-right': x = width - textWidth - margin; y = height - margin; break;
- case 'top-left': x = margin; y = height - margin; break;
+ case 'top-center': x = (width - textWidth) / 2; y = height - margin - fontSize; break;
+ case 'top-right': x = width - textWidth - margin; y = height - margin - fontSize; break;
+ case 'top-left': x = margin; y = height - margin - fontSize; break;
  default: x = (width - textWidth) / 2; y = margin;
  }
 
- page.drawText(label, { x, y, size: fontSize, font, color });
+ const pos = toPdfCoords(page, x, y);
+ page.drawText(label, { x: pos.x, y: pos.y, size: fontSize, font, color, rotate: PDFLib.degrees(pos.rotate) });
 
  counter++;
  progressBar.style.width = `${((i + 1) / pages.length) * 100}%`;
@@ -227,7 +242,7 @@ async function renderpagenumbers(container) {
  }
 
  progressDiv.innerHTML = 'Saving PDF...';
- const pdfBytes = await currentPdf.save();
+ const pdfBytes = await workPdf.save();
  const blob = new Blob([pdfBytes], { type: 'application/pdf' });
 
  progressBar.style.width = '100%';
@@ -237,7 +252,7 @@ async function renderpagenumbers(container) {
  const pnBase = currentFileName.replace(/\.pdf$/i, '') || 'document';
  downloadBtn.onclick = () => downloadBlob(blob, `${pnBase}-numbered.pdf`);
 
- if (window.showToast) showToast(`Successfully added page numbers to ${total - skipN} pages`);
+ if (window.showToast) showToast(`Successfully added page numbers to ${numberedCount} pages`);
 
  setTimeout(() => {
  progressContainer.style.display = 'none';

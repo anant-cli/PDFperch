@@ -1,5 +1,5 @@
 async function renderweb2pdf(container) {
- await loadScript('https://cdn.jsdelivr.net/npm/dompurify@3.4.11/dist/purify.min.js');
+ await loadScript('/vendor/dompurify/purify.min.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -143,6 +143,45 @@ async function renderweb2pdf(container) {
  }
  };
 
+ // Rewrites user CSS so every rule only applies inside `scope`. The export
+ // node lives in the real page, so unscoped rules (body {...}, h1 {...}, * {...})
+ // used to restyle PDFperch itself during export, and body rules never
+ // reached the PDF content. html/body/:root selectors map to the scope itself.
+ function scopeCss(css, scope) {
+ let sheet;
+ try {
+ sheet = new CSSStyleSheet();
+ sheet.replaceSync(css);
+ } catch (e) {
+ return '';
+ }
+ const scopeSelector = sel => {
+ const trimmed = sel.trim();
+ if (!trimmed) return '';
+ const rest = trimmed.replace(/^((html|body|:root)(\s+|\s*>\s*|$))+/i, '');
+ return rest ? `${scope} ${rest}` : scope;
+ };
+ const walk = rules => {
+ let out = '';
+ for (const rule of rules) {
+ if (rule instanceof CSSStyleRule) {
+ const selectors = rule.selectorText.split(',').map(scopeSelector).filter(Boolean).join(', ');
+ if (selectors) out += `${selectors} { ${rule.style.cssText} }\n`;
+ } else if (typeof CSSMediaRule !== 'undefined' && rule instanceof CSSMediaRule) {
+ out += `@media ${rule.conditionText} {\n${walk(rule.cssRules)}}\n`;
+ } else if (typeof CSSSupportsRule !== 'undefined' && rule instanceof CSSSupportsRule) {
+ out += `@supports ${rule.conditionText} {\n${walk(rule.cssRules)}}\n`;
+ } else if ((typeof CSSKeyframesRule !== 'undefined' && rule instanceof CSSKeyframesRule) ||
+ (typeof CSSFontFaceRule !== 'undefined' && rule instanceof CSSFontFaceRule)) {
+ out += rule.cssText + '\n';
+ }
+ // @page and other at-rules are dropped: they would affect the site page.
+ }
+ return out;
+ };
+ return walk(sheet.cssRules);
+ }
+
  function updatePreview() {
  const html = window.sanitizeHtmlForTool(htmlSnippet.value);
  const css = window.sanitizeCssForTool(cssSnippet.value);
@@ -192,14 +231,22 @@ async function renderweb2pdf(container) {
 
  let exportNode = null;
  try {
- await loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js');
+ await loadScript('/vendor/html2pdf/html2pdf.bundle.min.js');
  exportNode = document.createElement('div');
- exportNode.style.background = '#ffffff';
- exportNode.style.color = '#111111';
+ exportNode.id = 'pdfperch-html-export';
  exportNode.style.padding = '0.75in';
- exportNode.style.width = sizeSel.value === 'letter' ? '8.5in' : '8.27in';
+ // border-box keeps padding inside the paper width (8.27in + 2 x 0.75in
+ // padding used to overflow A4 and get clipped), and landscape is honoured.
+ exportNode.style.boxSizing = 'border-box';
+ const paper = { a4: [8.27, 11.69], letter: [8.5, 11] }[sizeSel.value] || [8.27, 11.69];
+ const paperWidth = orientSel.value === 'landscape' ? paper[1] : paper[0];
+ exportNode.style.width = `${paperWidth}in`;
  const styleNode = document.createElement('style');
- styleNode.textContent = css;
+ // Defaults first, user rules after at equal specificity, so a user's
+ // body { background/color } (mapped to this node) wins. Inline styles here
+ // would have overridden them.
+ styleNode.textContent = '#pdfperch-html-export { background: #ffffff; color: #111111; }\n'
+ + scopeCss(css, '#pdfperch-html-export');
  exportNode.appendChild(styleNode);
  const contentNode = document.createElement('div');
  contentNode.innerHTML = html;
@@ -209,7 +256,10 @@ async function renderweb2pdf(container) {
  margin: 0,
  filename: 'html-document.pdf',
  image: { type: 'jpeg', quality: 0.95 },
- html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+ // scrollX/scrollY 0: html2canvas otherwise offsets the capture by the
+ // page's scroll position, and since the export node sits below the long
+ // tool page the captured area was empty, producing blank PDFs.
+ html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff', scrollX: 0, scrollY: 0 },
  jsPDF: { unit: 'in', format: sizeSel.value, orientation: orientSel.value },
  pagebreak: { mode: ['css', 'legacy'] }
  }).from(exportNode).save();

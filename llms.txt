@@ -28,7 +28,7 @@ PDFperch is a browser-based productivity suite offering 21 free PDF and document
 - [TXT to Word](https://pdfperch-7xd.pages.dev/pages/txt2docx.html): Convert plain text to DOCX
 
 ## Key Differentiator
-Everything runs in the browser using WebAssembly. No files are uploaded to servers.
+Everything runs in the browser with JavaScript (and WebAssembly for OCR). No files are uploaded to any server, and all libraries are self-hosted, so no third-party services are contacted.
 
 ## Blog
 https://pdfperch-7xd.pages.dev/blog/blog_index.html

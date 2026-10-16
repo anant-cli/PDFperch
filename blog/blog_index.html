@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>/* Apply saved/system theme before first paint (avoids a light-theme flash) */try{var t=localStorage.getItem('cpdf_theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
  <meta name="theme-color" content="#ffffff">
- <link rel="preload" href="../styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
- <noscript><link rel="stylesheet" href="../styles.css"></noscript>
+ <link rel="preload" href="/styles.css?v=2026-10-16T15-15-38" as="style" onload="this.onload=null;this.rel='stylesheet'">
+ <noscript><link rel="stylesheet" href="/styles.css?v=2026-10-16T15-15-38"></noscript>
  <link rel="apple-touch-icon" href="/icon-192.png">
  <link rel="icon" href="/favicon.png">
  <link rel="shortcut icon" href="/favicon.ico">
@@ -390,7 +391,7 @@
  you're in a hurry, look for our "Method" sections and "Step-by-Step" guides, which are designed to
  get you results in under sixty seconds. If you have more time, we encourage you to read the technical
  background sections, which explain the "why" behind the tools. By understanding the underlying
- technologies - like WASM, AES-256, and client-side JavaScript - you'll be better equipped to make informed
+ technologies - like WASM, AES-128, and client-side JavaScript - you'll be better equipped to make informed
  decisions about your digital security in all areas of your life, not just when you're handling PDFs.
  This blog is a living document, and we update it regularly as new browser capabilities emerge and new
  privacy challenges arise. Bookmark this page and check back often for the latest in private document
@@ -466,8 +467,8 @@
  </div>
  </footer>
 
- <script defer src="../utils.js"></script>
- <script defer src="../components.js"></script>
+ <script defer src="/utils.js?v=2026-10-16T15-15-38"></script>
+ <script defer src="/components.js?v=2026-10-16T15-15-38"></script>
 </body>
 
 </html>

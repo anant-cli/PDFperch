@@ -50,7 +50,10 @@ function walk(dir, exts, out = []) {
 }
 
 // --- Gather files -----------------------------------------------------
-const htmlFiles = walk(ROOT, ['.html']);
+// Search-engine verification stubs (e.g. google1234abcd.html) are one-line
+// plain-text files by design, not real pages, so skip the structure check.
+const isVerificationStub = f => /^google[0-9a-f]+\.html$/.test(path.basename(f));
+const htmlFiles = walk(ROOT, ['.html']).filter(f => !isVerificationStub(f));
 const jsFiles = walk(ROOT, ['.js']).filter(f => !f.includes(`${path.sep}scripts${path.sep}`));
 
 console.log(`Found ${htmlFiles.length} HTML files and ${jsFiles.length} JS files.\n`);

@@ -161,7 +161,7 @@ async function renderimgcompress(container) {
  const url = URL.createObjectURL(file);
  const img = new Image();
  img.onload = () => {
- icDims.textContent = `${img.naturalWidth} ${img.naturalHeight} px`;
+ icDims.textContent = `${img.naturalWidth} \u00d7 ${img.naturalHeight} px`;
  URL.revokeObjectURL(url);
  };
  img.src = url;
@@ -194,6 +194,9 @@ async function renderimgcompress(container) {
 
  progressBar.style.width = '100%';
  compressedBlob = blob;
+ if (safeMime === 'image/webp' && blob.type !== 'image/webp' && window.showToast) {
+ showToast('This browser cannot create WebP files, so PNG was produced instead.', 'warning');
+ }
  const origBytes = originalFile.size;
  const compBytes = blob.size;
  const savedBytes = origBytes - compBytes;
@@ -233,10 +236,8 @@ async function renderimgcompress(container) {
  });
  dlBtn.addEventListener('click', () => {
  if (!compressedBlob || !originalName) return;
- const fmtVal = formatSel.value;
- const mime = fmtVal === 'same' ? originalFile.type : fmtVal;
- const extMap = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
- const ext = extMap[mime] || 'png';
+ // Extension from the bytes actually produced (Safari turns WebP into PNG).
+ const ext = extensionForBlob(compressedBlob);
  const base = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
  downloadBlob(compressedBlob, `compressed-${base}.${ext}`);
  });

@@ -36,7 +36,8 @@
       toggle.setAttribute('aria-expanded', 'true');
       backdrop.classList.add('visible');
       document.body.style.overflow = 'hidden';
-      trapFocus(nav);
+      const firstLink = nav.querySelector('a[href], button:not([disabled])');
+      if (firstLink) firstLink.focus();
     }
 
     function closeMenu() {
@@ -68,22 +69,21 @@
       if (window.innerWidth > 800 && nav.classList.contains('open')) closeMenu();
     });
 
-    function trapFocus(element) {
-      const focusable = element.querySelectorAll(
+    // One listener, registered once, active only while the menu is open.
+    // The old version added a new listener on every open and never removed
+    // it, so on desktop Tab kept wrapping inside the nav (a keyboard trap),
+    // and the toggle button was outside the loop so the menu couldn't be
+    // closed by keyboard without Escape.
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab' || !nav.classList.contains('open')) return;
+      const focusable = [toggle].concat(Array.from(nav.querySelectorAll(
         'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled])'
-      );
-      if (!focusable.length) return;
+      )));
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      element.addEventListener('keydown', function (e) {
-        if (e.key !== 'Tab') return;
-        if (e.shiftKey) {
-          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
-        } else {
-          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
-        }
-      });
-    }
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
   }
 
   function getNormalizedNavPath(href) {
@@ -146,9 +146,12 @@
   }
 
   function ensureMainId() {
-    if (document.getElementById('main-content')) return;
-    const main = document.querySelector('main');
-    if (main) { main.id = 'main-content'; main.setAttribute('tabindex', '-1'); }
+    // tabindex=-1 is needed for the skip link's focus() to work; it was only
+    // set when <main> lacked an id, but every page already has the id.
+    const main = document.getElementById('main-content') || document.querySelector('main');
+    if (!main) return;
+    if (!main.id) main.id = 'main-content';
+    if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
   }
 
   function ensureSkipLink() {
@@ -368,7 +371,11 @@
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'theme-toggle-btn';
 
-    const storedTheme = localStorage.getItem('cpdf_theme');
+    // localStorage throws in some privacy modes / with storage blocked. Unguarded,
+    // that exception aborted init() before initPremiumUI(), leaving every
+    // .reveal section on the homepage stuck at opacity: 0 (blank page).
+    let storedTheme = null;
+    try { storedTheme = localStorage.getItem('cpdf_theme'); } catch (e) { /* storage unavailable */ }
     let currentTheme = 'light';
     if (storedTheme) {
       currentTheme = storedTheme;
@@ -380,7 +387,7 @@
     toggleBtn.addEventListener('click', function () {
       document.documentElement.style.setProperty('--theme-transition', '0.3s');
       const nextTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-      localStorage.setItem('cpdf_theme', nextTheme);
+      try { localStorage.setItem('cpdf_theme', nextTheme); } catch (e) { /* storage unavailable */ }
       applyTheme(nextTheme, toggleBtn);
       if (window.showToast) showToast(`Switched to ${nextTheme} mode!`, 'info');
     });
@@ -420,18 +427,14 @@
   }
 
   function init() {
-    clearLegacyStorage();
-    ensureSkipLink();
-    ensureAriaAnnouncer();
-    normalizeGlobalLabels();
-    rewriteLocalFileLinks();
-    normalizeFooterDetails();
-    ensurePwaSupport();
-    setupHamburger();
-    setActiveNavLink();
-    ensureToastContainer();
-    setupThemeToggle();
-    initPremiumUI();
+    // Run each step independently so one failure can't block the rest
+    // (in particular initPremiumUI, which makes .reveal content visible).
+    [clearLegacyStorage, ensureSkipLink, ensureAriaAnnouncer, normalizeGlobalLabels,
+      rewriteLocalFileLinks, normalizeFooterDetails, ensurePwaSupport, setupHamburger,
+      setActiveNavLink, ensureToastContainer, setupThemeToggle, initPremiumUI]
+      .forEach(function (step) {
+        try { step(); } catch (e) { console.error('[components] ' + step.name + ' failed:', e); }
+      });
   }
 
   if (document.readyState === 'loading') {

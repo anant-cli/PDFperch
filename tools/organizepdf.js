@@ -1,8 +1,8 @@
 async function renderorganizepdf(container) {
  try {
- const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
- const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
- const PDFLIB_URL = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+ const PDFJS_URL = '/vendor/pdfjs/pdf.min.js';
+ const PDFJS_WORKER = '/vendor/pdfjs/pdf.worker.min.js';
+ const PDFLIB_URL = '/vendor/pdf-lib/pdf-lib.min.js';
 
  await Promise.all([loadScript(PDFJS_URL), loadScript(PDFLIB_URL)]);
  pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
@@ -134,6 +134,7 @@ async function renderorganizepdf(container) {
  }
 
  function clearState() {
+ if (pdfjsDoc) { try { pdfjsDoc.destroy(); } catch (e) {} }
  pages = [];
  originalPages = [];
  originalBuffer = null;
@@ -231,7 +232,9 @@ async function renderorganizepdf(container) {
  statusDiv.style.display = 'block';
 
  originalBuffer = await file.arrayBuffer();
- const pdfData = new Uint8Array(originalBuffer);
+ // pdf.js transfers (detaches) the buffer it receives to its worker.
+ // Give it a copy so originalBuffer is still intact when saving.
+ const pdfData = new Uint8Array(originalBuffer.slice(0));
  pdfjsDoc = await pdfjsLib.getDocument({ data: pdfData }).promise;
 
  pages = Array.from({ length: pdfjsDoc.numPages }, (_, index) => ({ pageIndex: index, rotation: 0 }));
@@ -463,7 +466,11 @@ async function renderorganizepdf(container) {
  const copiedPages = await newDoc.copyPages(sourceDoc, pages.map(page => page.pageIndex));
 
  for (let index = 0; index < copiedPages.length; index++) {
- copiedPages[index].setRotation(PDFLib.degrees(pages[index].rotation));
+ // Add the user's rotation to the page's existing /Rotate instead of
+ // replacing it, otherwise pre-rotated (e.g. scanned landscape) pages flip back.
+ const existing = copiedPages[index].getRotation().angle || 0;
+ const finalAngle = (((existing + pages[index].rotation) % 360) + 360) % 360;
+ copiedPages[index].setRotation(PDFLib.degrees(finalAngle));
  newDoc.addPage(copiedPages[index]);
  if (index % 6 === 0 && window.yieldToMainThread) await yieldToMainThread();
  }

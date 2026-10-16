@@ -1,6 +1,6 @@
 async function renderqrmaker(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js');
+ await loadScript('/vendor/qrcode/qrcode.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -138,7 +138,19 @@ async function renderqrmaker(container) {
  }
  case 'vcard': {
  const [name = value, company = '', phone = '', email = '', website = ''] = value.split('|').map(part => part.trim());
- return `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nORG:${company}\nTEL:${phone}\nEMAIL:${email}\nURL:${website}\nEND:VCARD`;
+ // vCard 3.0: N is mandatory (iOS/Android may refuse cards without it),
+ // values must escape \ , ; and newlines, and lines end with CRLF.
+ const esc = v => v.replace(/\\/g, '\\\\').replace(/([,;])/g, '\\$1').replace(/\r?\n/g, '\\n');
+ const parts = name.split(/\s+/).filter(Boolean);
+ const family = parts.length > 1 ? parts.pop() : (parts.pop() || '');
+ const given = parts.join(' ');
+ const lines = ['BEGIN:VCARD', 'VERSION:3.0', `N:${esc(family)};${esc(given)};;;`, `FN:${esc(name)}`];
+ if (company) lines.push(`ORG:${esc(company)}`);
+ if (phone) lines.push(`TEL:${esc(phone)}`);
+ if (email) lines.push(`EMAIL:${esc(email)}`);
+ if (website) lines.push(`URL:${esc(website)}`);
+ lines.push('END:VCARD');
+ return lines.join('\r\n');
  }
  default:
  return value;
@@ -167,7 +179,13 @@ async function renderqrmaker(container) {
  });
  }
 
+ let generationId = 0;
+ let svgLogoWarned = false;
  async function generateQRCodes() {
+ // Every run gets an id; a run that is superseded by a newer one stops at
+ // its next await instead of appending to the newer run's preview/arrays.
+ const runId = ++generationId;
+ const isStale = () => runId !== generationId;
  const textValue = qrText.value.trim();
  if (!textValue) {
  qrPreview.innerHTML = '<div style="color: var(--text-muted);">Enter text to generate QR code</div>';
@@ -205,6 +223,17 @@ async function renderqrmaker(container) {
  let logoImg = null;
  if (qrLogo.files[0] && qrFormat.value !== 'svg') {
  logoImg = await loadImage(qrLogo.files[0]);
+ if (isStale()) return;
+ } else if (qrLogo.files[0] && qrFormat.value === 'svg' && !svgLogoWarned) {
+ svgLogoWarned = true;
+ if (window.showToast) showToast('Logos are only added to PNG output. Switch format to PNG to include it.', 'info');
+ }
+ // A logo hides part of the code; only level H (30% recovery) reliably
+ // survives that. Lower levels produced codes that would not scan.
+ const errorLevel = logoImg ? 'H' : qrErrorLevel.value;
+ if (logoImg && qrErrorLevel.value !== 'H') {
+ qrErrorLevel.value = 'H';
+ if (window.showToast) showToast('Error correction set to High so the code still scans with a logo.', 'info');
  }
 
  const margin = parseInt(qrMargin.value);
@@ -222,14 +251,15 @@ async function renderqrmaker(container) {
  width: parseInt(qrSize.value),
  margin: margin,
  color: { dark: qrDarkColor.value, light: qrLightColor.value },
- errorCorrectionLevel: qrErrorLevel.value
+ errorCorrectionLevel: errorLevel
  }, (err, svg) => {
  if (err) reject(err);
  else resolve(svg);
  });
  });
+ if (isStale()) return;
 
- if (!isBatch) currentSvgString = svg;
+ if (i === 0) currentSvgString = svg;
  batchSvgStrings.push({ text: lines[i], svg });
 
  if (!isBatch || i < 10) {
@@ -270,21 +300,28 @@ async function renderqrmaker(container) {
  width: size,
  margin: margin,
  color: { dark: qrDarkColor.value, light: qrLightColor.value },
- errorCorrectionLevel: qrErrorLevel.value
+ errorCorrectionLevel: errorLevel
  });
+ if (isStale()) return;
 
  if (logoImg) {
  const ctx = canvas.getContext('2d');
- const logoSize = size * 0.2;
+ // Fit the logo inside a 20% box, keeping its aspect ratio
+ // (it used to be stretched to a square).
+ const box = size * 0.2;
+ const ratio = Math.min(box / logoImg.naturalWidth, box / logoImg.naturalHeight);
+ const lw = logoImg.naturalWidth * ratio;
+ const lh = logoImg.naturalHeight * ratio;
+ const pad = size * 0.02;
  ctx.fillStyle = qrLightColor.value;
- const bgSize = logoSize + (size * 0.02);
- ctx.fillRect((size - bgSize) / 2, (size - bgSize) / 2, bgSize, bgSize);
-
- ctx.drawImage(logoImg, (size - logoSize) / 2, (size - logoSize) / 2, logoSize, logoSize);
+ ctx.fillRect((size - lw) / 2 - pad / 2, (size - lh) / 2 - pad / 2, lw + pad, lh + pad);
+ ctx.drawImage(logoImg, (size - lw) / 2, (size - lh) / 2, lw, lh);
  }
 
  const dataUrl = canvas.toDataURL('image/png');
- if (!isBatch) currentQrDataUrl = dataUrl;
+ // Keep the first code as the single download, also in batch mode with a
+ // single line (previously nothing was downloadable in that case).
+ if (i === 0) currentQrDataUrl = dataUrl;
  batchDataUrls.push({ text: lines[i], dataUrl });
 
  if (!isBatch || i < 10) {
@@ -330,6 +367,7 @@ async function renderqrmaker(container) {
 
  downloadBtn.disabled = false;
  } catch (e) {
+ if (isStale()) return;
  qrPreview.textContent = `Error: ${e.message}`;
  if (window.showToast) showToast('QR generation failed: ' + e.message, 'error');
  console.error(e);
@@ -374,7 +412,7 @@ async function renderqrmaker(container) {
  if (isBatch && lines.length > 1) {
  try {
  if (typeof JSZip === 'undefined') {
- await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+ await loadScript('/vendor/jszip/jszip.min.js');
  }
 
  downloadBtn.disabled = true;

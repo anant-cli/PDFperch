@@ -110,6 +110,7 @@ function renderimg2png(container) {
  const imgPrev = document.getElementById('pngPreview');
  const placeholder = document.getElementById('pngPlaceholder');
  const dPng = document.getElementById('downloadPngBtn');
+ let convertedExt = 'png';
  const dZip = document.getElementById('downloadAllZipBtn');
  const maxWidthSel = document.getElementById('pngMaxWidth');
  const formatSel = document.getElementById('outputFormatImg');
@@ -127,6 +128,8 @@ function renderimg2png(container) {
  let originalFile = null;
  let currentImage = null;
  let batchBlobs = [];
+ let batchFiles = null; // set when several files are selected
+ let loadToken = 0; // guards against an older image finishing load late
 
  inp.addEventListener('change', () => {
  const files = Array.from(inp.files);
@@ -148,51 +151,8 @@ function renderimg2png(container) {
  origSizeSpan.textContent = `${files.length} files selected`;
  conv.disabled = false;
 
- conv.onclick = () => {
- if (!files.length) return;
- conv.disabled = true;
- conv.innerHTML = ' Converting...';
- batchBlobs = [];
-
- const fmt = formatSel.value;
- const mimeType = fmt === 'jpeg' ? 'image/jpeg' : fmt === 'webp' ? 'image/webp' : 'image/png';
- const quality = parseInt(qualitySlider.value) / 100;
- const maxW = maxWidthSel.value !== 'none' ? parseInt(maxWidthSel.value) : null;
-
- let pending = files.length;
-
- files.forEach(file => {
- const reader = new FileReader();
- reader.onload = (e) => {
- const img = new Image();
- img.onload = () => {
- let tW = img.naturalWidth, tH = img.naturalHeight;
- if (maxW && tW > maxW) { tH = Math.round(tH * maxW / tW); tW = maxW; }
- const c = document.createElement('canvas');
- c.width = tW; c.height = tH;
- const cx = c.getContext('2d');
- if (fmt !== 'png') { cx.fillStyle = bgColorInput.value; cx.fillRect(0,0,tW,tH); }
- cx.drawImage(img, 0, 0, tW, tH);
- c.toBlob(blob => {
- const ext = fmt === 'jpeg' ? 'jpg' : fmt;
- const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
- batchBlobs.push({ name: `${base}.${ext}`, blob });
- pending--;
- if (pending === 0) {
- conv.disabled = false;
- conv.innerHTML = 'Convert Images';
- dZip.style.display = 'inline-block';
- dZip.disabled = false;
- placeholder.textContent = `${batchBlobs.length} images converted`;
- if (window.showToast) showToast(`Converted ${batchBlobs.length} images. Download the ZIP.`);
- }
- }, mimeType, fmt !== 'png' ? quality : undefined);
- };
- img.src = e.target.result;
- };
- reader.readAsDataURL(file);
- });
- };
+ batchFiles = files;
+ currentImage = null;
  return;
  }
  originalFile = files[0];
@@ -205,13 +165,23 @@ function renderimg2png(container) {
  origPrev.style.display = 'block';
  origHolder.style.display = 'none';
 
+ batchFiles = null;
+ currentImage = null;
+ conv.disabled = true; // enabled once the new image has decoded
+ const token = ++loadToken;
  const imgEl = new Image();
- imgEl.onload = () => { currentImage = imgEl; };
+ imgEl.onload = () => {
+ if (token !== loadToken) return;
+ currentImage = imgEl;
+ conv.disabled = false;
+ };
+ imgEl.onerror = () => {
+ if (token !== loadToken) return;
+ if (window.showToast) showToast('This image format cannot be read by your browser.', 'error');
+ };
  imgEl.src = url;
 
  dZip.style.display = 'none';
- conv.disabled = false;
- conv.onclick = null;
  imgPrev.style.display = 'none';
  placeholder.style.display = 'block';
  newSizeSpan.textContent = '';
@@ -219,6 +189,10 @@ function renderimg2png(container) {
  convertedBlob = null;
  });
 
+ // This header was missing: its closing brace ended renderimg2png() early,
+ // so everything below ran at page load, threw "formatSel is not defined",
+ // and the Convert/Download/ZIP buttons and upload click were never wired.
+ function updateFormatUI() {
  const fmt = formatSel.value;
  qualityRow.style.display = fmt === 'png' ? 'none' : 'block';
  bgColorRow.style.display = fmt === 'png' ? 'none' : 'block';
@@ -235,7 +209,76 @@ function renderimg2png(container) {
  dropZone.addEventListener('click', () => inp.click());
  if (typeof setupDropZone === 'function') setupDropZone('imgPngDropZone', 'anyImgInput');
 
+ // Decodes one file to an <img>; rejects instead of hanging if it can't load.
+ function loadImageFile(file) {
+ return new Promise((resolve, reject) => {
+ const url = URL.createObjectURL(file);
+ const img = new Image();
+ img.onload = () => { URL.revokeObjectURL(url); resolve(img); };
+ img.onerror = () => { URL.revokeObjectURL(url); reject(new Error(`Could not read "${file.name}"`)); };
+ img.src = url;
+ });
+ }
+
+ function renderToBlob(img, fmt, quality, maxW) {
+ let tW = img.naturalWidth, tH = img.naturalHeight;
+ if (maxW && tW > maxW) { tH = Math.round(tH * maxW / tW); tW = maxW; }
+ const mimeType = fmt === 'jpeg' ? 'image/jpeg' : fmt === 'webp' ? 'image/webp' : 'image/png';
+ const c = document.createElement('canvas');
+ c.width = tW; c.height = tH;
+ const cx = c.getContext('2d');
+ if (fmt !== 'png') { cx.fillStyle = bgColorInput.value; cx.fillRect(0, 0, tW, tH); }
+ cx.drawImage(img, 0, 0, tW, tH);
+ return new Promise((resolve, reject) => {
+ c.toBlob(blob => {
+ releaseCanvas(c);
+ blob ? resolve(blob) : reject(new Error('Image is too large to convert in this browser.'));
+ }, mimeType, fmt !== 'png' ? quality : undefined);
+ });
+ }
+
+ async function convertBatch(files) {
+ conv.disabled = true;
+ conv.textContent = 'Converting...';
+ batchBlobs = [];
+ const fmt = formatSel.value;
+ const quality = parseInt(qualitySlider.value, 10) / 100;
+ const maxW = maxWidthSel.value !== 'none' ? parseInt(maxWidthSel.value, 10) : null;
+ const usedNames = new Set();
+ const failed = [];
+ // Sequential: decoding every file at once as data URLs spiked memory,
+ // and one unreadable file left the old counter-based version stuck forever.
+ for (const file of files) {
+ try {
+ const img = await loadImageFile(file);
+ const blob = await renderToBlob(img, fmt, quality, maxW);
+ const base = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+ const ext = extensionForBlob(blob);
+ let name = `${base}.${ext}`;
+ for (let n = 2; usedNames.has(name.toLowerCase()); n++) name = `${base} (${n}).${ext}`;
+ usedNames.add(name.toLowerCase());
+ batchBlobs.push({ name, blob });
+ } catch (err) {
+ failed.push(file.name);
+ }
+ }
+ conv.disabled = false;
+ conv.textContent = 'Convert Images';
+ placeholder.textContent = `${batchBlobs.length} images converted`;
+ if (batchBlobs.length) {
+ dZip.style.display = 'inline-block';
+ dZip.disabled = false;
+ }
+ if (window.showToast) {
+ if (failed.length) showToast(`Converted ${batchBlobs.length}; could not read: ${failed.join(', ')}`, 'warning');
+ else showToast(`Converted ${batchBlobs.length} images. Download the ZIP.`);
+ }
+ }
+
+ // One click handler for both modes. Previously batch mode set conv.onclick
+ // while this listener also fired, re-converting a stale single image.
  conv.addEventListener('click', () => {
+ if (batchFiles) { convertBatch(batchFiles); return; }
  if (!originalFile || !currentImage) return;
 
  conv.disabled = true;
@@ -270,10 +313,24 @@ function renderimg2png(container) {
  ctx.drawImage(currentImage, 0, 0, targetW, targetH);
 
  canvas.toBlob(blob => {
+ if (!blob) {
+ conv.disabled = false;
+ conv.innerHTML = 'Convert Image';
+ if (window.hideSpinner) hideSpinner();
+ if (window.showToast) showToast('Image is too large to convert in this browser.', 'error');
+ return;
+ }
  convertedBlob = blob;
+ convertedExt = extensionForBlob(blob);
  dPng.disabled = false;
+ if (fmt === 'webp' && convertedExt !== 'webp' && window.showToast) {
+ showToast('This browser cannot create WebP files, so PNG was produced instead.', 'warning');
+ }
 
- const dataUrl = canvas.toDataURL(mimeType, fmt !== 'png' ? quality : undefined);
+ // Preview the actual output blob instead of encoding a second time.
+ if (imgPrev.dataset.objectUrl) URL.revokeObjectURL(imgPrev.dataset.objectUrl);
+ const dataUrl = URL.createObjectURL(blob);
+ imgPrev.dataset.objectUrl = dataUrl;
  imgPrev.src = dataUrl;
  imgPrev.style.display = 'block';
  placeholder.style.display = 'none';
@@ -301,8 +358,7 @@ function renderimg2png(container) {
 
  dPng.addEventListener('click', () => {
  if (!convertedBlob || !originalFile) return;
- const fmt = formatSel.value;
- const ext = fmt === 'jpeg' ? 'jpg' : fmt;
+ const ext = convertedExt; // matches the bytes actually produced
  const base = originalFile.name.substring(0, originalFile.name.lastIndexOf('.')) || originalFile.name;
  downloadBlob(convertedBlob, `${base}.${ext}`);
  });
@@ -311,7 +367,7 @@ function renderimg2png(container) {
  dZip.disabled = true;
  dZip.innerHTML = ' Creating ZIP...';
  try {
- await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+ await loadScript('/vendor/jszip/jszip.min.js');
  const zip = new JSZip();
  batchBlobs.forEach(({ name, blob }) => zip.file(name, blob));
  const zipBlob = await zip.generateAsync({ type: 'blob' });
@@ -324,6 +380,4 @@ function renderimg2png(container) {
  dZip.disabled = false;
  dZip.innerHTML = ' Download All as ZIP';
  });
-
-
-
+}

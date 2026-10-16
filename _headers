@@ -1,14 +1,15 @@
 # Content Security Policy Directives
-# - script-src 'unsafe-inline': required for the inline onload="" handlers used
-#   on preloaded stylesheets/scripts across pages, and for JSON-LD blocks
-# - script-src blob:: required by loadModuleWithIntegrity() in utils.js, which
-#   verifies a module's hash before importing it from a same-origin Blob URL
-#   (used for the pptx-preview dependency that can't carry an SRI attribute)
-# - cdn.jsdelivr.net, cdnjs.cloudflare.com: loads critical WebAssembly and JavaScript libraries (e.g. pdf-lib, KaTeX, Mammoth)
-# - worker-src blob:: required for pdf.js and Tesseract.js web workers running client-side
-
+# PDFperch is fully static and client-side: user files are processed in the
+# browser and never uploaded. Every library and font is self-hosted under
+# /vendor, so the policy allows NO third-party origins at all.
+# - script-src 'unsafe-inline': inline theme bootstrap, JSON-LD blocks and the
+#   onload="" handlers on preloaded stylesheets
+# - script-src 'wasm-unsafe-eval': lets Tesseract.js compile its WebAssembly
+#   OCR core (it does NOT allow JavaScript eval)
+# - connect-src 'self': OCR language models are fetched from /vendor
+# - img-src/frame-src blob: and data:: in-browser previews of the user's own files
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' blob: cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com; worker-src 'self' blob: cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.googleapis.com; img-src 'self' data: blob:; font-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com fonts.gstatic.com; connect-src 'self' cdn.jsdelivr.net cdnjs.cloudflare.com esm.sh unpkg.com; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; frame-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
@@ -33,6 +34,11 @@
   Cache-Control: public, max-age=31536000, immutable
 /tools/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Self-hosted libraries. Paths are not versioned, so cache for a day and
+# revalidate in the background rather than marking them immutable.
+/vendor/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 
 # Icons/screenshots change rarely and aren't versioned, so a shorter cache
 # with revalidation is the safer default for these.

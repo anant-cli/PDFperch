@@ -1,6 +1,6 @@
 async function renderocrtool(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js');
+ await loadScript('/vendor/tesseract/tesseract.min.js');
  if (typeof Tesseract === 'undefined') {
  throw new Error('OCR engine failed to load. Check your internet connection and try again.');
  }
@@ -84,6 +84,20 @@ async function renderocrtool(container) {
  </div>
  `;
  const dropZone = document.getElementById('ocrDropZone');
+ // Engine, WebAssembly core and language models are all self-hosted under
+ // /vendor/tesseract (see /vendor/README.md), so OCR makes no third-party
+ // requests. Absolute URLs because the worker resolves paths itself.
+ // workerBlobURL:false loads the worker straight from our origin, so no
+ // blob: script source is needed in the CSP.
+ const TESSERACT_PATHS = {
+ workerPath: new URL('/vendor/tesseract/worker.min.js', location.href).href,
+ corePath: new URL('/vendor/tesseract/core', location.href).href,
+ langPath: null, // set per language below
+ workerBlobURL: false
+ };
+ // Tesseract appends "/<lang>.traineddata.gz" to langPath; one model folder
+ // per language keeps the layout identical to the npm data packages.
+ const langPathFor = lang => new URL(`/vendor/tesseract/lang/${lang}/4.0.0_best_int`, location.href).href;
  const inp = document.getElementById('ocrInput');
  const langSel = document.getElementById('ocrLang');
  const runBtn = document.getElementById('ocrRunBtn');
@@ -100,10 +114,19 @@ async function renderocrtool(container) {
  let currentFile = null;
  let lastText = '';
  let baseName = '';
- if (typeof setupDropZone === 'function') {
- setupDropZone('ocrDropZone', 'ocrInput', handleFile);
- } else {
+ // Click must always be wired: the input is visually hidden with
+ // pointer-events:none, and setupDropZone only handles drag-and-drop.
  dropZone.addEventListener('click', () => inp.click());
+ dropZone.setAttribute('tabindex', '0');
+ dropZone.setAttribute('role', 'button');
+ dropZone.addEventListener('keydown', event => {
+ if (event.key === 'Enter' || event.key === ' ') {
+ event.preventDefault();
+ inp.click();
+ }
+ });
+ if (typeof setupDropZone === 'function') {
+ setupDropZone('ocrDropZone', 'ocrInput');
  }
  inp.addEventListener('change', () => {
  if (inp.files[0]) handleFile(inp.files[0]);
@@ -172,14 +195,14 @@ async function renderocrtool(container) {
  let pageCount = 0;
 
  if (isPdf) {
- await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
- pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ await loadScript('/vendor/pdfjs/pdf.min.js');
+ pdfjsLib.GlobalWorkerOptions.workerSrc = '/vendor/pdfjs/pdf.worker.min.js';
 
  const buf = await currentFile.arrayBuffer();
  const pdfjsDoc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
  const total = pdfjsDoc.numPages;
  pageCount = total;
- const worker = await Tesseract.createWorker(langCode, 1, { logger });
+ const worker = await Tesseract.createWorker(langCode, 1, { logger, ...TESSERACT_PATHS, langPath: langPathFor(langCode) });
 
  try {
  for (let pageNum = 1; pageNum <= total; pageNum++) {
@@ -196,7 +219,9 @@ async function renderocrtool(container) {
  ctx.fillRect(0, 0, canvas.width, canvas.height);
  await pdfPage.render({ canvasContext: ctx, viewport }).promise;
 
- const { data: { text } } = await worker.recognize(canvas.toDataURL('image/png'));
+ // Pass the canvas itself: Tesseract reads it directly, with no URL fetch
+ // (data:/blob: fetches are blocked by connect-src) and no PNG round-trip.
+ const { data: { text } } = await worker.recognize(canvas);
  releaseCanvas(canvas);
  if (pageNum === 1) fullText += `--- Page 1 ---\n\n`;
  else fullText += `\n\n--- Page ${pageNum} ---\n\n`;
@@ -206,18 +231,19 @@ async function renderocrtool(container) {
  }
  } finally {
  await worker.terminate();
+ pdfjsDoc.destroy();
  }
  progressBar.style.width = '100%';
 
  } else {
  progressLabel.textContent = 'Initialising OCR engine';
- const worker = await Tesseract.createWorker(langCode, 1, { logger });
- const ocrImageUrl = URL.createObjectURL(currentFile);
+ const worker = await Tesseract.createWorker(langCode, 1, { logger, ...TESSERACT_PATHS, langPath: langPathFor(langCode) });
  try {
- const { data: { text } } = await worker.recognize(ocrImageUrl);
+ // Pass the File directly: Tesseract reads it with FileReader. A blob: URL
+ // made Tesseract fetch() it, which the CSP's connect-src blocks.
+ const { data: { text } } = await worker.recognize(currentFile);
  fullText = text;
  } finally {
- URL.revokeObjectURL(ocrImageUrl);
  await worker.terminate();
  }
  progressBar.style.width = '100%';

@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>/* Apply saved/system theme before first paint (avoids a light-theme flash) */try{var t=localStorage.getItem('cpdf_theme')||(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
  <meta name="theme-color" content="#ffffff">
- <link rel="preload" href="../styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
- <noscript><link rel="stylesheet" href="../styles.css"></noscript>
+ <link rel="preload" href="/styles.css?v=2026-10-16T15-15-38" as="style" onload="this.onload=null;this.rel='stylesheet'">
+ <noscript><link rel="stylesheet" href="/styles.css?v=2026-10-16T15-15-38"></noscript>
  <link rel="apple-touch-icon" href="/icon-192.png">
  <link rel="icon" href="/favicon.png">
  <link rel="shortcut icon" href="/favicon.ico">
@@ -67,7 +68,7 @@
  </script>
 
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","@id":"https://pdfperch-7xd.pages.dev/blog/understanding-pdf-permissions#faq","mainEntity":[{"@type":"Question","name":"What are PDF permissions and how do they work?","acceptedAnswer":{"@type":"Answer","text":"PDF permissions are restriction flags embedded in an encrypted PDF that control what readers can do including printing, copying text, filling forms, and modifying the document. They only work when the PDF is encrypted."}},{"@type":"Question","name":"Can PDF permissions be bypassed?","acceptedAnswer":{"@type":"Answer","text":"PDF permissions rely on software enforcement. Most PDF readers respect them, but tools exist to strip permissions from weakly encrypted PDFs. AES-256 encryption significantly raises the bar against such attacks."}},{"@type":"Question","name":"How do I set PDF permissions without Adobe Acrobat?","acceptedAnswer":{"@type":"Answer","text":"PDFperch's password protect tool lets you set printing, copying, and editing permissions for free in your browser no Adobe Acrobat or subscription required."}}]}
+{"@context":"https://schema.org","@type":"FAQPage","@id":"https://pdfperch-7xd.pages.dev/blog/understanding-pdf-permissions#faq","mainEntity":[{"@type":"Question","name":"What are PDF permissions and how do they work?","acceptedAnswer":{"@type":"Answer","text":"PDF permissions are restriction flags embedded in an encrypted PDF that control what readers can do including printing, copying text, filling forms, and modifying the document. They only work when the PDF is encrypted."}},{"@type":"Question","name":"Can PDF permissions be bypassed?","acceptedAnswer":{"@type":"Answer","text":"PDF permissions rely on software enforcement. Most PDF readers respect them, but tools exist to strip permissions from weakly encrypted PDFs. AES-128 encryption significantly raises the bar against such attacks."}},{"@type":"Question","name":"How do I set PDF permissions without Adobe Acrobat?","acceptedAnswer":{"@type":"Answer","text":"PDFperch's password protect tool lets you set printing, copying, and editing permissions for free in your browser no Adobe Acrobat or subscription required."}}]}
 </script>
 <script type="application/ld+json">
 {
@@ -396,8 +397,8 @@
  </div>
  </footer>
 
- <script defer src="../utils.js"></script>
- <script defer src="../components.js"></script>
+ <script defer src="/utils.js?v=2026-10-16T15-15-38"></script>
+ <script defer src="/components.js?v=2026-10-16T15-15-38"></script>
 </body>
 
 </html>

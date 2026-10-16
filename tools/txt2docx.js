@@ -1,6 +1,6 @@
 async function rendertxt2docx(container) {
  try {
- await loadScript('https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.min.js');
+ await loadScript('/vendor/docx/index.js');
 
  container.innerHTML = '';
  const area = document.createElement('div');
@@ -103,6 +103,14 @@ async function rendertxt2docx(container) {
  const convertBtn = document.getElementById('convertTxtBtn');
  const downloadBtn = document.getElementById('downloadDocxBtn');
  let currentDocxBlob = null;
+
+ // Any change to the text or options makes an already-built DOCX outdated;
+ // previously Download kept returning the old document after edits.
+ function invalidateDocx() {
+ if (!currentDocxBlob) return;
+ currentDocxBlob = null;
+ downloadBtn.disabled = true;
+ }
  txtDropZone.addEventListener('click', () => txtFile.click());
  if (typeof setupDropZone === 'function') {
  setupDropZone('txtDocxDropZone', 'txtFile');
@@ -184,30 +192,27 @@ async function rendertxt2docx(container) {
  livePreview.innerHTML = html.join('');
  }
 
- function makeRunsFromMarkdown(text) {
+ // withSize=false lets headings keep their heading-style size.
+ function makeRunsFromMarkdown(text, withSize = true) {
+ const base = { font: txtFont.value };
+ if (withSize) base.size = parseInt(txtFontSize.value, 10) * 2;
  const runs = [];
  const regex = /(\*\*[^*]+\*\*|\*[^*]+\*)/g;
  let last = 0;
  let match;
  while ((match = regex.exec(text)) !== null) {
- if (match.index > last) {
- runs.push(new docx.TextRun({ text: text.slice(last, match.index), font: txtFont.value, size: parseInt(txtFontSize.value) * 2 }));
- }
+ if (match.index > last) runs.push(new docx.TextRun({ ...base, text: text.slice(last, match.index) }));
  const token = match[0];
- if (token.startsWith('**')) {
- runs.push(new docx.TextRun({ text: token.slice(2, -2), bold: true, font: txtFont.value, size: parseInt(txtFontSize.value) * 2 }));
- } else {
- runs.push(new docx.TextRun({ text: token.slice(1, -1), italics: true, font: txtFont.value, size: parseInt(txtFontSize.value) * 2 }));
- }
+ if (token.startsWith('**')) runs.push(new docx.TextRun({ ...base, text: token.slice(2, -2), bold: true }));
+ else runs.push(new docx.TextRun({ ...base, text: token.slice(1, -1), italics: true }));
  last = regex.lastIndex;
  }
- if (last < text.length) {
- runs.push(new docx.TextRun({ text: text.slice(last), font: txtFont.value, size: parseInt(txtFontSize.value) * 2 }));
- }
- return runs.length ? runs : [new docx.TextRun({ text, font: txtFont.value, size: parseInt(txtFontSize.value) * 2 })];
+ if (last < text.length) runs.push(new docx.TextRun({ ...base, text: text.slice(last) }));
+ return runs.length ? runs : [new docx.TextRun({ ...base, text })];
  }
 
  txtEditor.addEventListener('input', () => {
+ invalidateDocx();
  updateStats();
  updatePreview();
  if (!txtFile.files || txtFile.files.length === 0) {
@@ -215,7 +220,7 @@ async function rendertxt2docx(container) {
  }
  });
  [txtFont, txtFontSize, txtLineSpacing, txtDetectHeadings, txtDetectMarkdown].forEach(control => {
- control.addEventListener('change', updatePreview);
+ control.addEventListener('change', () => { invalidateDocx(); updatePreview(); });
  });
 
  txtFile.addEventListener('change', async () => {
@@ -227,6 +232,7 @@ async function rendertxt2docx(container) {
 
  try {
  const text = await file.text();
+ invalidateDocx();
  txtEditor.value = text;
  updateStats();
  updatePreview();
@@ -251,9 +257,13 @@ async function rendertxt2docx(container) {
  const { Document, Packer, Paragraph, HeadingLevel } = docx;
  const lines = textToConvert.split('\n');
  const children = [];
+ // Each separate numbered list gets its own numbering instance so it
+ // restarts at 1 (all lists used to share one counter: 1,2,3 ... 4,5).
+ let numberingInstance = 0;
+ let inNumberedList = false;
  for (let line of lines) {
  line = line.trim();
- if (!line) continue;
+ if (!line) { inNumberedList = false; continue; }
  if (txtDetectHeadings.checked) {
  const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
  if (headingMatch) {
@@ -269,11 +279,16 @@ async function rendertxt2docx(container) {
  case 6: heading = HeadingLevel.HEADING_6; break;
  default: heading = HeadingLevel.HEADING_1;
  }
+ // Runs (instead of plain `text`) so headings use the chosen font
+ // and **bold**/*italic* markers are formatted, not shown literally.
  children.push(new Paragraph({
- text: headingText,
+ children: txtDetectMarkdown.checked
+ ? makeRunsFromMarkdown(headingText, false)
+ : [new docx.TextRun({ text: headingText, font: txtFont.value })],
  heading: heading,
  spacing: { after: 200 }
  }));
+ inNumberedList = false;
  continue;
  }
  }
@@ -281,15 +296,18 @@ async function rendertxt2docx(container) {
  const bulletMatch = line.match(/^[-*]\s+(.*)$/);
  const numberedMatch = line.match(/^\d+[.)]\s+(.*)$/);
  if (bulletMatch || numberedMatch) {
+ if (numberedMatch && !inNumberedList) numberingInstance++;
+ inNumberedList = Boolean(numberedMatch);
  children.push(new Paragraph({
  children: makeRunsFromMarkdown((bulletMatch || numberedMatch)[1]),
  bullet: bulletMatch ? { level: 0 } : undefined,
- numbering: numberedMatch ? { reference: 'numbered-list', level: 0 } : undefined,
+ numbering: numberedMatch ? { reference: 'numbered-list', level: 0, instance: numberingInstance } : undefined,
  spacing: { line: Math.round(parseFloat(txtLineSpacing.value) * 240), after: 80 }
  }));
  continue;
  }
  }
+ inNumberedList = false;
  children.push(new Paragraph({
  children: txtDetectMarkdown.checked
  ? makeRunsFromMarkdown(line)

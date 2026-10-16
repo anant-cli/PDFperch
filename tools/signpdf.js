@@ -1,8 +1,8 @@
 async function rendersignpdf(container) {
  try {
- const PDFJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
- const PDFJS_WORKER = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
- const PDFLIB_URL = 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+ const PDFJS_URL = '/vendor/pdfjs/pdf.min.js';
+ const PDFJS_WORKER = '/vendor/pdfjs/pdf.worker.min.js';
+ const PDFLIB_URL = '/vendor/pdf-lib/pdf-lib.min.js';
 
  await Promise.all([loadScript(PDFLIB_URL), loadScript(PDFJS_URL)]);
  pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER;
@@ -344,7 +344,8 @@ async function rendersignpdf(container) {
  try {
  if (window.showSpinner) showSpinner('Reading document');
  originalBuffer = await file.arrayBuffer();
- const dataArray = new Uint8Array(originalBuffer);
+ const dataArray = new Uint8Array(originalBuffer.slice(0));
+ if (pdfjsDoc) { try { pdfjsDoc.destroy(); } catch (e) {} }
  pdfjsDoc = await pdfjsLib.getDocument({ data: dataArray }).promise;
 
  options.classList.remove('hidden');
@@ -639,49 +640,55 @@ async function rendersignpdf(container) {
  const finalH = sigEl.clientHeight * scaleY;
  const finalX = sigEl.offsetLeft * scaleX;
 
- for (let idx = 0; idx < targetPages.length; idx++) {
- const page = targetPages[idx];
- const { width: pWidth, height: pHeight } = page.getSize();
- const finalY = pHeight - (sigEl.offsetTop * scaleY) - finalH;
+ // Embed the signature ONCE and reuse it on every target page; embedding
+ // inside the loop duplicated the font/image for each page ("All pages" bloat).
+ // Bytes come from canvas.toBlob(): fetch(dataURL) is blocked by the site's
+ // CSP (connect-src has no data:), which broke drawn/uploaded signatures.
+ const canvasToPngBytes = (cnv) => new Promise((resolve, reject) => {
+ cnv.toBlob(blob => {
+ if (!blob) { reject(new Error('Could not read signature image.')); return; }
+ blob.arrayBuffer().then(resolve, reject);
+ }, 'image/png');
+ });
 
+ let sigFont = null;
+ let sigEmbed = null;
  if (sigTypeSel.value === 'text') {
- const text = textInput.value.trim();
  const fontMap = {
  'Helvetica': StandardFonts.HelveticaBold,
  'TimesRoman': StandardFonts.TimesRomanBold,
  'Courier': StandardFonts.CourierBold
  };
- const font = await pdfDoc.embedFont(fontMap[sigFontSel.value] || StandardFonts.Helvetica);
+ sigFont = await pdfDoc.embedFont(fontMap[sigFontSel.value] || StandardFonts.HelveticaBold);
+ } else if (sigTypeSel.value === 'image') {
+ const imgCanvas = document.createElement('canvas');
+ imgCanvas.width = uploadedSigImage.naturalWidth || uploadedSigImage.width;
+ imgCanvas.height = uploadedSigImage.naturalHeight || uploadedSigImage.height;
+ imgCanvas.getContext('2d').drawImage(uploadedSigImage, 0, 0);
+ const sigBytes = await canvasToPngBytes(imgCanvas);
+ releaseCanvas(imgCanvas);
+ sigEmbed = await pdfDoc.embedPng(sigBytes);
+ } else {
+ const sigBytes = await canvasToPngBytes(drawCanvas);
+ sigEmbed = await pdfDoc.embedPng(sigBytes);
+ }
+
+ for (let idx = 0; idx < targetPages.length; idx++) {
+ const page = targetPages[idx];
+ const { height: pHeight } = page.getSize();
+ const finalY = pHeight - (sigEl.offsetTop * scaleY) - finalH;
+
+ if (sigTypeSel.value === 'text') {
+ const text = textInput.value.trim();
  const fontSz = Math.round(finalH * 0.45);
  page.drawText(text, {
  x: finalX,
  y: finalY + (finalH * 0.28),
  size: fontSz,
- font,
+ font: sigFont,
  color: sigColor
  });
- } else if (sigTypeSel.value === 'image') {
- const imgCanvas = document.createElement('canvas');
- imgCanvas.width = uploadedSigImage.width;
- imgCanvas.height = uploadedSigImage.height;
- const imgCtx = imgCanvas.getContext('2d');
- imgCtx.drawImage(uploadedSigImage, 0, 0);
- const dataUrl = imgCanvas.toDataURL('image/png');
- const sigBytes = await fetch(dataUrl).then(r => r.arrayBuffer());
- const sigEmbed = await pdfDoc.embedPng(sigBytes);
- releaseCanvas(imgCanvas);
-
- page.drawImage(sigEmbed, {
- x: finalX,
- y: finalY,
- width: finalW,
- height: finalH
- });
  } else {
- const dataUrl = drawCanvas.toDataURL('image/png');
- const sigBytes = await fetch(dataUrl).then(r => r.arrayBuffer());
- const sigEmbed = await pdfDoc.embedPng(sigBytes);
-
  page.drawImage(sigEmbed, {
  x: finalX,
  y: finalY,
