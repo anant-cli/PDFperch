@@ -42,4 +42,4 @@ npx esbuild entry.js --bundle --minify --format=iife --global-name=pptxPreview \
 
 Download the new version's file from npm (`npm pack <name>@<version>`), replace it
 here, update this table and the matching path in the tool that loads it, then run
-`npm run check` and test the tool.
+`npm run check` and test the tool. 
